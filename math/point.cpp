@@ -4,7 +4,7 @@ Point::Point(double x, double y) : coordX(x), coordY(y)
 {
 }
 
-Point::Point(const Point& point) : coordX(point.x()), coordY(point.y())
+Point::Point(const Point &point) : coordX(point.x()), coordY(point.y())
 {
 }
 

@@ -6,10 +6,20 @@ Polygon::Polygon()
 
 Polygon::~Polygon()
 {
-    lines.clear();
+    points.clear();
 }
 
-void Polygon::addLine(const Line &line)
+void Polygon::addPoint(const Point &point)
 {
-    lines.push_back(line);
+    points.push_back(point);
+}
+
+int Polygon::numberOfPoints(void) const
+{
+    return points.size();
+}
+
+const Points& Polygon::listOfPoints(void) const
+{
+    return this->points;
 }

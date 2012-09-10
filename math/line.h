@@ -7,9 +7,11 @@ class Line
 {
 public:
     Line(const Point&, const Point&);
+    Point begin(void) const;
+    Point end(void) const;
 private:
-    Point begin;
-    Point end;
+    Point beginPoint;
+    Point endPoint;
 };
 
 #endif // LINE_H

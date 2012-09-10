@@ -12,3 +12,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+QGraphicsView* MainWindow::canvas(void)
+{
+    return ui->graphicsView;
+}

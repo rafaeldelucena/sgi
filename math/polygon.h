@@ -2,16 +2,20 @@
 #define POLYGON_H
 
 #include <vector>
-#include "math/line.h"
+#include "math/point.h"
+
+typedef std::vector<Point> Points;
 
 class Polygon
 {
 public:
     Polygon();
     ~Polygon();
-    void addLine(const Line& line);
+    void addPoint(const Point& point);
+    int numberOfPoints(void) const;
+    const Points& listOfPoints(void) const;
 private:
-    std::vector<Line> lines;
+    Points points;
 };
 
 #endif // POLYGON_H
