@@ -9,7 +9,7 @@ Controller::Controller(void)
     Point vpMin(1.0, 1.0);
     displayFile = new DisplayFile();
     window = new Window(wMin, wMax);
-    viewPort = new ViewPort(mainWindow->canvas(), vpMin, vpMax, wMin, wMax);
+    viewPort = new ViewPort(mainWindow->canvas(), window, vpMin, vpMax);
 
     mainWindow->show();
 }

@@ -2,13 +2,14 @@
 #define VIEWPORT_H
 
 #include <QGraphicsView>
+#include "view/window.h"
 #include "math/polygon.h"
 #include "math/line.h"
 
 class ViewPort
 {
 public:
-    ViewPort(QGraphicsView* canvas, const Point &vpMin, const Point &vpMax, const Point &wMin, const Point &wMax);
+    ViewPort(QGraphicsView* canvas, Window* window, const Point &vpMin, const Point &vpMax);
     ~ViewPort();
     Point transform(const Point &coordinates);
     Line transform(const Line &lineCoordinates);

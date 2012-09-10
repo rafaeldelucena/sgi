@@ -1,8 +1,7 @@
 #include "view/viewport.h"
 #include "math/polygon.h"
 
-ViewPort::ViewPort(QGraphicsView* cv, const Point &vpMin, const Point &vpMax, const Point &wMin, const Point &wMax)
-    : minVpPoint(vpMin), maxVpPoint(vpMax), minWPoint(wMin), maxWPoint(wMax)
+ViewPort::ViewPort(QGraphicsView* cv, Window* window, const Point &vpMin, const Point &vpMax) : minVpPoint(vpMin), maxVpPoint(vpMax), minWPoint(window->min()), maxWPoint(window->max())
 {
     canvas = cv;
     scene = new QGraphicsScene(vpMin.x(), vpMin.y(), vpMax.x(), vpMax.y());
