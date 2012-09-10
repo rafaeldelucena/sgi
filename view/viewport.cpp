@@ -47,6 +47,7 @@ void ViewPort::addPoint(const Point &point)
 {
     Point newPoint = transform(point);
     scene->addLine(newPoint.x(), newPoint.y(), newPoint.x(), newPoint.y());
+    draw();
 }
 
 void ViewPort::addLine(const Line &line)
@@ -55,6 +56,7 @@ void ViewPort::addLine(const Line &line)
     Point begin = newLine.begin();
     Point end = newLine.end();
     scene->addLine(begin.x(), begin.y(), end.x(), end.y());
+    draw();
 }
 
 void ViewPort::addPolygon(const Polygon &polygon)
@@ -67,6 +69,7 @@ void ViewPort::addPolygon(const Polygon &polygon)
     }
     Line line(newPolygon.listOfPoints()[i-1], newPolygon.listOfPoints()[0]);
     addLine(line);
+    draw();
 }
 
 void ViewPort::draw(void)

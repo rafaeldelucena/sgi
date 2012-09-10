@@ -11,13 +11,13 @@ class DisplayFile
 public:
     DisplayFile();
     ~DisplayFile();
-    void insertObject(Point *point);
-    void insertObject(Line *line);
-    void insertObject(Polygon *polygon);
+    void insertObject(const Point &point);
+    void insertObject(const Line &line);
+    void insertObject(const Polygon &polygon);
 private:
-    std::vector<Point*> points;
-    std::vector<Line*> lines;
-    std::vector<Polygon*> polygons;
+    std::vector<Point> points;
+    std::vector<Line> lines;
+    std::vector<Polygon> polygons;
 };
 
 #endif // DISPLAYFILE_H
