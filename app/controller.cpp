@@ -3,10 +3,10 @@
 Controller::Controller(void)
 {
     mainWindow = new MainWindow();
-    Point wMax(100.0, 100.0);
+    Point wMax(1.0, 1.0);
     Point wMin(0.0, 0.0);
-    Point vpMax(90.0, 90.0);
-    Point vpMin(1.0, 1.0);
+    Point vpMax(1.0, 1.0);
+    Point vpMin(0.0, 0.0);
     displayFile = new DisplayFile();
     window = new Window(wMin, wMax);
     viewPort = new ViewPort(mainWindow->canvas(), window, vpMin, vpMax);
