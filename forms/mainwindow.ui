@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>667</width>
-    <height>499</height>
+    <width>670</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>39</y>
-      <width>391</width>
-      <height>301</height>
+      <y>40</y>
+      <width>390</width>
+      <height>300</height>
      </rect>
     </property>
    </widget>
@@ -137,10 +137,6 @@
       <string>Delete</string>
      </property>
     </widget>
-    <zorder>listView</zorder>
-    <zorder>pushButton_7</zorder>
-    <zorder>label_2</zorder>
-    <zorder>tabWidget</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
@@ -160,7 +156,7 @@
        <x>0</x>
        <y>30</y>
        <width>231</width>
-       <height>221</height>
+       <height>231</height>
       </rect>
      </property>
      <property name="whatsThis">
@@ -664,23 +660,13 @@
      </widget>
     </widget>
    </widget>
-   <zorder>graphicsView</zorder>
-   <zorder>pushButton</zorder>
-   <zorder>pushButton_2</zorder>
-   <zorder>pushButton_3</zorder>
-   <zorder>pushButton_4</zorder>
-   <zorder>pushButton_5</zorder>
-   <zorder>pushButton_6</zorder>
-   <zorder>groupBox</zorder>
-   <zorder>groupBox_2</zorder>
-   <zorder>scrollArea</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>667</width>
+     <width>670</width>
      <height>25</height>
     </rect>
    </property>
