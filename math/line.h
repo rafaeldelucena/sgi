@@ -3,7 +3,7 @@
 
 #include "math/point.h"
 
-class Line
+class Line: public Object
 {
 public:
     Line(const Point&, const Point&);

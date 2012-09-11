@@ -1,5 +1,7 @@
 #include "view/displayfile.h"
 
+#include <iostream>
+
 DisplayFile::DisplayFile()
 {
 }

@@ -1,7 +1,9 @@
 #ifndef POINT_H
 #define POINT_H
 
-class Point
+#include "math/object.h"
+
+class Point : public Object
 {
 public:
     Point(double x, double y);

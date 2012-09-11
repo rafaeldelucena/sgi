@@ -11,7 +11,8 @@ SOURCES += app/app.cpp\
     view/window.cpp \
     math/point.cpp \
     math/line.cpp \
-    math/polygon.cpp
+    math/polygon.cpp \
+    math/object.cpp
 
 HEADERS  += app/mainwindow.h \
     app/controller.h \
@@ -22,6 +23,7 @@ HEADERS  += app/mainwindow.h \
     math/point.h \
     math/line.h \
     math/polygon.h \
+    math/object.h \
     view/displayfile.h \
     view/viewport.h \
     view/window.h

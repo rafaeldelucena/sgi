@@ -2,11 +2,15 @@
 #include <QGraphicsScene>
 #include "app/controller.h"
 
+#include <iostream>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
    Controller control;
+
+   Point point1(10.0, 35.0);
    Line line1(Point(0,0), Point(10,50));
    Line line2(Point(50,0), Point(22,1));
    Polygon polygon;
@@ -15,9 +19,17 @@ int main(int argc, char *argv[])
    polygon.addPoint(Point(12.0,1.0));
    polygon.addPoint(Point(1.0,12.0));
    polygon.addPoint(Point(21.0,11.0));
+   polygon.nominate("polygon");
 
-    control.addObject(polygon);
-    control.addObject(line1);
-    control.addObject(line2);
-    return a.exec();
+   std::cout << polygon.name() << std::endl;
+
+   control.addObject(polygon);
+   control.addObject(point1);
+   control.addObject(point1);
+   control.addObject(point1);
+   control.addObject(point1);
+   control.addObject(point1);
+   control.addObject(line1);
+   control.addObject(line2);
+   return a.exec();
 }

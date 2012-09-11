@@ -6,7 +6,7 @@
 
 typedef std::vector<Point> Points;
 
-class Polygon
+class Polygon : public Object
 {
 public:
     Polygon();

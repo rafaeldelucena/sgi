@@ -1,6 +1,7 @@
 #include "math/line.h"
 
-Line::Line(const Point &a, const Point &b) : beginPoint(a), endPoint(b)
+Line::Line(const Point &a, const Point &b)
+    : Object(LINE), beginPoint(a), endPoint(b)
 {
 }
 

@@ -1,6 +1,7 @@
 #include "math/polygon.h"
 
 Polygon::Polygon()
+    : Object(POLYGON)
 {
 }
 
