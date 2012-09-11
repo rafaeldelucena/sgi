@@ -1,14 +1,14 @@
 #include <QtGui/QApplication>
-#include <QGraphicsScene>
 #include "app/controller.h"
-
-#include <iostream>
 
 int main(int argc, char *argv[])
 {
    QApplication a(argc, argv);
 
-   Controller control;
+   Controller *control = Controller::instance();
    
-   return a.exec();
+   a.exec();
+
+   delete control;
+   return 0;
 }

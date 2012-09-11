@@ -6,13 +6,14 @@
 class Point : public Object
 {
 public:
-    Point(double x, double y);
+    Point(double x, double y, double z);
     Point(const Point& point);
 
     double x(void) const;
     double y(void) const;
+    double z(void) const;
 private:
-    double coordX, coordY;
+    double coordX, coordY, coordZ;
 };
 
 #endif // POINT_H

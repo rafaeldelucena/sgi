@@ -1,4 +1,4 @@
-#include "window.h"
+#include "view/window.h"
 
 Window::Window(const Point &min, const Point &max) : minPoint(min), maxPoint(max)
 {

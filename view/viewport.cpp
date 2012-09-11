@@ -18,7 +18,8 @@ Point ViewPort::transform(const Point &coordinate)
 {
     double x = ((coordinate.x() - minWPoint.x())/(maxWPoint.x() - minWPoint.x()) * (maxVpPoint.x() - minVpPoint.y()));
     double y = 1.0 - (((coordinate.y() - minWPoint.y())/ maxWPoint.y() - minWPoint.y()) * (maxVpPoint.y() - minVpPoint.y()));
-    Point point(x, y);
+    double z = 0.0;
+    Point point(x, y, z);
 
     return point;
 }

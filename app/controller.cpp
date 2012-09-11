@@ -1,12 +1,14 @@
 #include "app/controller.h"
 
+Controller* Controller::controller = 0;
+
 Controller::Controller(void)
 {
     mainWindow = new MainWindow();
-    Point wMax(100.0, 100.0);
-    Point wMin(0.0, 0.0);
-    Point vpMax(90.0, 90.0);
-    Point vpMin(1.0, 1.0);
+    Point wMax(100.0, 100.0, 0.0);
+    Point wMin(0.0, 0.0, 0.0);
+    Point vpMax(90.0, 90.0, 0.0);
+    Point vpMin(1.0, 1.0, 0.0);
     displayFile = new DisplayFile();
     window = new Window(wMin, wMax);
     viewPort = new ViewPort(mainWindow->canvas(), window, vpMin, vpMax);
@@ -22,9 +24,17 @@ Controller::~Controller(void)
     delete displayFile;
 }
 
+Controller* Controller::instance(void)
+{
+    if (!controller) {
+        controller =  new Controller;
+    }
+    return controller;
+}
+
 void Controller::addObject(const Point &point)
 {
-    Point newPoint(Point(point.x(), point.y()));
+    Point newPoint(Point(point.x(), point.y(), point.z()));
     viewPort->addPoint(newPoint);
     displayFile->insertObject(newPoint);
 }

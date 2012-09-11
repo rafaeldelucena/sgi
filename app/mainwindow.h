@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsView>
+#include <QPushButton>
 
 namespace Ui {
     class MainWindow;
@@ -15,7 +16,14 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
     QGraphicsView* canvas();
+    QPushButton* saveLineButton();
+    
+private slots:
+    void onPushPointSaveButton(void);
+    void onPushLineSaveButton(void);
+    void onPushPolygonSaveButton(void);
 
 private:
     Ui::MainWindow *ui;
