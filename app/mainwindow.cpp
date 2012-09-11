@@ -6,8 +6,9 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->saveLineButton, SIGNAL(pressed()), this,  SLOT(onPushSaveLineButton()));
+    connect(ui->saveLineButton, SIGNAL(pressed()), this,  SLOT(onPushLineSaveButton()));
     connect(ui->savePointButton, SIGNAL(pressed()), this, SLOT(onPushPointSaveButton()));
+    connect(ui->savePolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonSaveButton()));
 }
 
 MainWindow::~MainWindow()
