@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+   QApplication a(argc, argv);
 
    Controller control;
    Line line1(Point(0,0), Point(10,50));
@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
    polygon.addPoint(Point(1.0,12.0));
    polygon.addPoint(Point(21.0,11.0));
 
-    control.addObject(polygon);
-    control.addObject(line1);
-    control.addObject(line2);
-    return a.exec();
+   control.addObject(polygon);
+   control.addObject(line1);
+   control.addObject(line2);
+   return a.exec();
 }
