@@ -9,10 +9,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->saveLineButton, SIGNAL(pressed()), this,  SLOT(onPushLineSaveButton()));
     connect(ui->savePointButton, SIGNAL(pressed()), this, SLOT(onPushPointSaveButton()));
     connect(ui->savePolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonSaveButton()));
+    connect(ui->addPolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonAddButton()));
 }
 
 MainWindow::~MainWindow()
 {
+    points.clear();
     delete ui;
 }
 
@@ -48,4 +50,34 @@ void MainWindow::onPushPointSaveButton(void)
 
 void MainWindow::onPushPolygonSaveButton(void)
 {
+    int i;
+    Polygon polygon;
+    
+    for (i=0; i < points.size(); i++) {
+        polygon.addPoint(points[i]);
+    }
+    
+    if (!points.empty()) {
+        Controller::instance()->addObject(polygon);
+        points.clear();
+    }
+}
+
+void MainWindow::onPushPolygonAddButton(void)
+{
+    double x = ui->polygonX->text().toDouble();
+    double y = ui->polygonY->text().toDouble();
+    double z = ui->polygonZ->text().toDouble();
+    Point point(x, y, z);
+    pointNames.append("Point");
+   
+    // TODO: Coding Horror!
+    if (pointsList) {
+        delete pointsList;
+    }
+    
+    pointsList = new QStringListModel(pointNames);
+    ui->pointsListView->setModel(pointsList);
+
+    points.push_back(point);
 }

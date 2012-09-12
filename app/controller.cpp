@@ -34,21 +34,18 @@ Controller* Controller::instance(void)
 
 void Controller::addObject(const Point &point)
 {
-    Point newPoint(Point(point.x(), point.y(), point.z()));
-    viewPort->addPoint(newPoint);
-    displayFile->insertObject(newPoint);
+    viewPort->addPoint(point);
+    displayFile->insertObject(point);
 }
 
 void Controller::addObject(const Line &line)
 {
-    Line newLine(line.begin(), line.end());
-    viewPort->addLine(newLine);
-    displayFile->insertObject(newLine);
+    viewPort->addLine(line);
+    displayFile->insertObject(line);
 }
 
 void Controller::addObject(const Polygon &polygon)
 {
-    Polygon newPolygon(polygon);
-    viewPort->addPolygon(newPolygon);
-    displayFile->insertObject(newPolygon);
+    viewPort->addPolygon(polygon);
+    displayFile->insertObject(polygon);
 }

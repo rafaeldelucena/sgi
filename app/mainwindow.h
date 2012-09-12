@@ -3,7 +3,10 @@
 
 #include <QMainWindow>
 #include <QGraphicsView>
+#include <QStringListModel>
 #include <QPushButton>
+
+#include "math/polygon.h"
 
 namespace Ui {
     class MainWindow;
@@ -18,15 +21,18 @@ public:
     ~MainWindow();
 
     QGraphicsView* canvas();
-    QPushButton* saveLineButton();
     
 private slots:
     void onPushPointSaveButton(void);
     void onPushLineSaveButton(void);
     void onPushPolygonSaveButton(void);
+    void onPushPolygonAddButton(void);
 
 private:
     Ui::MainWindow *ui;
+    Points points;
+    QStringListModel *pointsList;
+    QStringList pointNames;
 };
 
 #endif // MAINWINDOW_H

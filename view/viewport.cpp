@@ -71,7 +71,7 @@ void ViewPort::addPolygon(const Polygon &polygon)
         Line newLine(newPolygon.listOfPoints()[i], newPolygon.listOfPoints()[i+1]);
         addLine(newLine);
     }
-    Line line(newPolygon.listOfPoints()[i-1], newPolygon.listOfPoints()[0]);
+    Line line(newPolygon.listOfPoints().back(), newPolygon.listOfPoints().front());
     addLine(line);
     draw();
 }
