@@ -14,12 +14,13 @@ DisplayFile::~DisplayFile()
 
 void DisplayFile::insertObject(const Line &line)
 {
-    std::cout << line.name().toStdString() << "begin: " << line.begin().toString() << "end: " << line.begin().toString() <<  std::endl;
+    std::cout << line.name().toStdString() << "begin: " << line.begin().toString() << "  end: " << line.begin().toString() <<  std::endl;
     lines.push_back(line);
 }
 
 void DisplayFile::insertObject(const Point &point)
 {
+    std::cout << point.name().toStdString() << ": "  << point.toString() << std::endl;
     points.push_back(point);
 }
 

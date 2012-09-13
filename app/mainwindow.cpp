@@ -3,6 +3,8 @@
 #include "math/line.h"
 #include "app/controller.h"
 
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -44,7 +46,13 @@ void MainWindow::onPushLineSaveButton(void)
     double endY = ui->lineEndY->text().toDouble();
     double endZ = ui->lineEndZ->text().toDouble();
 
-    Line line(Point(startX, startY, startZ), Point(endX, endY, endZ), ui->lineName->text());
+    QString name = ui->lineName->text();
+
+    if (name.size() == 0) {
+        name = "Line";
+    }
+
+    Line line(Point(startX, startY, startZ), Point(endX, endY, endZ), name);
 
 
     Controller::instance()->addObject(line);
@@ -60,7 +68,14 @@ void MainWindow::onPushPointSaveButton(void)
     double y = ui->pointY->text().toDouble();
     double z = ui->pointZ->text().toDouble();
     
-    Point point(x, y, z, ui->pointName->text());
+    QString name = ui->pointName->text();
+    
+    if (name.size() == 0) {
+        name = "Point";
+    }
+    
+    Point point(x, y, z, name);
+    
     Controller::instance()->addObject(point);
     
     addObjectToListView(point);
@@ -71,7 +86,12 @@ void MainWindow::onPushPointSaveButton(void)
 void MainWindow::onPushPolygonSaveButton(void)
 {
     int i;
-    Polygon polygon(ui->polygonName->text());
+    QString name = ui->polygonName->text();
+    if (name.size() == 0) {
+        name = "Polygon";
+    }
+
+    Polygon polygon(name);
     
     for (i=0; i < points.size(); i++) {
         polygon.addPoint(points[i]);
