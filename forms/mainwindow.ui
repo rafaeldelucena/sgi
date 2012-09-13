@@ -114,7 +114,7 @@
     <property name="title">
      <string>Objects</string>
     </property>
-    <widget class="QListView" name="listView">
+    <widget class="QListView" name="objectsListView">
      <property name="geometry">
       <rect>
        <x>0</x>

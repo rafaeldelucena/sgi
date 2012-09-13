@@ -3,6 +3,7 @@
 Line::Line(const Point &a, const Point &b)
     : Object(LINE), beginPoint(a), endPoint(b)
 {
+    nominate("Line");
 }
 
 Point Line::begin(void) const

@@ -3,6 +3,7 @@
 Polygon::Polygon()
     : Object(POLYGON)
 {
+    nominate("Polygon");
 }
 
 Polygon::~Polygon()

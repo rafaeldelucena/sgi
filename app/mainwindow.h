@@ -30,6 +30,7 @@ private slots:
 
 private:
     void addPointToListView(const Point& point);
+    void addObjectToListView(const Object& object);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);
@@ -37,7 +38,9 @@ private:
     Ui::MainWindow *ui;
     Points points;
     QStringList pointsListNames;
+    QStringList objectsListNames;
     QStringListModel *pointsList;
+    QStringListModel *objectsList;
 };
 
 #endif // MAINWINDOW_H

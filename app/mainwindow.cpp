@@ -11,12 +11,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->savePolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonSaveButton()));
     connect(ui->addPolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonAddButton()));
     pointsList = new QStringListModel();
+    objectsList =  new QStringListModel();
 }
 
 MainWindow::~MainWindow()
 {
     points.clear();
     pointsListNames.clear();
+    delete objectsList;
     delete pointsList;
     delete ui;
 }
@@ -39,6 +41,7 @@ void MainWindow::onPushLineSaveButton(void)
     Line line(Point(startX, startY, startZ), Point(endX, endY, endZ));
 
     Controller::instance()->addObject(line);
+    addObjectToListView(line);
 
     clearLineTextFields();
 }
@@ -51,6 +54,7 @@ void MainWindow::onPushPointSaveButton(void)
     
     Point point(x, y, z);
     Controller::instance()->addObject(point);
+    addObjectToListView(point);
 
     clearPointTextFields();
 }
@@ -69,6 +73,8 @@ void MainWindow::onPushPolygonSaveButton(void)
         points.clear();
         pointsListNames.clear();
     }
+
+    addObjectToListView(polygon);
 }
 
 void MainWindow::onPushPolygonAddButton(void)
@@ -82,6 +88,13 @@ void MainWindow::onPushPolygonAddButton(void)
 
     addPointToListView(point);
     clearPolygonTextFields();
+}
+
+void MainWindow::addObjectToListView(const Object& object)
+{
+    objectsListNames.append(QString::fromStdString(object.name()));
+    objectsList->setStringList(objectsListNames);
+    ui->objectsListView->setModel(objectsList);
 }
 
 void MainWindow::addPointToListView(const Point& point)
@@ -107,7 +120,6 @@ void MainWindow::clearLineTextFields(void)
     ui->lineEndX->clear();
     ui->lineEndY->clear();
     ui->lineEndZ->clear();
-
 }
 
 void MainWindow::clearPolygonTextFields(void)

@@ -4,6 +4,7 @@
 Point::Point(double x, double y, double z)
     : Object(POINT), coordX(x), coordY(y), coordZ(z)
 {
+    nominate("Point");
 }
 
 Point::Point(const Point &point)
