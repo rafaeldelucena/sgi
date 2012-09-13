@@ -18,9 +18,9 @@ class MainWindow : public QMainWindow
     
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    ~MainWindow(void);
 
-    QGraphicsView* canvas();
+    QGraphicsView* canvas(void);
     
 private slots:
     void onPushPointSaveButton(void);
@@ -29,10 +29,15 @@ private slots:
     void onPushPolygonAddButton(void);
 
 private:
+    void addPointToListView(const Point& point);
+    void clearLineTextFields(void);
+    void clearPointTextFields(void);
+    void clearPolygonTextFields(void);
+
     Ui::MainWindow *ui;
     Points points;
+    QStringList pointsListNames;
     QStringListModel *pointsList;
-    QStringList pointNames;
 };
 
 #endif // MAINWINDOW_H

@@ -12,6 +12,9 @@ public:
     double x(void) const;
     double y(void) const;
     double z(void) const;
+
+    std::string toString(void) const;
+
 private:
     double coordX, coordY, coordZ;
 };

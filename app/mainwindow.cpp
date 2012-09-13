@@ -10,11 +10,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->savePointButton, SIGNAL(pressed()), this, SLOT(onPushPointSaveButton()));
     connect(ui->savePolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonSaveButton()));
     connect(ui->addPolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonAddButton()));
+    pointsList = new QStringListModel();
 }
 
 MainWindow::~MainWindow()
 {
     points.clear();
+    pointsListNames.clear();
+    delete pointsList;
     delete ui;
 }
 
@@ -36,6 +39,8 @@ void MainWindow::onPushLineSaveButton(void)
     Line line(Point(startX, startY, startZ), Point(endX, endY, endZ));
 
     Controller::instance()->addObject(line);
+
+    clearLineTextFields();
 }
 
 void MainWindow::onPushPointSaveButton(void)
@@ -46,6 +51,8 @@ void MainWindow::onPushPointSaveButton(void)
     
     Point point(x, y, z);
     Controller::instance()->addObject(point);
+
+    clearPointTextFields();
 }
 
 void MainWindow::onPushPolygonSaveButton(void)
@@ -60,6 +67,7 @@ void MainWindow::onPushPolygonSaveButton(void)
     if (!points.empty()) {
         Controller::instance()->addObject(polygon);
         points.clear();
+        pointsListNames.clear();
     }
 }
 
@@ -69,15 +77,42 @@ void MainWindow::onPushPolygonAddButton(void)
     double y = ui->polygonY->text().toDouble();
     double z = ui->polygonZ->text().toDouble();
     Point point(x, y, z);
-    pointNames.append("Point");
-   
-    // TODO: Coding Horror!
-    if (pointsList) {
-        delete pointsList;
-    }
     
-    pointsList = new QStringListModel(pointNames);
-    ui->pointsListView->setModel(pointsList);
-
     points.push_back(point);
+
+    addPointToListView(point);
+    clearPolygonTextFields();
+}
+
+void MainWindow::addPointToListView(const Point& point)
+{
+    pointsListNames.append(QString::fromStdString(point.toString()));
+    pointsList->setStringList(pointsListNames);
+    ui->pointsListView->setModel(pointsList);
+}
+
+void MainWindow::clearPointTextFields(void)
+{
+    ui->pointX->clear();
+    ui->pointY->clear();
+    ui->pointZ->clear();
+}
+
+void MainWindow::clearLineTextFields(void)
+{
+    ui->lineStartX->clear();
+    ui->lineStartY->clear();
+    ui->lineStartZ->clear();
+
+    ui->lineEndX->clear();
+    ui->lineEndY->clear();
+    ui->lineEndZ->clear();
+
+}
+
+void MainWindow::clearPolygonTextFields(void)
+{
+    ui->polygonX->clear();
+    ui->polygonY->clear();
+    ui->polygonZ->clear();
 }
