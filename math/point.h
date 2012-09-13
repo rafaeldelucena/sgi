@@ -6,8 +6,8 @@
 class Point : public Object
 {
 public:
-    Point(double x, double y, double z);
-    Point(const Point& point);
+    Point(double x, double y, double z, QString name = "Point");
+    Point(const Point& point, QString name = "Point");
 
     double x(void) const;
     double y(void) const;

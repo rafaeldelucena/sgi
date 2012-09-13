@@ -1,9 +1,8 @@
 #include "math/polygon.h"
 
-Polygon::Polygon()
-    : Object(POLYGON)
+Polygon::Polygon(QString name)
+    : Object(POLYGON, name)
 {
-    nominate("Polygon");
 }
 
 Polygon::~Polygon()

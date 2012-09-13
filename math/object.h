@@ -1,22 +1,20 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <string>
+#include <QString>
 
 enum Shape { POINT, LINE, POLYGON };
 
 class Object {
 public:
-    Object(Shape type);
+    Object(Shape type, QString name);
     ~Object(void);
     Shape type(void) const;
-    std::string name(void) const;
-
-    void nominate(const std::string& str);
+    QString name(void) const;
 
 private:
     Shape shape;
-    std::string objectName;
+    QString objectName;
 };
 
 #endif // OBJECT_H

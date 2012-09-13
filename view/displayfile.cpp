@@ -1,4 +1,5 @@
 #include "view/displayfile.h"
+#include <iostream>
 
 DisplayFile::DisplayFile()
 {
@@ -13,6 +14,7 @@ DisplayFile::~DisplayFile()
 
 void DisplayFile::insertObject(const Line &line)
 {
+    std::cout << line.name().toStdString() << "begin: " << line.begin().toString() << "end: " << line.begin().toString() <<  std::endl;
     lines.push_back(line);
 }
 

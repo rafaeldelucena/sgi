@@ -6,6 +6,7 @@
 #include <QStringListModel>
 #include <QPushButton>
 
+#include "math/line.h"
 #include "math/polygon.h"
 
 namespace Ui {
@@ -29,11 +30,15 @@ private slots:
     void onPushPolygonAddButton(void);
 
 private:
-    void addPointToListView(const Point& point);
-    void addObjectToListView(const Object& object);
+    void addPolygonPointsToListView(const Point &);
+    void addObjectToListView(const Object &);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);
+    void setObjectName(Point &);
+    void setObjectName(Line &);
+    void setObjectName(Polygon &);
+    inline void listening(void);
 
     Ui::MainWindow *ui;
     Points points;

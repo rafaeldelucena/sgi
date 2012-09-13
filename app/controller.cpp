@@ -6,9 +6,9 @@ Controller::Controller(void)
 {
     mainWindow = new MainWindow();
     Point wMax(100.0, 100.0, 0.0);
-    Point wMin(0.0, 0.0, 0.0);
+    Point wMin(-100.0, -100.0, 0.0);
     Point vpMax(90.0, 90.0, 0.0);
-    Point vpMin(1.0, 1.0, 0.0);
+    Point vpMin(-90.0, -90.0, 0.0);
     displayFile = new DisplayFile();
     window = new Window(wMin, wMax);
     viewPort = new ViewPort(mainWindow->canvas(), window, vpMin, vpMax);

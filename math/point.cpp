@@ -1,14 +1,13 @@
 #include "math/point.h"
 #include <sstream>
 
-Point::Point(double x, double y, double z)
-    : Object(POINT), coordX(x), coordY(y), coordZ(z)
+Point::Point(double x, double y, double z, QString name)
+    : Object(POINT, name), coordX(x), coordY(y), coordZ(z)
 {
-    nominate("Point");
 }
 
-Point::Point(const Point &point)
-    : Object(POINT), coordX(point.x()), coordY(point.y()), coordZ(point.z())
+Point::Point(const Point &point, QString name)
+    : Object(POINT, name), coordX(point.x()), coordY(point.y()), coordZ(point.z())
 {
 }
 

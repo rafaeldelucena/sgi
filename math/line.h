@@ -6,7 +6,7 @@
 class Line: public Object
 {
 public:
-    Line(const Point&, const Point&);
+    Line(const Point &, const Point &, QString name = "Line");
     Point begin(void) const;
     Point end(void) const;
 private:

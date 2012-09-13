@@ -6,6 +6,11 @@
 #include "math/polygon.h"
 #include "math/line.h"
 
+typedef std::vector<Point> PointsRef;
+typedef std::vector<Line> LinesRef;
+typedef std::vector<Polygon> PolygonsRef;
+
+
 class DisplayFile
 {
 public:
@@ -15,9 +20,9 @@ public:
     void insertObject(const Line &line);
     void insertObject(const Polygon &polygon);
 private:
-    std::vector<Point> points;
-    std::vector<Line> lines;
-    std::vector<Polygon> polygons;
+    PointsRef points;
+    LinesRef lines;
+    PolygonsRef polygons;
 };
 
 #endif // DISPLAYFILE_H

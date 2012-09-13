@@ -9,8 +9,8 @@ typedef std::vector<Point> Points;
 class Polygon : public Object
 {
 public:
-    Polygon();
-    ~Polygon();
+    Polygon(QString name = "Polygon");
+    ~Polygon(void);
     void addPoint(const Point& point);
     int numberOfPoints(void) const;
     const Points& listOfPoints(void) const;

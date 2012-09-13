@@ -1,7 +1,7 @@
 #include "math/object.h"
 
-Object::Object(Shape type)
-    : objectName()
+Object::Object(Shape type, QString name)
+    : objectName(name)
 {
     shape = type;
 }
@@ -16,12 +16,7 @@ Shape Object::type(void) const
     return shape;
 }
 
-std::string Object::name(void) const
+QString Object::name(void) const
 {
     return objectName;
-}
-
-void Object::nominate(const std::string& str)
-{
-    objectName = str;
 }
