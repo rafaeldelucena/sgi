@@ -1,12 +1,11 @@
 #include "view/viewport.h"
-#include "math/polygon.h"
 
-ViewPort::ViewPort(QGraphicsView* cv, Window* window, const Point &vpMin, const Point &vpMax) :
-                  minVpPoint(vpMin), maxVpPoint(vpMax),
-                  minWPoint(window->min()), maxWPoint(window->max())
+ViewPort::ViewPort(QGraphicsView* cv, Window* window)
+: maxVpPoint(90.0, 90.0, 0.0), minVpPoint(-90.0, -90.0, 0.0),
+  minWPoint(window->min()), maxWPoint(window->max())
 {
     canvas = cv;
-    scene = new QGraphicsScene(vpMin.x(), vpMin.y(), vpMax.x() - vpMin.x(), vpMax.y() - vpMin.y());
+    scene = new QGraphicsScene(260, 40, 450, 340);
     draw();
 }
 
@@ -17,12 +16,14 @@ ViewPort::~ViewPort()
 
 Point ViewPort::transform(const Point &coordinate)
 {
-    double x = ((coordinate.x() - minWPoint.x())
-                 / (maxWPoint.x() - minWPoint.x())) * (maxVpPoint.x() - minVpPoint.y());
-    double y = (1.0 - ((coordinate.y() - minWPoint.y())/ (maxWPoint.y() - minWPoint.y()))
-                 * (maxVpPoint.y() - minVpPoint.y()));
+    double x = ( (coordinate.x() - minWPoint.x())
+                 / (maxWPoint.x() - minWPoint.x()) ) * (maxVpPoint.x() - minVpPoint.y() );
+    double y = (1.0 -
+                 ( (coordinate.y() - minWPoint.y()) / (maxWPoint.y() - minWPoint.y()))
+                 * (maxVpPoint.y() - minVpPoint.y())
+               );
     double z = 0.0;
-    Point point(x, y, z);
+    Point point = Point(x, y, z);
 
     return point;
 }

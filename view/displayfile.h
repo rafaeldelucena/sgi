@@ -3,8 +3,7 @@
 
 #include <vector>
 
-#include "math/polygon.h"
-#include "math/line.h"
+#include "app/formas.h"
 
 typedef std::vector<Point> PointsRef;
 typedef std::vector<Line> LinesRef;

@@ -6,8 +6,11 @@
 #include <QStringListModel>
 #include <QPushButton>
 
-#include "math/line.h"
-#include "math/polygon.h"
+#include "app/formas.h"
+
+#include "view/displayfile.h"
+#include "view/window.h"
+#include "view/viewport.h"
 
 namespace Ui {
     class MainWindow;
@@ -46,6 +49,10 @@ private:
     QStringList objectsListNames;
     QStringListModel *pointsList;
     QStringListModel *objectsList;
+
+    DisplayFile *displayFile;
+    Window *window;
+    ViewPort *viewPort;
 };
 
 #endif // MAINWINDOW_H

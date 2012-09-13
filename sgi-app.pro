@@ -3,29 +3,21 @@ QT  += core gui
 TARGET = sgi-app
 TEMPLATE = app
 
+CONFIG += qt debug
+
 SOURCES += app/app.cpp\
     app/mainwindow.cpp \
-    app/controller.cpp \
+    app/formas.cpp \
     view/displayfile.cpp \
     view/viewport.cpp \
-    view/window.cpp \
-    math/point.cpp \
-    math/line.cpp \
-    math/polygon.cpp \
-    math/object.cpp
+    view/window.cpp
 
-HEADERS  += app/mainwindow.h \
-    app/controller.h \
-    app/controller.h \
-    view/displayfile.h \
-    view/viewport.h \
-    view/window.h \
-    math/point.h \
-    math/line.h \
-    math/polygon.h \
-    math/object.h \
+HEADERS  +=\
+    app/mainwindow.h \
+    app/formas.h \
     view/displayfile.h \
     view/viewport.h \
     view/window.h
 
 FORMS    += forms/mainwindow.ui
+

@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "math/point.h"
+#include "app/formas.h"
 
 class Window
 {

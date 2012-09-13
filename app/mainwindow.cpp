@@ -1,12 +1,16 @@
 #include "app/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "math/line.h"
-#include "app/controller.h"
 
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    Point wMax(100.0, 100.0, 0.0);
+    Point wMin(-100.0, -100.0, 0.0);
+    displayFile = new DisplayFile();
+    window = new Window(wMin, wMax);
+    viewPort = new ViewPort(this->canvas(), window);
+
     ui->setupUi(this);
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
@@ -21,6 +25,9 @@ MainWindow::~MainWindow()
     delete objectsList;
     delete pointsList;
     delete ui;
+    delete displayFile;
+    delete window;
+    delete viewPort;
 }
 
 QGraphicsView* MainWindow::canvas(void)
@@ -54,8 +61,7 @@ void MainWindow::onPushLineSaveButton(void)
 
     Line line(Point(startX, startY, startZ), Point(endX, endY, endZ), name);
 
-
-    Controller::instance()->addObject(line);
+    displayFile->insertObject(line);
     
     addObjectToListView(line);
 
@@ -76,7 +82,7 @@ void MainWindow::onPushPointSaveButton(void)
     
     Point point(x, y, z, name);
     
-    Controller::instance()->addObject(point);
+    displayFile->insertObject(point);
     
     addObjectToListView(point);
 
@@ -98,7 +104,7 @@ void MainWindow::onPushPolygonSaveButton(void)
     }
     
     if (!points.empty()) {
-        Controller::instance()->addObject(polygon);
+        displayFile->insertObject(polygon);
         points.clear();
         pointsListNames.clear();
     }
