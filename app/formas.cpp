@@ -18,8 +18,8 @@ Point & Line::end(void)
 std::string Line::toString(void) const
 {
     std::stringstream s;
-    s << "Line[("<< beginPoint.x() << ", " << beginPoint.y() << ", " << beginPoint.z() <<"); ("
-        << endPoint.x() << ", " << endPoint.y() << ", " << endPoint.z() << ")]";
+    s << "Line[("<< beginPoint.x() << "," << beginPoint.y() << "," << beginPoint.z() <<")("
+        << endPoint.x() << "," << endPoint.y() << "," << endPoint.z() << ")]";
     
     return s.str();
 }
@@ -56,7 +56,7 @@ std::string Object::toString(void) const
     return str;
 }
 
-Point::Point(double x, double y, double z = 1.0)
+Point::Point(double x, double y, double z)
     : Object(POINT), coordX(x), coordY(y), coordZ(z)
 {
 }
@@ -129,7 +129,7 @@ std::string Polygon::toString(void) const
     unsigned int i;
     for (i=0; i < polygonPoints.size(); i++)
     {
-        s << "(" << polygonPoints[i].x() << ", " << polygonPoints[i].y() << ", " << polygonPoints[i].z() << ");";
+        s << "(" << polygonPoints[i].x() << "," << polygonPoints[i].y() << "," << polygonPoints[i].z() << ")";
     }
     s << "]";
 

@@ -11,9 +11,9 @@ public:
     ViewPort(QGraphicsView* canvas, Window* window);
     ~ViewPort(void);
     
-    void transform(Point & point);
-    void transform(Line *line);
-    void transform(Polygon *polygon);
+    Point transform(Point &point);
+    Line transform(Line *line);
+    Polygon transform(Polygon *polygon);
 
     void draw(Point *point);
     void draw(Line *line);

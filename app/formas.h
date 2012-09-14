@@ -26,7 +26,7 @@ private:
 class Point : public Object
 {
 public:
-    Point(double x, double y, double z);
+    Point(double x, double y, double z = 1.0);
     Point(const Point& point);
 
     double x(void) const;

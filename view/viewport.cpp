@@ -5,7 +5,7 @@ ViewPort::ViewPort(QGraphicsView* cv, Window* window)
   wMin(window->min()), wMax(window->max())
 {
     canvas = cv;
-    scene = new QGraphicsScene(260, 40, 450, 340, canvas);
+    scene = new QGraphicsScene(vMin.x(), vMin.y(), 200, 200, canvas);
 }
 
 ViewPort::~ViewPort()
@@ -13,7 +13,7 @@ ViewPort::~ViewPort()
     delete scene;
 }
 
-void ViewPort::transform(Point & wCoord)
+Point ViewPort::transform(Point & wCoord)
 {
     double vCoordX = ( (wCoord.x() - wMin.x())
                  / (wMax.x() - wMin.x()) ) * (vMax.x() - vMin.x());
@@ -21,43 +21,48 @@ void ViewPort::transform(Point & wCoord)
                  ( (wCoord.y() - wMin.y()) / (wMax.y() - wMin.y()))
                  * (vMax.y() - vMin.y()) );
 
-    wCoord.x(vCoordX);
-    wCoord.y(vCoordY);
+    return Point(vCoordX, vCoordY);
 }
 
-void ViewPort::transform(Line *line)
+Line ViewPort::transform(Line *line)
 {
-    transform(line->begin());
-    transform(line->end());
+    Line vLine(transform(line->begin()), transform(line->end()));
+    return vLine;
 }
 
-void ViewPort::transform(Polygon *polygon)
+Polygon ViewPort::transform(Polygon *polygon)
 {
     unsigned int i;
+    Polygon poly;
     for (i=0; i < polygon->points().size(); i++) {
-        transform(polygon->points()[i]);
+        poly.addPoint(transform(polygon->points()[i]));
     }
+    return poly;
 }
 
+#include <iostream>
 void ViewPort::draw(Point *point)
 {
-    scene->addLine(point->x(), point->y(), point->x(), point->y());
+    Point vPoint = transform(*point);
+    scene->addLine(vPoint.x(), vPoint.y(), vPoint.x(), vPoint.y());
 }
 
 void ViewPort::draw(Line *line)
 {
-    scene->addLine(line->begin().x(), line->begin().y(), line->end().x(), line->end().y());
+    Line vLine = transform(line);
+    scene->addLine(vLine.begin().x(), vLine.begin().y(), vLine.end().x(), vLine.end().y());
 }
 
 void ViewPort::draw(Polygon *polygon)
 {
+    Polygon vPolygon = transform(polygon);
     unsigned int i;
     for (i=0; i < polygon->points().size() - 1; i++) {
-        scene->addLine(polygon->points()[i].x(), polygon->points()[i].y(),
-                polygon->points()[i+1].x(), polygon->points()[i+1].y());
+        scene->addLine(vPolygon.points()[i].x(), vPolygon.points()[i].y(),
+                vPolygon.points()[i+1].x(), vPolygon.points()[i+1].y());
     }
-    scene->addLine(polygon->points().back().x(), polygon->points().back().y(),
-            polygon->points().front().x(), polygon->points().front().y()); 
+    scene->addLine(vPolygon.points().back().x(), vPolygon.points().back().y(),
+            vPolygon.points().front().x(), vPolygon.points().front().y()); 
 }
 
 void ViewPort::draw(Object* object)
@@ -74,16 +79,14 @@ void ViewPort::draw(Object* object)
             break;
     }
 }
-#include <iostream>
+
 void ViewPort::draw(ObjectsPtr& objects)
 {
     scene->clear();
-    std::cout << "Numero de objetos :" << objects.size() << std::endl; 
     unsigned int i;
     for (i=0; i < objects.size(); i++)
     {
         draw(objects[i]);
     }
-    std::cout << "Set scene" << std::endl;
     canvas->setScene(scene);
 }
