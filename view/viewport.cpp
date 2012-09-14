@@ -1,11 +1,11 @@
 #include "view/viewport.h"
 
 ViewPort::ViewPort(QGraphicsView* cv, Window* window)
-: maxVpPoint(90.0, 90.0, 0.0), minVpPoint(-90.0, -90.0, 0.0),
+: minVpPoint(-90.0, -90.0, 0.0), maxVpPoint(90.0, 90.0, 0.0),
   minWPoint(window->min()), maxWPoint(window->max())
 {
     canvas = cv;
-    scene = new QGraphicsScene(260, 40, 450, 340);
+    scene = new QGraphicsScene(260, 40, 450, 340, canvas);
     draw();
 }
 
