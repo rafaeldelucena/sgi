@@ -1,17 +1,15 @@
 #include "app/mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <iostream>
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     Point wMax(100.0, 100.0, 0.0);
     Point wMin(-100.0, -100.0, 0.0);
-    displayFile = new DisplayFile();
     window = new Window(wMin, wMax);
-    viewPort = new ViewPort(this->canvas(), window);
 
     ui->setupUi(this);
+    displayFile = new DisplayFile();
+    viewPort = new ViewPort(this->canvas(), window);
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
 
@@ -24,10 +22,10 @@ MainWindow::~MainWindow()
     pointsListNames.clear();
     delete objectsList;
     delete pointsList;
-    delete ui;
-    delete displayFile;
-    delete window;
     delete viewPort;
+    delete displayFile;
+    delete ui;
+    delete window;
 }
 
 QGraphicsView* MainWindow::canvas(void)
@@ -55,17 +53,15 @@ void MainWindow::onPushLineSaveButton(void)
 
     QString name = ui->lineName->text();
 
-    if (name.size() == 0) {
-        name = "Line";
-    }
+    Line *line = new Line(Point(startX, startY, startZ), Point(endX, endY, endZ));
 
-    Line line(Point(startX, startY, startZ), Point(endX, endY, endZ), name);
-
-    displayFile->insertObject(line);
+    displayFile->insertObject(line, name);
     
     addObjectToListView(line);
 
     clearLineTextFields();
+    
+    viewPort->draw(displayFile->objects());
 }
 
 void MainWindow::onPushPointSaveButton(void)
@@ -76,41 +72,40 @@ void MainWindow::onPushPointSaveButton(void)
     
     QString name = ui->pointName->text();
     
-    if (name.size() == 0) {
-        name = "Point";
-    }
+    Point *point = new Point(x, y, z);
     
-    Point point(x, y, z, name);
-    
-    displayFile->insertObject(point);
+    displayFile->insertObject(point, name);
     
     addObjectToListView(point);
 
     clearPointTextFields();
+    
+    viewPort->draw(displayFile->objects());
 }
 
 void MainWindow::onPushPolygonSaveButton(void)
 {
     int i;
     QString name = ui->polygonName->text();
-    if (name.size() == 0) {
-        name = "Polygon";
-    }
-
-    Polygon polygon(name);
+    
+    Polygon *polygon = new Polygon();
+    polygon->name(name);
     
     for (i=0; i < points.size(); i++) {
-        polygon.addPoint(points[i]);
+        polygon->addPoint(points[i]);
     }
     
     if (!points.empty()) {
-        displayFile->insertObject(polygon);
+        displayFile->insertObject(polygon, name);
         points.clear();
         pointsListNames.clear();
     }
     
     addObjectToListView(polygon);
+    
     clearPolygonTextFields();
+    
+    viewPort->draw(displayFile->objects());
 }
 
 void MainWindow::onPushPolygonAddButton(void)
@@ -125,9 +120,9 @@ void MainWindow::onPushPolygonAddButton(void)
     addPolygonPointsToListView(point);
 }
 
-void MainWindow::addObjectToListView(const Object &object)
+void MainWindow::addObjectToListView(Object *object)
 {
-    objectsListNames.append(object.name());
+    objectsListNames.append(object->name());
     objectsList->setStringList(objectsListNames);
     ui->objectsListView->setModel(objectsList);
 }

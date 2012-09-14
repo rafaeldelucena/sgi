@@ -1,18 +1,27 @@
 #include "app/formas.h"
 
-Line::Line(const Point &a, const Point &b, QString name)
-    : Object(LINE, name), beginPoint(a), endPoint(b)
+Line::Line(const Point &a, const Point &b)
+    : Object(LINE), beginPoint(a), endPoint(b)
 {
 }
 
-Point Line::begin(void) const
+Point & Line::begin(void)
 {
     return beginPoint;
 }
 
-Point Line::end(void) const
+Point & Line::end(void)
 {
     return endPoint;
+}
+
+std::string Line::toString(void) const
+{
+    std::stringstream s;
+    s << "Line[("<< beginPoint.x() << ", " << beginPoint.y() << ", " << beginPoint.z() <<"); ("
+        << endPoint.x() << ", " << endPoint.y() << ", " << endPoint.z() << ")]";
+    
+    return s.str();
 }
 
 Object::Object(Shape type, QString name)
@@ -36,13 +45,24 @@ QString Object::name(void) const
     return objectName;
 }
 
-Point::Point(double x, double y, double z, QString name)
-    : Object(POINT, name), coordX(x), coordY(y), coordZ(z)
+void Object::name(QString anotherName)
+{
+    objectName = anotherName;
+}
+
+std::string Object::toString(void) const
+{
+    std::string str = "Unknown Object";
+    return str;
+}
+
+Point::Point(double x, double y, double z = 1.0)
+    : Object(POINT), coordX(x), coordY(y), coordZ(z)
 {
 }
 
-Point::Point(const Point &point, QString name)
-    : Object(POINT, name), coordX(point.x()), coordY(point.y()), coordZ(point.z())
+Point::Point(const Point &point)
+    : Object(POINT), coordX(point.x()), coordY(point.y()), coordZ(point.z())
 {
 }
 
@@ -61,6 +81,20 @@ double Point::z(void) const
     return coordZ;
 }
 
+void Point::x(double x)
+{
+    this->coordX = x;
+}
+
+void Point::y(double y)
+{
+    this->coordY = y;
+}
+void Point::z(double z)
+{
+    this->coordZ = z;
+}
+
 std::string Point::toString(void) const
 {
     std::stringstream s;
@@ -68,27 +102,36 @@ std::string Point::toString(void) const
     return s.str();
 }
 
-Polygon::Polygon(QString name)
-    : Object(POLYGON, name)
+Polygon::Polygon()
+    : Object(POLYGON)
 {
 }
 
 Polygon::~Polygon()
 {
-    points.clear();
+    polygonPoints.clear();
 }
 
 void Polygon::addPoint(const Point &point)
 {
-    points.push_back(point);
+    polygonPoints.push_back(point);
 }
 
-int Polygon::numberOfPoints(void) const
+Points & Polygon::points(void)
 {
-    return points.size();
+    return polygonPoints;
 }
 
-const Points& Polygon::listOfPoints(void) const
+std::string Polygon::toString(void) const
 {
-    return this->points;
+    std::stringstream s;
+    s << "Polygon[";
+    unsigned int i;
+    for (i=0; i < polygonPoints.size(); i++)
+    {
+        s << "(" << polygonPoints[i].x() << ", " << polygonPoints[i].y() << ", " << polygonPoints[i].z() << ");";
+    }
+    s << "]";
+
+    return s.str();
 }

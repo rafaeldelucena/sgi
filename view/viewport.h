@@ -9,21 +9,23 @@ class ViewPort
 {
 public:
     ViewPort(QGraphicsView* canvas, Window* window);
-    ~ViewPort();
-    Point transform(const Point &coordinates);
-    Line transform(const Line &lineCoordinates);
-    Polygon transform(const Polygon &polygonCoordinates);
+    ~ViewPort(void);
+    
+    void transform(Point & point);
+    void transform(Line *line);
+    void transform(Polygon *polygon);
 
-    void addLine(const Line &line);
-    void addPoint(const Point &point);
-    void addPolygon(const Polygon &polygon);
+    void draw(Point *point);
+    void draw(Line *line);
+    void draw(Polygon *polygon);
+    void draw(ObjectsPtr&);
+    void draw(Object *object);
 
-    void draw();
 private:
-    Point minVpPoint;
-    Point maxVpPoint;
-    Point minWPoint;
-    Point maxWPoint;
+    Point vMin;
+    Point vMax;
+    Point wMin;
+    Point wMax;
     QGraphicsView *canvas;
     QGraphicsScene *scene;
 };

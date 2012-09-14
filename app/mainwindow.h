@@ -33,8 +33,8 @@ private slots:
     void onPushPolygonAddButton(void);
 
 private:
-    void addPolygonPointsToListView(const Point &);
-    void addObjectToListView(const Object &);
+    void addPolygonPointsToListView(const Point &point);
+    void addObjectToListView(Object *object);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);
@@ -44,12 +44,12 @@ private:
     inline void listening(void);
 
     Ui::MainWindow *ui;
-    Points points;
     QStringList pointsListNames;
     QStringList objectsListNames;
     QStringListModel *pointsList;
     QStringListModel *objectsList;
 
+    Points points;
     DisplayFile *displayFile;
     Window *window;
     ViewPort *viewPort;

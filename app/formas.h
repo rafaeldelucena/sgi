@@ -10,10 +10,13 @@ enum Shape { POINT, LINE, POLYGON };
 
 class Object {
 public:
-    Object(Shape type, QString name);
-    ~Object(void);
+    Object(Shape type, QString name = "Object");
+    virtual ~Object(void);
     Shape type(void) const;
     QString name(void) const;
+    void name(QString anotherName);
+
+    virtual std::string toString(void) const;
 
 private:
     Shape shape;
@@ -23,12 +26,16 @@ private:
 class Point : public Object
 {
 public:
-    Point(double x, double y, double z, QString name = "Point");
-    Point(const Point& point, QString name = "Point");
+    Point(double x, double y, double z);
+    Point(const Point& point);
 
     double x(void) const;
     double y(void) const;
     double z(void) const;
+
+    void x(double);
+    void y(double);
+    void z(double);
 
     std::string toString(void) const;
 
@@ -39,26 +46,30 @@ private:
 class Line: public Object
 {
 public:
-    Line(const Point &, const Point &, QString name = "Line");
-    Point begin(void) const;
-    Point end(void) const;
+    Line(const Point &, const Point &);
+    Point & begin(void);
+    Point & end(void);
+
+    std::string toString(void) const;
 private:
     Point beginPoint;
     Point endPoint;
 };
 
 typedef std::vector<Point> Points;
+typedef std::vector<Object*> ObjectsPtr;
 
 class Polygon : public Object
 {
 public:
-    Polygon(QString name = "Polygon");
+    Polygon();
     ~Polygon(void);
     void addPoint(const Point& point);
-    int numberOfPoints(void) const;
-    const Points& listOfPoints(void) const;
+    Points &points(void); 
+
+    std::string toString(void) const;
 private:
-    Points points;
+    Points polygonPoints;
 };
 
 #endif // FORMAS_H

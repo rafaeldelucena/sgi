@@ -1,12 +1,11 @@
 #include "view/viewport.h"
 
 ViewPort::ViewPort(QGraphicsView* cv, Window* window)
-: minVpPoint(-90.0, -90.0, 0.0), maxVpPoint(90.0, 90.0, 0.0),
-  minWPoint(window->min()), maxWPoint(window->max())
+: vMin(-90.0, -90.0, 0.0), vMax(90.0, 90.0, 0.0),
+  wMin(window->min()), wMax(window->max())
 {
     canvas = cv;
     scene = new QGraphicsScene(260, 40, 450, 340, canvas);
-    draw();
 }
 
 ViewPort::~ViewPort()
@@ -14,70 +13,77 @@ ViewPort::~ViewPort()
     delete scene;
 }
 
-Point ViewPort::transform(const Point &coordinate)
+void ViewPort::transform(Point & wCoord)
 {
-    double x = ( (coordinate.x() - minWPoint.x())
-                 / (maxWPoint.x() - minWPoint.x()) ) * (maxVpPoint.x() - minVpPoint.y() );
-    double y = (1.0 -
-                 ( (coordinate.y() - minWPoint.y()) / (maxWPoint.y() - minWPoint.y()))
-                 * (maxVpPoint.y() - minVpPoint.y())
-               );
-    double z = 0.0;
-    Point point = Point(x, y, z);
+    double vCoordX = ( (wCoord.x() - wMin.x())
+                 / (wMax.x() - wMin.x()) ) * (vMax.x() - vMin.x());
+    double vCoordY = (1.0 -
+                 ( (wCoord.y() - wMin.y()) / (wMax.y() - wMin.y()))
+                 * (vMax.y() - vMin.y()) );
 
-    return point;
+    wCoord.x(vCoordX);
+    wCoord.y(vCoordY);
 }
 
-Line ViewPort::transform(const Line &lineCoordinate)
+void ViewPort::transform(Line *line)
 {
-    Point begin = transform(lineCoordinate.begin());
-    Point end = transform(lineCoordinate.end());
-    Line line = Line(begin, end);
-
-    return line;
+    transform(line->begin());
+    transform(line->end());
 }
 
-Polygon ViewPort::transform(const Polygon &polygonCoordinates)
+void ViewPort::transform(Polygon *polygon)
 {
-    Polygon polygon;
-    int i;
-    for (i=0; i < polygonCoordinates.numberOfPoints(); i++) {
-        Point point = transform(polygonCoordinates.listOfPoints()[i]);
-        polygon.addPoint(point);
+    unsigned int i;
+    for (i=0; i < polygon->points().size(); i++) {
+        transform(polygon->points()[i]);
     }
-    return polygon;
 }
 
-void ViewPort::addPoint(const Point &point)
+void ViewPort::draw(Point *point)
 {
-    Point newPoint = transform(point);
-    scene->addLine(newPoint.x(), newPoint.y(), newPoint.x(), newPoint.y());
-    draw();
+    scene->addLine(point->x(), point->y(), point->x(), point->y());
 }
 
-void ViewPort::addLine(const Line &line)
+void ViewPort::draw(Line *line)
 {
-    Line newLine = transform(line);
-    Point begin = newLine.begin();
-    Point end = newLine.end();
-    scene->addLine(begin.x(), begin.y(), end.x(), end.y());
-    draw();
+    scene->addLine(line->begin().x(), line->begin().y(), line->end().x(), line->end().y());
 }
 
-void ViewPort::addPolygon(const Polygon &polygon)
+void ViewPort::draw(Polygon *polygon)
 {
-    Polygon newPolygon(transform(polygon));
-    int i;
-    for (i=0; i < newPolygon.numberOfPoints() - 1; i++) {
-        Line newLine(newPolygon.listOfPoints()[i], newPolygon.listOfPoints()[i+1]);
-        addLine(newLine);
+    unsigned int i;
+    for (i=0; i < polygon->points().size() - 1; i++) {
+        scene->addLine(polygon->points()[i].x(), polygon->points()[i].y(),
+                polygon->points()[i+1].x(), polygon->points()[i+1].y());
     }
-    Line line(newPolygon.listOfPoints().back(), newPolygon.listOfPoints().front());
-    addLine(line);
-    draw();
+    scene->addLine(polygon->points().back().x(), polygon->points().back().y(),
+            polygon->points().front().x(), polygon->points().front().y()); 
 }
 
-void ViewPort::draw(void)
+void ViewPort::draw(Object* object)
 {
+    switch(object->type()) {
+        case (POINT) :
+            draw((Point*)object);
+            break;
+        case (LINE) :
+            draw((Line*)object);
+            break;
+        case (POLYGON) :
+            draw((Polygon*)object);
+            break;
+    }
+}
+#include <iostream>
+void ViewPort::draw(ObjectsPtr& objects)
+{
+    scene->clear();
+    std::cout << "Numero de objetos :" << objects.size() << std::endl; 
+    unsigned int i;
+    for (i=0; i < objects.size(); i++)
+    {
+        draw(objects[i]);
+    }
+    std::cout << "Set scene" << std::endl;
     canvas->setScene(scene);
 }

@@ -1,30 +1,35 @@
 #include "view/displayfile.h"
-#include <iostream>
 
-DisplayFile::DisplayFile()
+DisplayFile::DisplayFile(void)
 {
 }
 
 DisplayFile::~DisplayFile()
 {
-    lines.clear();
-    points.clear();
-    polygons.clear();
+    destroyObjects();
+    worldObjects.clear();
 }
 
-void DisplayFile::insertObject(const Line &line)
+void DisplayFile::destroyObjects(void)
 {
-    std::cout << line.name().toStdString() << "begin: " << line.begin().toString() << "  end: " << line.begin().toString() <<  std::endl;
-    lines.push_back(line);
+    int i;
+    for (i=0; i < worldObjects.size(); i++)
+    {
+        delete worldObjects[i];
+    }
+}
+#include <iostream>
+void DisplayFile::insertObject(Object *object, QString name)
+{
+    std::cout << "entrou aqui! " << std::endl;
+    if (name.size() != 0) {
+        object->name(name);
+    }
+    std::cout << object->toString() << std::endl;
+    worldObjects.push_back(object);
 }
 
-void DisplayFile::insertObject(const Point &point)
+ObjectsPtr& DisplayFile::objects(void)
 {
-    std::cout << point.name().toStdString() << ": "  << point.toString() << std::endl;
-    points.push_back(point);
-}
-
-void DisplayFile::insertObject(const Polygon &polygon)
-{
-    polygons.push_back(polygon);
+    return worldObjects;
 }
