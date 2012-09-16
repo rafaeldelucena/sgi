@@ -60,7 +60,7 @@ void MainWindow::onPushLineSaveButton(void)
 
     clearLineTextFields();
     
-    viewPort->draw(displayFile.objects());
+    viewPort->draw(line);
 }
 
 void MainWindow::onPushPointSaveButton(void)
@@ -79,30 +79,28 @@ void MainWindow::onPushPointSaveButton(void)
 
     clearPointTextFields();
     
-    viewPort->draw(displayFile.objects());
+    viewPort->draw(point);
 }
 
 void MainWindow::onPushPolygonSaveButton(void)
 {
-    int i;
-    QString name = ui->polygonName->text();
-    
-    Polygon *polygon = new Polygon();
-    
-    for (i=0; i < points.size(); i++) {
-        polygon->addPoint(points[i]);
-    }
     
     if (!points.empty()) {
+        QString name = ui->polygonName->text();
+        Polygon *polygon = new Polygon();
+        unsigned int i;
+        for (i=0; i < points.size(); i++) {
+            polygon->addPoint(points[i]);
+        }
         displayFile.insertObject(polygon, name);
         points.clear();
-        pointsListNames.clear();
         addObjectToListView(polygon);
+        viewPort->draw(polygon);
     }
     
+    pointsListNames.clear();
     clearPolygonTextFields();
     
-    viewPort->draw(displayFile.objects());
 }
 
 void MainWindow::onPushDeleteButton(void)

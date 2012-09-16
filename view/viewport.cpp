@@ -5,7 +5,7 @@ ViewPort::ViewPort(QGraphicsView* cv, Window* window)
   wMin(window->min()), wMax(window->max())
 {
     canvas = cv;
-    scene = new QGraphicsScene(vMin.x(), vMin.y(), 200, 200, canvas);
+    scene = new QGraphicsScene(vMin.x(), vMin.y(), vMax.x(), vMax.y(), canvas);
 }
 
 ViewPort::~ViewPort()
@@ -40,17 +40,18 @@ Polygon ViewPort::transform(Polygon *polygon)
     return poly;
 }
 
-#include <iostream>
 void ViewPort::draw(Point *point)
 {
     Point vPoint = transform(*point);
     scene->addLine(vPoint.x(), vPoint.y(), vPoint.x(), vPoint.y());
+    canvas->setScene(scene);
 }
 
 void ViewPort::draw(Line *line)
 {
     Line vLine = transform(line);
     scene->addLine(vLine.begin().x(), vLine.begin().y(), vLine.end().x(), vLine.end().y());
+    canvas->setScene(scene);
 }
 
 void ViewPort::draw(Polygon *polygon)
@@ -63,10 +64,13 @@ void ViewPort::draw(Polygon *polygon)
     }
     scene->addLine(vPolygon.points().back().x(), vPolygon.points().back().y(),
             vPolygon.points().front().x(), vPolygon.points().front().y()); 
+    
+    canvas->setScene(scene);
 }
-
+#include <iostream>
 void ViewPort::draw(Object* object)
 {
+    std::cout << "Aqui!" << std::endl;
     switch(object->type()) {
         case (POINT) :
             draw((Point*)object);
