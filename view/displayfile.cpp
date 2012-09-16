@@ -15,7 +15,7 @@ void DisplayFile::destroyObjects(void)
     unsigned int i;
     for (i=0; i < worldObjects.size(); i++)
     {
-        delete worldObjects[i];
+        removeObjectAt(i);
     }
 }
 void DisplayFile::insertObject(Object *object, QString name)
@@ -24,6 +24,12 @@ void DisplayFile::insertObject(Object *object, QString name)
         object->name(name);
     }
     worldObjects.push_back(object);
+}
+
+void DisplayFile::removeObjectAt(unsigned int index)
+{
+    delete worldObjects[index];
+    worldObjects.erase(worldObjects.begin() + index);
 }
 
 ObjectsPtr& DisplayFile::objects(void)

@@ -44,6 +44,7 @@ inline void MainWindow::listening(void)
     connect(ui->moveDownButton, SIGNAL(pressed()), this, SLOT(onPushMoveDownButton()));
     connect(ui->zoomInButton, SIGNAL(pressed()), this, SLOT(onPushZoomInButton()));
     connect(ui->zoomOutButton, SIGNAL(pressed()), this, SLOT(onPushZoomOutButton()));
+    connect(ui->objectsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectObject(const QModelIndex &)));
 }
 
 void MainWindow::onPushLineSaveButton(void)
@@ -111,6 +112,11 @@ void MainWindow::onPushPolygonSaveButton(void)
 
 void MainWindow::onPushDeleteButton(void)
 {
+    if (!displayFile.objects().empty()) {
+        removeObjectToListViewAt(objectPosition);
+        displayFile.removeObjectAt(objectPosition); 
+        reDrawObjectsOnScreen();
+    }
 }
 
 void MainWindow::onPushPolygonAddButton(void)
@@ -151,19 +157,31 @@ void MainWindow::onPushMoveRightButton(void)
 
 void MainWindow::onPushZoomInButton(void)
 {
-    window->stretch(1.0);
+    window->shrink(1.0);
     reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushZoomOutButton(void)
 {
-    window->shrink(1.0);
+    window->stretch(1.0);
     reDrawObjectsOnScreen();
+}
+
+void MainWindow::onSelectObject(const QModelIndex & index)
+{
+    objectPosition = index.row();
 }
 
 void MainWindow::addObjectToListView(Object *object)
 {
     objectsListNames.append(object->name());
+    objectsList->setStringList(objectsListNames);
+    ui->objectsListView->setModel(objectsList);
+}
+
+void MainWindow::removeObjectToListViewAt(unsigned int index)
+{
+    objectsListNames.removeAt(index);
     objectsList->setStringList(objectsListNames);
     ui->objectsListView->setModel(objectsList);
 }
@@ -208,7 +226,7 @@ void MainWindow::clearPolygonTextFields(void)
 
 void MainWindow::reDrawObjectsOnScreen(void)
 {
-    if (displayFile.objects().size() != 0) {
+    if (!displayFile.objects().empty()) {
         viewPort->draw(displayFile.objects());
     }
 }

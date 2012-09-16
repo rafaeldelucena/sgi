@@ -12,6 +12,7 @@ public:
     ~DisplayFile();
     ObjectsPtr& objects();
     void insertObject(Object *, QString);
+    void removeObjectAt(unsigned int index);
 private:
     void destroyObjects(void);
 

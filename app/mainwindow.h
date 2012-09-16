@@ -38,10 +38,12 @@ private slots:
     void onPushMoveRightButton(void);
     void onPushZoomInButton(void);
     void onPushZoomOutButton(void);
+    void onSelectObject(const QModelIndex &);
 
 private:
     void addPolygonPointsToListView(const Point &point);
     void addObjectToListView(Object *object);
+    void removeObjectToListViewAt(unsigned int index);
     void reDrawObjectsOnScreen(void);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
@@ -59,6 +61,7 @@ private:
     DisplayFile displayFile;
     Window *window;
     ViewPort *viewPort;
+    unsigned int objectPosition;
 };
 
 #endif // MAINWINDOW_H
