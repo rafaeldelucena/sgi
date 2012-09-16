@@ -32,10 +32,17 @@ private slots:
     void onPushPolygonSaveButton(void);
     void onPushPolygonAddButton(void);
     void onPushDeleteButton(void);
+    void onPushMoveUpButton(void);
+    void onPushMoveLeftButton(void);
+    void onPushMoveDownButton(void);
+    void onPushMoveRightButton(void);
+    void onPushZoomInButton(void);
+    void onPushZoomOutButton(void);
 
 private:
     void addPolygonPointsToListView(const Point &point);
     void addObjectToListView(Object *object);
+    void reDrawObjectsOnScreen(void);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);

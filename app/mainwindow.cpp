@@ -38,6 +38,12 @@ inline void MainWindow::listening(void)
     connect(ui->savePolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonSaveButton()));
     connect(ui->addPolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonAddButton()));
     connect(ui->deleteButton, SIGNAL(pressed()), this, SLOT(onPushDeleteButton()));
+    connect(ui->moveUpButton, SIGNAL(pressed()), this, SLOT(onPushMoveUpButton()));
+    connect(ui->moveLeftButton, SIGNAL(pressed()), this, SLOT(onPushMoveLeftButton()));
+    connect(ui->moveRightButton, SIGNAL(pressed()), this, SLOT(onPushMoveRightButton()));
+    connect(ui->moveDownButton, SIGNAL(pressed()), this, SLOT(onPushMoveDownButton()));
+    connect(ui->zoomInButton, SIGNAL(pressed()), this, SLOT(onPushZoomInButton()));
+    connect(ui->zoomOutButton, SIGNAL(pressed()), this, SLOT(onPushZoomOutButton()));
 }
 
 void MainWindow::onPushLineSaveButton(void)
@@ -119,6 +125,42 @@ void MainWindow::onPushPolygonAddButton(void)
     addPolygonPointsToListView(point);
 }
 
+void MainWindow::onPushMoveUpButton(void)
+{
+    window->up(1.0);
+    reDrawObjectsOnScreen();
+}
+
+void MainWindow::onPushMoveLeftButton(void)
+{
+    window->left(1.0);
+    reDrawObjectsOnScreen();
+}
+
+void MainWindow::onPushMoveDownButton(void)
+{
+    window->down(1.0);
+    reDrawObjectsOnScreen();
+}
+
+void MainWindow::onPushMoveRightButton(void)
+{
+    window->right(1.0);
+    reDrawObjectsOnScreen();
+}
+
+void MainWindow::onPushZoomInButton(void)
+{
+    window->stretch(1.0);
+    reDrawObjectsOnScreen();
+}
+
+void MainWindow::onPushZoomOutButton(void)
+{
+    window->shrink(1.0);
+    reDrawObjectsOnScreen();
+}
+
 void MainWindow::addObjectToListView(Object *object)
 {
     objectsListNames.append(object->name());
@@ -162,4 +204,11 @@ void MainWindow::clearPolygonTextFields(void)
     ui->polygonZ->clear();
     
     ui->polygonName->clear();
+}
+
+void MainWindow::reDrawObjectsOnScreen(void)
+{
+    if (displayFile.objects().size() != 0) {
+        viewPort->draw(displayFile.objects());
+    }
 }

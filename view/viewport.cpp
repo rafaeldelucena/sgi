@@ -1,10 +1,10 @@
 #include "view/viewport.h"
 
-ViewPort::ViewPort(QGraphicsView* cv, Window* window)
-: vMin(-90.0, -90.0, 0.0), vMax(90.0, 90.0, 0.0),
-  wMin(window->min()), wMax(window->max())
+ViewPort::ViewPort(QGraphicsView *cv, Window *w)
+: vMin(-90.0, -90.0, 0.0), vMax(90.0, 90.0, 0.0)
 {
     canvas = cv;
+    window = w;
     scene = new QGraphicsScene(vMin.x(), vMin.y(), vMax.x(), vMax.y(), canvas);
 }
 
@@ -15,10 +15,10 @@ ViewPort::~ViewPort()
 
 Point ViewPort::transform(Point & wCoord)
 {
-    double vCoordX = ( (wCoord.x() - wMin.x())
-                 / (wMax.x() - wMin.x()) ) * (vMax.x() - vMin.x());
+    double vCoordX = ( (wCoord.x() - window->min().x())
+                 / (window->max().x() - window->min().x()) ) * (vMax.x() - vMin.x());
     double vCoordY = (1.0 -
-                 ( (wCoord.y() - wMin.y()) / (wMax.y() - wMin.y()))
+                 ( (wCoord.y() - window->min().y()) / (window->max().y() - window->min().y()))
                  * (vMax.y() - vMin.y()) );
 
     return Point(vCoordX, vCoordY);
@@ -67,10 +67,9 @@ void ViewPort::draw(Polygon *polygon)
     
     canvas->setScene(scene);
 }
-#include <iostream>
+
 void ViewPort::draw(Object* object)
 {
-    std::cout << "Aqui!" << std::endl;
     switch(object->type()) {
         case (POINT) :
             draw((Point*)object);

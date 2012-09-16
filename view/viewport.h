@@ -24,8 +24,7 @@ public:
 private:
     Point vMin;
     Point vMax;
-    Point wMin;
-    Point wMax;
+    Window *window;
     QGraphicsView *canvas;
     QGraphicsScene *scene;
 };
