@@ -1,6 +1,6 @@
 QT  += core gui
 
-TARGET = sgi-app
+TARGET = sgi
 TEMPLATE = app
 
 CONFIG += qt debug
