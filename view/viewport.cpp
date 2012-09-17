@@ -5,7 +5,7 @@ ViewPort::ViewPort(QGraphicsView *cv, Window *w)
 {
     canvas = cv;
     window = w;
-    scene = new QGraphicsScene(vMin.x(), vMin.y(), vMax.x(), vMax.y(), canvas);
+    scene = new QGraphicsScene(canvas);
 }
 
 ViewPort::~ViewPort()
@@ -43,7 +43,8 @@ Polygon ViewPort::transform(Polygon *polygon)
 void ViewPort::draw(Point *point)
 {
     Point vPoint = transform(*point);
-    scene->addLine(vPoint.x(), vPoint.y(), vPoint.x(), vPoint.y());
+    scene->addLine(vPoint.x() -1.0, vPoint.y() - 1.0, vPoint.x() + 1.0, vPoint.y() + 1.0);
+    scene->addLine(vPoint.x() -1.0, vPoint.y() + 1.0, vPoint.x() + 1.0, vPoint.y() - 1.0);
     canvas->setScene(scene);
 }
 

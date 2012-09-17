@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     viewPort = new ViewPort(this->canvas(), window);
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
+    objectPosition = 0;
 
     listening();
 }
@@ -223,10 +224,7 @@ void MainWindow::clearPolygonTextFields(void)
     
     ui->polygonName->clear();
 }
-
 void MainWindow::reDrawObjectsOnScreen(void)
 {
-    if (!displayFile.objects().empty()) {
-        viewPort->draw(displayFile.objects());
-    }
+    viewPort->draw(displayFile.objects());
 }
