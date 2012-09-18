@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     viewPort = new ViewPort(this->canvas(), window);
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
+    objectPosition = 0;
 
     listening();
 }
@@ -116,6 +117,7 @@ void MainWindow::onPushDeleteButton(void)
         removeObjectToListViewAt(objectPosition);
         displayFile.removeObjectAt(objectPosition); 
         reDrawObjectsOnScreen();
+        objectPosition = 0;
     }
 }
 

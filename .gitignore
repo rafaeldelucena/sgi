@@ -16,3 +16,4 @@ viewport.o
 window.o
 
 #tem um .cpp e .h ai, mas são output do make
+*.o
