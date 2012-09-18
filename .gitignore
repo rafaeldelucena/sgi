@@ -1,0 +1,14 @@
+Makefile
+sgi.app
+
+app.o
+displayfile.o
+formas.o
+mainwindow.o
+moc_mainwindow.cpp
+moc_mainwindow.o
+ui_mainwindow.h
+viewport.o
+window.o
+
+#tem um .cpp e .h ai, mas são output do make
