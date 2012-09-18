@@ -1,6 +1,10 @@
 Makefile
-sgi.app
 
+#binarios
+sgi.app
+sgi
+
+#make out
 app.o
 displayfile.o
 formas.o
