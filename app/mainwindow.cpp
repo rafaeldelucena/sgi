@@ -56,6 +56,7 @@ inline void MainWindow::listening(void)
     connect(ui->moveLeftButton, SIGNAL(pressed()), this, SLOT(onPushMoveLeftButton()));
     connect(ui->moveRightButton, SIGNAL(pressed()), this, SLOT(onPushMoveRightButton()));
     connect(ui->moveDownButton, SIGNAL(pressed()), this, SLOT(onPushMoveDownButton()));
+    connect(ui->centerViewPortButton, SIGNAL(pressed()), this, SLOT(onPushCenterViewPortButton()));
     connect(ui->zoomInButton, SIGNAL(pressed()), this, SLOT(onPushZoomInButton()));
     connect(ui->zoomOutButton, SIGNAL(pressed()), this, SLOT(onPushZoomOutButton()));
     connect(ui->objectsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectObject(const QModelIndex &)));
@@ -161,6 +162,12 @@ void MainWindow::onPushMoveLeftButton(void)
 void MainWindow::onPushMoveDownButton(void)
 {
     window->down(ui->moveStep->text().toDouble());
+    viewPort->draw();
+}
+
+void MainWindow::onPushCenterViewPortButton(void)
+{
+    window->centralize();
     viewPort->draw();
 }
 

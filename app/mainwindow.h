@@ -36,6 +36,7 @@ private slots:
     void onPushMoveLeftButton(void);
     void onPushMoveDownButton(void);
     void onPushMoveRightButton(void);
+    void onPushCenterViewPortButton(void);
     void onPushZoomInButton(void);
     void onPushZoomOutButton(void);
     void onSelectObject(const QModelIndex &);
