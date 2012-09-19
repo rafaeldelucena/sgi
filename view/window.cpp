@@ -42,20 +42,81 @@ void Window::down(double value)
     maxPoint.y(maxPoint.y() - value);
 }
 
-void Window::stretch(double value)
+#include <iostream>
+void Window::enlarge(double value)
 {
-   minPoint.x(minPoint.x() - value);
-   minPoint.y(minPoint.y() - value);
+   double factor = (value / 100) / 2;
+   std::cout << "enlarging by " << factor << std::endl;
+   std::cout << "max point original is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
+   std::cout << "min point original is " << minPoint.x() << "," << minPoint.y() << std::endl;
 
-   maxPoint.x(maxPoint.x() + value);
-   maxPoint.y(maxPoint.y() + value);
+   double abs_x_factor = fabs(maxPoint.x()) * factor;
+   double abs_y_factor = fabs(maxPoint.y()) * factor;
+   std::cout << "max_abs_factor is " << abs_x_factor << "," << abs_y_factor << std::endl;
+    if (maxPoint.x() < 0) {
+        maxPoint.x(maxPoint.x() - abs_x_factor );
+    } else {
+        maxPoint.x(maxPoint.x() + abs_x_factor );
+    }
+    if (maxPoint.y() < 0) {
+        maxPoint.y(maxPoint.y() - abs_y_factor );
+    } else {
+        maxPoint.y(maxPoint.y() + abs_y_factor );
+    }
+
+    abs_x_factor = fabs(minPoint.x()) * factor;
+    abs_y_factor = fabs(minPoint.y()) * factor;
+    std::cout << "min_abs_factor is " << abs_x_factor << "," << abs_y_factor << std::endl;
+    if (minPoint.x() < 0) {
+        minPoint.x(minPoint.x() + abs_x_factor );
+    } else {
+        minPoint.x(minPoint.x() - abs_x_factor );
+    }
+    if (minPoint.y() < 0) {
+        minPoint.y(minPoint.y() + abs_y_factor );
+    } else {
+        minPoint.y(minPoint.y() - abs_y_factor );
+    }
+
+   std::cout << "max point now is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
+   std::cout << "min point now is " << minPoint.x() << "," << minPoint.y() << std::endl;
 }
 
-void Window::shrink(double value)
+void Window::decrease(double value)
 {
-   minPoint.x(minPoint.x() + value);
-   minPoint.y(minPoint.y() + value);
+    double factor = (value / 100) / 2;
+    std::cout << "decreasing by " << factor << std::endl;
+    std::cout << "max point original is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
+    std::cout << "min point original is " << minPoint.x() << "," << minPoint.y() << std::endl;
 
-   maxPoint.x(maxPoint.x() - value);
-   maxPoint.y(maxPoint.y() - value);
+    double abs_x_factor = fabs(maxPoint.x()) * factor;
+    double abs_y_factor = fabs(maxPoint.y()) * factor;
+    std::cout << "max_abs_factor is " << abs_x_factor << "," << abs_y_factor << std::endl;
+    if (maxPoint.x() < 0) {
+        maxPoint.x(maxPoint.x() + abs_x_factor );
+    } else {
+        maxPoint.x(maxPoint.x() - abs_x_factor );
+    }
+    if (maxPoint.y() < 0) {
+        maxPoint.y(maxPoint.y() + abs_y_factor );
+    } else {
+        maxPoint.y(maxPoint.y() - abs_y_factor );
+    }
+
+    abs_x_factor = fabs(minPoint.x()) * factor;
+    abs_y_factor = fabs(minPoint.y()) * factor;
+    std::cout << "min_abs_factor is " << abs_x_factor << "," << abs_y_factor << std::endl;
+    if (minPoint.x() < 0) {
+        minPoint.x(minPoint.x() - abs_x_factor );
+    } else {
+        minPoint.x(minPoint.x() + abs_x_factor );
+    }
+    if (minPoint.y() < 0) {
+        minPoint.y(minPoint.y() - abs_y_factor );
+    } else {
+        minPoint.y(minPoint.y() + abs_y_factor );
+    }
+
+    std::cout << "max point now is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
+    std::cout << "min point now is " << minPoint.x() << "," << minPoint.y() << std::endl;
 }

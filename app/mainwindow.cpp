@@ -16,11 +16,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     objectsList = new QStringListModel();
     objectPosition = 0;
 
-    Line *line = new Line(Point(-150, 0, 0), Point(150, 0, 0));
+    Line *line = new Line(Point(-50, 0, 0), Point(50, 0, 0));
     displayFile.insertObject(line, QString("x axis"));
     addObjectToListView(line);
 
-    Line *line1 = new Line(Point(0, -150, 0), Point(0, 150, 0));
+    Line *line1 = new Line(Point(0, -50, 0), Point(0, 50, 0));
     displayFile.insertObject(line1, QString("y axis"));
     addObjectToListView(line);
 
@@ -170,15 +170,16 @@ void MainWindow::onPushMoveRightButton(void)
     viewPort->draw();
 }
 
+#include <iostream>
 void MainWindow::onPushZoomInButton(void)
 {
-    window->shrink(ui->moveStep->text().toDouble());
+    window->decrease(ui->zoomFactor->text().toDouble());
     viewPort->draw();
 }
 
 void MainWindow::onPushZoomOutButton(void)
 {
-    window->stretch(ui->moveStep->text().toDouble());
+    window->enlarge(ui->zoomFactor->text().toDouble());
     viewPort->draw();
 }
 

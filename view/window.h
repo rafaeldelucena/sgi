@@ -1,6 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <math.h>
 #include "app/formas.h"
 
 class Window
@@ -15,8 +16,8 @@ public:
     void left(double value);
     void up(double value);
     void down(double value);
-    void shrink(double value);
-    void stretch(double value);
+    void enlarge(double value);
+    void decrease(double value);
 
 private:
     Point minPoint;
