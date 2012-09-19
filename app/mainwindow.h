@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QGraphicsView>
 #include <QStringListModel>
 #include <QPushButton>
 #include <QPainter>
@@ -12,6 +11,12 @@
 #include "view/displayfile.h"
 #include "view/window.h"
 #include "view/viewport.h"
+
+#include "ui_mainwindow.h"
+
+
+//#include "forms/canhamo.h"
+
 
 namespace Ui {
     class MainWindow;
@@ -25,7 +30,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow(void);
 
-    QGraphicsView* canvas(void);
+    Canhamo* canvas(void);
     
 private slots:
     void onPushPointSaveButton(void);

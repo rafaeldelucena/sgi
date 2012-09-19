@@ -1,17 +1,17 @@
 #include "view/viewport.h"
 
-ViewPort::ViewPort(QGraphicsView *cv, Window *w)
+
+ViewPort::ViewPort(Canhamo *cv, Window *w)
 : vMin(-90.0, -90.0, 0.0), vMax(90.0, 90.0, 0.0)
 {
     canvas = cv;
     window = w;
-    scene = new QGraphicsScene(vMin.x(), vMin.y(), vMax.x(), vMax.y(), canvas);
+//     redrawAll();
     
 }
 
 ViewPort::~ViewPort()
 {
-    delete scene;
 }
 
 Point ViewPort::transform(Point & wCoord)
@@ -43,54 +43,61 @@ Polygon ViewPort::transform(Polygon *polygon)
 
 void ViewPort::draw(Point *point)
 {
-    Point vPoint = transform(*point);
-    scene->addLine(vPoint.x(), vPoint.y(), vPoint.x(), vPoint.y());
-    canvas->setScene(scene);
+    //Point vPoint = transform(*point);
+    //scene->addLine(vPoint.x(), vPoint.y(), vPoint.x(), vPoint.y());
+    //canvas->setScene(scene);
 }
 
 void ViewPort::draw(Line *line)
 {
-    Line vLine = transform(line);
-    scene->addLine(vLine.begin().x(), vLine.begin().y(), vLine.end().x(), vLine.end().y());
-    canvas->setScene(scene);
+    //Line vLine = transform(line);
+    //scene->addLine(vLine.begin().x(), vLine.begin().y(), vLine.end().x(), vLine.end().y());
+    //canvas->setScene(scene);
 }
 
 void ViewPort::draw(Polygon *polygon)
 {
-    Polygon vPolygon = transform(polygon);
-    unsigned int i;
-    for (i=0; i < polygon->points().size() - 1; i++) {
-        scene->addLine(vPolygon.points()[i].x(), vPolygon.points()[i].y(),
-                vPolygon.points()[i+1].x(), vPolygon.points()[i+1].y());
-    }
-    scene->addLine(vPolygon.points().back().x(), vPolygon.points().back().y(),
-            vPolygon.points().front().x(), vPolygon.points().front().y()); 
-    
-    canvas->setScene(scene);
+    // Polygon vPolygon = transform(polygon);
+//     unsigned int i;
+//     for (i=0; i < polygon->points().size() - 1; i++) {
+//         scene->addLine(vPolygon.points()[i].x(), vPolygon.points()[i].y(),
+//                 vPolygon.points()[i+1].x(), vPolygon.points()[i+1].y());
+//     }
+//     scene->addLine(vPolygon.points().back().x(), vPolygon.points().back().y(),
+//             vPolygon.points().front().x(), vPolygon.points().front().y()); 
+//     
+//     canvas->setScene(scene);
 }
 
 void ViewPort::draw(Object* object)
 {
-    switch(object->type()) {
-        case (POINT) :
-            draw((Point*)object);
-            break;
-        case (LINE) :
-            draw((Line*)object);
-            break;
-        case (POLYGON) :
-            draw((Polygon*)object);
-            break;
-    }
+    // switch(object->type()) {
+//         case (POINT) :
+//             draw((Point*)object);
+//             break;
+//         case (LINE) :
+//             draw((Line*)object);
+//             break;
+//         case (POLYGON) :
+//             draw((Polygon*)object);
+//             break;
+//     }
 }
 
 void ViewPort::draw(ObjectsPtr& objects)
 {
-    scene->clear();
-    unsigned int i;
-    for (i=0; i < objects.size(); i++)
-    {
-        draw(objects[i]);
-    }
-    canvas->setScene(scene);
+    // scene->clear();
+//     unsigned int i;
+//     for (i=0; i < objects.size(); i++)
+//     {
+//         draw(objects[i]);
+//     }
+//     canvas->setScene(scene);
 }
+
+void ViewPort::redrawAll()
+{
+     canvas->desenharLinha(5,5,30,50);
+
+}
+

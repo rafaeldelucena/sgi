@@ -1,16 +1,15 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
-#include <QGraphicsView>
 #include "view/window.h"
 #include "app/formas.h"
-#include <QPainter>
+#include "forms/canhamo.h"
 
 
 class ViewPort
 {
 public:
-    ViewPort(QGraphicsView* canvas, Window* window);
+    ViewPort(Canhamo* canvas, Window* window);
     ~ViewPort(void);
     
     Point transform(Point &point);
@@ -22,13 +21,13 @@ public:
     void draw(Polygon *polygon);
     void draw(ObjectsPtr&);
     void draw(Object *object);
+    void redrawAll();
 
 private:
     Point vMin;
     Point vMax;
     Window *window;
-    QGraphicsView *canvas;
-    QGraphicsScene *scene;
+    Canhamo *canvas;
 };
 
 #endif // VIEWPORT_H

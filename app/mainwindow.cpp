@@ -1,5 +1,5 @@
 #include "app/mainwindow.h"
-#include "ui_mainwindow.h"
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -12,12 +12,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
 
-    //QPainter painter(ui->widgetQPainter);
-    //painter.setPen(QPen(Qt::black, 3));
-    //painter.drawLine(1,1,50,50);
+    //viewPort->redrawAll();
     
-    //ui->widgetQPainter
-
     listening();
 }
 
@@ -32,9 +28,9 @@ MainWindow::~MainWindow()
     delete window;
 }
 
-QGraphicsView* MainWindow::canvas(void)
+Canhamo* MainWindow::canvas(void)
 {
-    return ui->graphicsView;
+    return ui->widgetCanhamo;
 }
 
 inline void MainWindow::listening(void)
@@ -73,7 +69,7 @@ void MainWindow::onPushLineSaveButton(void)
 
     clearLineTextFields();
     
-    viewPort->draw(line);
+    viewPort->redrawAll();
 }
 
 void MainWindow::onPushPointSaveButton(void)
@@ -92,7 +88,7 @@ void MainWindow::onPushPointSaveButton(void)
 
     clearPointTextFields();
     
-    viewPort->draw(point);
+    //viewPort->draw(point);
 }
 
 void MainWindow::onPushPolygonSaveButton(void)
@@ -108,7 +104,7 @@ void MainWindow::onPushPolygonSaveButton(void)
         displayFile.insertObject(polygon, name);
         points.clear();
         addObjectToListView(polygon);
-        viewPort->draw(polygon);
+        //viewPort->draw(polygon);
     }
     
     pointsListNames.clear();
@@ -140,37 +136,37 @@ void MainWindow::onPushPolygonAddButton(void)
 void MainWindow::onPushMoveUpButton(void)
 {
     window->up(1.0);
-    reDrawObjectsOnScreen();
+    //reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushMoveLeftButton(void)
 {
     window->left(1.0);
-    reDrawObjectsOnScreen();
+    //reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushMoveDownButton(void)
 {
     window->down(1.0);
-    reDrawObjectsOnScreen();
+    //reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushMoveRightButton(void)
 {
     window->right(1.0);
-    reDrawObjectsOnScreen();
+    //reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushZoomInButton(void)
 {
     window->shrink(1.0);
-    reDrawObjectsOnScreen();
+    //reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushZoomOutButton(void)
 {
     window->stretch(1.0);
-    reDrawObjectsOnScreen();
+    //reDrawObjectsOnScreen();
 }
 
 void MainWindow::onSelectObject(const QModelIndex & index)
@@ -232,7 +228,8 @@ void MainWindow::clearPolygonTextFields(void)
 
 void MainWindow::reDrawObjectsOnScreen(void)
 {
+    viewPort->redrawAll();
     if (!displayFile.objects().empty()) {
-        viewPort->draw(displayFile.objects());
+        //viewPort->draw(displayFile.objects());
     }
 }
