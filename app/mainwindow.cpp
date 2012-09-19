@@ -1,5 +1,4 @@
 #include "app/mainwindow.h"
-#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -40,9 +39,9 @@ MainWindow::~MainWindow()
     delete window;
 }
 
-QGraphicsView* MainWindow::canvas(void)
+Canhamo* MainWindow::canvas(void)
 {
-    return ui->graphicsView;
+    return ui->widgetCanhamo;
 }
 
 inline void MainWindow::listening(void)

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
+    <width>740</width>
     <height>541</height>
    </rect>
   </property>
@@ -14,16 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>40</y>
-      <width>450</width>
-      <height>340</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="zoomInButton">
     <property name="geometry">
      <rect>
@@ -719,14 +709,24 @@
      <string>CenterViewport</string>
     </property>
    </widget>
+   <widget class="Canhamo" name="widgetCanhamo" native="true">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>40</y>
+      <width>461</width>
+      <height>341</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>721</width>
-     <height>25</height>
+     <width>740</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -741,6 +741,14 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>Canhamo</class>
+   <extends>QWidget</extends>
+   <header>forms/canhamo.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -20,7 +20,6 @@ std::string Line::toString(void) const
     std::stringstream s;
     s << "Line[("<< beginPoint.x() << "," << beginPoint.y() << "," << beginPoint.z() <<")("
         << endPoint.x() << "," << endPoint.y() << "," << endPoint.z() << ")]";
-    
     return s.str();
 }
 
