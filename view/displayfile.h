@@ -17,7 +17,7 @@ public:
 private:
     void destroyObjects(void);
 
-    ObjectsPtr worldObjects;
+    Objects worldObjects;
 };
 
 #endif // DISPLAYFILE_H

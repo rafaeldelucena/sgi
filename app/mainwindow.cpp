@@ -15,13 +15,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     objectsList = new QStringListModel();
     objectPosition = 0;
 
-    Line *line = new Line(Point(-50, 0, 0), Point(50, 0, 0));
-    displayFile.insertObject(line, QString("x axis"));
-    addObjectToListView(line);
+    Object *line = new Object(LINE);
+    line->addPoint(Point(-50, 0, 0));
+    line->addPoint(Point(50, 0, 0));
+    addObjectToListView(line, QString("x axis"));
 
-    Line *line1 = new Line(Point(0, -50, 0), Point(0, 50, 0));
-    displayFile.insertObject(line1, QString("y axis"));
-    addObjectToListView(line);
+    Object *line1 = new Object(LINE);
+    line1->addPoint(Point(0, -50, 0));
+    line1->addPoint(Point(0, 50, 0));
+    addObjectToListView(line, QString("y axis"));
 
     viewPort->draw();
 
@@ -73,11 +75,11 @@ void MainWindow::onPushLineSaveButton(void)
 
     QString name = ui->lineName->text();
 
-    Line *line = new Line(Point(startX, startY, startZ), Point(endX, endY, endZ));
+    Object *line = new Object(LINE);
+    line->addPoint(Point(startX, startY, startZ));
+    line->addPoint(Point(endX, endY, endZ));
 
-    displayFile.insertObject(line, name);
-    
-    addObjectToListView(line);
+    addObjectToListView(line, name);
 
     clearLineTextFields();
     
@@ -92,11 +94,10 @@ void MainWindow::onPushPointSaveButton(void)
     
     QString name = ui->pointName->text();
     
-    Point *point = new Point(x, y, z);
+    Object *point = new Object(POINT);
+    point->addPoint(Point(x, y, z));
     
-    displayFile.insertObject(point, name);
-    
-    addObjectToListView(point);
+    addObjectToListView(point, name);
 
     clearPointTextFields();
     
@@ -108,14 +109,13 @@ void MainWindow::onPushPolygonSaveButton(void)
     
     if (!points.empty()) {
         QString name = ui->polygonName->text();
-        Polygon *polygon = new Polygon();
+        Object *polygon = new Object(POLYGON);
         unsigned int i;
         for (i=0; i < points.size(); i++) {
             polygon->addPoint(points[i]);
         }
-        displayFile.insertObject(polygon, name);
         points.clear();
-        addObjectToListView(polygon);
+        addObjectToListView(polygon, name);
     }
     
     pointsListNames.clear();
@@ -143,7 +143,7 @@ void MainWindow::onPushPolygonAddButton(void)
     
     points.push_back(point);
 
-    addPolygonPointsToListView(point);
+    addPointsToPointsList(point);
 }
 
 void MainWindow::onPushMoveUpButton(void)
@@ -194,9 +194,10 @@ void MainWindow::onSelectObject(const QModelIndex & index)
     objectPosition = index.row();
 }
 
-void MainWindow::addObjectToListView(Object *object)
+void MainWindow::addObjectToListView(Object *object, QString name)
 {
-    objectsListNames.append(object->name());
+    displayFile.insertObject(object, name);
+    objectsListNames.append(name);
     objectsList->setStringList(objectsListNames);
     ui->objectsListView->setModel(objectsList);
 }
@@ -208,7 +209,7 @@ void MainWindow::removeObjectToListViewAt(unsigned int index)
     ui->objectsListView->setModel(objectsList);
 }
 
-void MainWindow::addPolygonPointsToListView(const Point& point)
+void MainWindow::addPointsToPointsList(const Point& point)
 {
     pointsListNames.append(QString::fromStdString(point.toString()));
     pointsList->setStringList(pointsListNames);

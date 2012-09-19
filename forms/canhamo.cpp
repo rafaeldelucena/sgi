@@ -17,11 +17,11 @@ void Canhamo::paintEvent(QPaintEvent*) {
     p.drawLine(b_inicial_x,b_inicial_y, b_final_x, b_final_y);
 }
 
-void Canhamo::desenharLinha(int inicial_x, int inicial_y, int final_x, int final_y){
+void Canhamo::drawLine(Point begin, Point end){
 
-     b_inicial_x = inicial_x;
-     b_inicial_y = inicial_y;
-     b_final_x = final_x;
-     b_final_y = final_y;
+     b_inicial_x = begin.x();
+     b_inicial_y = begin.y();
+     b_final_x = end.x();
+     b_final_y = end.y();
      this->update();
 }

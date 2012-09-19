@@ -48,10 +48,9 @@ private slots:
     void onSelectObject(const QModelIndex &);
 
 private:
-    void addPolygonPointsToListView(const Point &point);
-    void addObjectToListView(Object *object);
+    void addPointsToPointsList(const Point &point);
+    void addObjectToListView(Object *object, QString name);
     void removeObjectToListViewAt(unsigned int index);
-    void reDrawObjectsOnScreen(void);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);

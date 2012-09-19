@@ -20,9 +20,6 @@ void DisplayFile::destroyObjects(void)
 }
 void DisplayFile::insertObject(Object *object, QString name)
 {
-    if (name.size() != 0) {
-        object->name(name);
-    }
     worldObjects.push_back(object);
 }
 

@@ -20,73 +20,35 @@ Point ViewPort::transform(Point & wCoord)
     return Point(vCoordX, vCoordY);
 }
 
-Line ViewPort::transform(Line *line)
-{
-    Line vLine(transform(line->begin()), transform(line->end()));
-    return vLine;
-}
-
-Polygon ViewPort::transform(Polygon *polygon)
-{
-    unsigned int i;
-    Polygon poly;
-    for (i=0; i < polygon->points().size(); i++) {
-        poly.addPoint(transform(polygon->points()[i]));
-    }
-    return poly;
-}
-
-void ViewPort::draw(Point *point)
-{
-  //  Point vPoint = transform(*point);
-    // desenha um X com centro no ponto
- //   scene->addLine(vPoint.x() -1.0, vPoint.y() - 1.0, vPoint.x() + 1.0, vPoint.y() + 1.0);
- //   scene->addLine(vPoint.x() -1.0, vPoint.y() + 1.0, vPoint.x() + 1.0, vPoint.y() - 1.0);
-}
-
-void ViewPort::draw(Line *line)
-{
-    //Line vLine = transform(line);
-    //scene->addLine(vLine.begin().x(), vLine.begin().y(), vLine.end().x(), vLine.end().y());
-    //canvas->setScene(scene);
-}
-
-void ViewPort::draw(Polygon *polygon)
-{
-    // Polygon vPolygon = transform(polygon);
-//     unsigned int i;
-//     for (i=0; i < polygon->points().size() - 1; i++) {
-//         scene->addLine(vPolygon.points()[i].x(), vPolygon.points()[i].y(),
-//                 vPolygon.points()[i+1].x(), vPolygon.points()[i+1].y());
-//     }
-//     scene->addLine(vPolygon.points().back().x(), vPolygon.points().back().y(),
-//             vPolygon.points().front().x(), vPolygon.points().front().y()); 
-//     
-//     canvas->setScene(scene);
-}
-
-void ViewPort::draw(Object* object)
-{
-    // switch(object->type()) {
-//         case (POINT) :
-//             draw((Point*)object);
-//             break;
-//         case (LINE) :
-//             draw((Line*)object);
-//             break;
-//         case (POLYGON) :
-//             draw((Polygon*)object);
-//             break;
-//     }
-}
-
 void ViewPort::draw()
 {
     unsigned int i;
     for (i=0; i < displayFile->objectsSize(); i++)
     {
         Object* obj = displayFile->getObjectAt(i);
-        canvas->desenharLinha(5,5,30,50);
+        if (obj->type() == POINT) {
+
+            Point vPoint = obj->point(0);
+            vPoint = transform(vPoint);
+            // desenha um X com centro no ponto
+            canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0));
+            canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0));
+        } else {
+            unsigned int i;
+            Point startPoint = obj->point(0);
+            Point endPoint = obj->point(obj->pointsCount() - 1);
+            for (i=0; i < obj->pointsCount() - 1; i++) {
+                startPoint = obj->point(i);
+                startPoint = transform(startPoint);
+                endPoint = obj->point(i);
+                endPoint = transform(endPoint);
+                canvas->drawLine(startPoint, endPoint);
+            }
+            if (obj->type() == POLYGON) {
+                startPoint = obj->point(0);
+                startPoint = transform(startPoint);
+                canvas->drawLine(endPoint, startPoint);
+            }
+        }
     }
-    //canvas->setScene(scene);
 }
