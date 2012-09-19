@@ -32,7 +32,12 @@ void DisplayFile::removeObjectAt(unsigned int index)
     worldObjects.erase(worldObjects.begin() + index);
 }
 
-ObjectsPtr& DisplayFile::objects(void)
+Object* DisplayFile::getObjectAt(unsigned int index)
 {
-    return worldObjects;
+    return worldObjects[index];
+}
+
+unsigned int DisplayFile::objectsSize(void)
+{
+    return worldObjects.size();
 }

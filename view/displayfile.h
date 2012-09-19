@@ -10,9 +10,10 @@ class DisplayFile
 public:
     DisplayFile();
     ~DisplayFile();
-    ObjectsPtr& objects();
+    unsigned int objectsSize();
     void insertObject(Object *, QString);
     void removeObjectAt(unsigned int index);
+    Object* getObjectAt(unsigned int index);
 private:
     void destroyObjects(void);
 

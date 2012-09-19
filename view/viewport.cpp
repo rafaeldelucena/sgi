@@ -1,10 +1,11 @@
 #include "view/viewport.h"
 
-ViewPort::ViewPort(QGraphicsView *cv, Window *w)
+ViewPort::ViewPort(QGraphicsView *cv, Window *w, DisplayFile *d)
 : vMin(-1.0, -1.0, 0.0), vMax(1.0, 1.0, 0.0)
 {
     canvas = cv;
     window = w;
+    displayFile = d;
     scene = new QGraphicsScene(canvas);
 }
 
@@ -78,13 +79,13 @@ void ViewPort::draw(Object* object)
     }
 }
 
-void ViewPort::draw(ObjectsPtr& objects)
+void ViewPort::draw()
 {
     scene->clear();
     unsigned int i;
-    for (i=0; i < objects.size(); i++)
+    for (i=0; i < displayFile->objectsSize(); i++)
     {
-        draw(objects[i]);
+        draw(displayFile->getObjectAt(i));
     }
     canvas->setScene(scene);
 }
