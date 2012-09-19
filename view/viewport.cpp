@@ -1,7 +1,7 @@
 #include "view/viewport.h"
 
 ViewPort::ViewPort(Canhamo *cv, Window *w, DisplayFile *d)
-: vMin(-1.0, -1.0, 0.0), vMax(1.0, 1.0, 0.0)
+: vMin(0.0, 0.0, 0.0), vMax(440.0, 340.0, 0.0)
 {
     canvas = cv;
     window = w;
@@ -20,6 +20,7 @@ Point ViewPort::transform(Point & wCoord)
     return Point(vCoordX, vCoordY);
 }
 
+#include <iostream>
 void ViewPort::draw()
 {
     unsigned int i;
@@ -33,6 +34,8 @@ void ViewPort::draw()
             // desenha um X com centro no ponto
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0));
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0));
+
+
         } else {
             unsigned int i;
             Point startPoint = obj->point(0);
@@ -40,7 +43,7 @@ void ViewPort::draw()
             for (i=0; i < obj->pointsCount() - 1; i++) {
                 startPoint = obj->point(i);
                 startPoint = transform(startPoint);
-                endPoint = obj->point(i);
+                endPoint = obj->point(i+1);
                 endPoint = transform(endPoint);
                 canvas->drawLine(startPoint, endPoint);
             }

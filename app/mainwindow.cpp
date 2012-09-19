@@ -3,8 +3,8 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 
-    Point wMax(1.0, 1.0, 0.0);
-    Point wMin(-1.0, -1.0, 0.0);
+    Point wMax(220.0, 170.0, 0.0);
+    Point wMin(-220.0, -170.0, 0.0);
     window = new Window(wMin, wMax);
 
     ui->setupUi(this);
@@ -16,14 +16,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     objectPosition = 0;
 
     Object *line = new Object(LINE);
-    line->addPoint(Point(-50, 0, 0));
-    line->addPoint(Point(50, 0, 0));
+    line->addPoint(Point(-220, 0, 0));
+    line->addPoint(Point(220, 0, 0));
     addObjectToListView(line, QString("x axis"));
 
     Object *line1 = new Object(LINE);
-    line1->addPoint(Point(0, -50, 0));
-    line1->addPoint(Point(0, 50, 0));
+    line1->addPoint(Point(0, -170, 0));
+    line1->addPoint(Point(0, 170, 0));
     addObjectToListView(line, QString("y axis"));
+
+    Object *line2 = new Object(LINE);
+    line1->addPoint(Point(0, 0, 0));
+    line1->addPoint(Point(0, 200, 0));
+    addObjectToListView(line, QString("diagonal"));
 
     viewPort->draw();
 

@@ -644,7 +644,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>10</string>
+     <string>1</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_12">
@@ -693,7 +693,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>10</string>
+     <string>1</string>
     </property>
    </widget>
    <widget class="QPushButton" name="centerViewPortButton">
@@ -714,8 +714,8 @@
      <rect>
       <x>280</x>
       <y>40</y>
-      <width>461</width>
-      <height>341</height>
+      <width>440</width>
+      <height>340</height>
      </rect>
     </property>
    </widget>
@@ -726,7 +726,7 @@
      <x>0</x>
      <y>0</y>
      <width>740</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

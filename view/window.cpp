@@ -44,10 +44,10 @@ void Window::down(double value)
 
 void Window::centralize()
 {
-    minPoint.x(-1);
-    minPoint.y(-1);
-    maxPoint.x(1);
-    maxPoint.y(1);
+    minPoint.x(-220);
+    minPoint.y(-170);
+    maxPoint.x(220);
+    maxPoint.y(170);
 }
 
 #include <iostream>

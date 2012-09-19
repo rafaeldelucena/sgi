@@ -23,7 +23,7 @@ std::string Object::toString(void) const
     {
         s << "(" << point(i).x() << "," << point(i).y() << "," << point(i).z() << "),";
     }
-    s << "]";
+    s << "]" << std::endl;
 
     return s.str();
 }
@@ -82,6 +82,6 @@ void Point::z(double z)
 std::string Point::toString(void) const
 {
     std::stringstream s;
-    s << "Point(" << x() << ","<< y() << "," << z() << ")";
+    s << "Point(" << x() << ","<< y() << "," << z() << ")" << std::endl;
     return s.str();
 }

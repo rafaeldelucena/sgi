@@ -2,6 +2,7 @@
 #define CANHAMO_H
 
 #include <QWidget>
+#include <QPainter>
 #include "app/formas.h"
 
 class Canhamo : public QWidget {
@@ -12,6 +13,7 @@ public:
     void drawLine(Point begin, Point End);
     
 private:
+    QPainter painter;
     int b_inicial_x;
     int b_inicial_y;
     int b_final_x;
