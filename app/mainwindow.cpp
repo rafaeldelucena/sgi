@@ -145,37 +145,37 @@ void MainWindow::onPushPolygonAddButton(void)
 
 void MainWindow::onPushMoveUpButton(void)
 {
-    window->up(1.0);
+    window->up(ui->moveStep->text().toDouble());
     reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushMoveLeftButton(void)
 {
-    window->left(1.0);
+    window->left(ui->moveStep->text().toDouble());
     reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushMoveDownButton(void)
 {
-    window->down(1.0);
+    window->down(ui->moveStep->text().toDouble());
     reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushMoveRightButton(void)
 {
-    window->right(1.0);
+    window->right(ui->moveStep->text().toDouble());
     reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushZoomInButton(void)
 {
-    window->shrink(1.0);
+    window->shrink(ui->moveStep->text().toDouble());
     reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushZoomOutButton(void)
 {
-    window->stretch(1.0);
+    window->stretch(ui->moveStep->text().toDouble());
     reDrawObjectsOnScreen();
 }
 
