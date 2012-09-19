@@ -40,16 +40,15 @@ Polygon ViewPort::transform(Polygon *polygon)
 void ViewPort::draw(Point *point)
 {
     Point vPoint = transform(*point);
+    // desenha um X com centro no ponto
     scene->addLine(vPoint.x() -1.0, vPoint.y() - 1.0, vPoint.x() + 1.0, vPoint.y() + 1.0);
     scene->addLine(vPoint.x() -1.0, vPoint.y() + 1.0, vPoint.x() + 1.0, vPoint.y() - 1.0);
-    canvas->setScene(scene);
 }
 
 void ViewPort::draw(Line *line)
 {
     Line vLine = transform(line);
     scene->addLine(vLine.begin().x(), vLine.begin().y(), vLine.end().x(), vLine.end().y());
-    canvas->setScene(scene);
 }
 
 void ViewPort::draw(Polygon *polygon)
@@ -62,8 +61,6 @@ void ViewPort::draw(Polygon *polygon)
     }
     scene->addLine(vPolygon.points().back().x(), vPolygon.points().back().y(),
             vPolygon.points().front().x(), vPolygon.points().front().y()); 
-    
-    canvas->setScene(scene);
 }
 
 void ViewPort::draw(Object* object)

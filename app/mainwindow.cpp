@@ -13,6 +13,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     objectsList = new QStringListModel();
     objectPosition = 0;
 
+    Line *line = new Line(Point(-150, 0, 0), Point(150, 0, 0));
+    displayFile.insertObject(line, QString("x axis"));
+    addObjectToListView(line);
+
+    Line *line1 = new Line(Point(0, -150, 0), Point(0, 150, 0));
+    displayFile.insertObject(line1, QString("y axis"));
+    addObjectToListView(line);
+
+    reDrawObjectsOnScreen();
+
     listening();
 }
 
@@ -68,7 +78,7 @@ void MainWindow::onPushLineSaveButton(void)
 
     clearLineTextFields();
     
-    viewPort->draw(line);
+    reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushPointSaveButton(void)
@@ -87,7 +97,7 @@ void MainWindow::onPushPointSaveButton(void)
 
     clearPointTextFields();
     
-    viewPort->draw(point);
+    reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushPolygonSaveButton(void)
@@ -103,12 +113,12 @@ void MainWindow::onPushPolygonSaveButton(void)
         displayFile.insertObject(polygon, name);
         points.clear();
         addObjectToListView(polygon);
-        viewPort->draw(polygon);
     }
     
     pointsListNames.clear();
     clearPolygonTextFields();
-    
+
+    reDrawObjectsOnScreen();
 }
 
 void MainWindow::onPushDeleteButton(void)
