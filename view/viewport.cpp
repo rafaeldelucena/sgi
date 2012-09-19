@@ -1,7 +1,7 @@
 #include "view/viewport.h"
 
 ViewPort::ViewPort(QGraphicsView *cv, Window *w)
-: vMin(-90.0, -90.0, 0.0), vMax(90.0, 90.0, 0.0)
+: vMin(-1.0, -1.0, 0.0), vMax(1.0, 1.0, 0.0)
 {
     canvas = cv;
     window = w;
@@ -15,11 +15,8 @@ ViewPort::~ViewPort()
 
 Point ViewPort::transform(Point & wCoord)
 {
-    double vCoordX = ( (wCoord.x() - window->min().x())
-                 / (window->max().x() - window->min().x()) ) * (vMax.x() - vMin.x());
-    double vCoordY = (1.0 -
-                 ( (wCoord.y() - window->min().y()) / (window->max().y() - window->min().y()))
-                 * (vMax.y() - vMin.y()) );
+    double vCoordX = ( (wCoord.x() - window->min().x()) / (window->max().x() - window->min().x()) ) * (vMax.x() - vMin.x());
+    double vCoordY = (1.0 - ( (wCoord.y() - window->min().y()) / (window->max().y() - window->min().y()))) * (vMax.y() - vMin.y());
 
     return Point(vCoordX, vCoordY);
 }

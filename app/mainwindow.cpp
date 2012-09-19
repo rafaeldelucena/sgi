@@ -3,8 +3,8 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    Point wMax(100.0, 100.0, 0.0);
-    Point wMin(-100.0, -100.0, 0.0);
+    Point wMax(1.0, 1.0, 0.0);
+    Point wMin(-1.0, -1.0, 0.0);
     window = new Window(wMin, wMax);
 
     ui->setupUi(this);
