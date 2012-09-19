@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
+    <width>1215</width>
     <height>541</height>
    </rect>
   </property>
@@ -644,14 +644,24 @@
      </widget>
     </widget>
    </widget>
+   <widget class="Canhamo" name="widgetQPainter" native="true">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>50</y>
+      <width>391</width>
+      <height>331</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>721</width>
-     <height>25</height>
+     <width>1215</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -666,6 +676,16 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+
+<customwidgets>
+  <customwidget>
+      <class>Canhamo</class>
+      <extends>QWidget</extends>
+      <header>forms/canhamo.h</header>
+      <container>1</container>
+  </customwidget>
+</customwidgets>
+
  <resources/>
  <connections/>
 </ui>

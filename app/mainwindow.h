@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QStringListModel>
 #include <QPushButton>
+#include <QPainter>
 
 #include "app/formas.h"
 

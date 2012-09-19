@@ -4,6 +4,8 @@
 #include <QGraphicsView>
 #include "view/window.h"
 #include "app/formas.h"
+#include <QPainter>
+
 
 class ViewPort
 {

@@ -6,6 +6,7 @@ ViewPort::ViewPort(QGraphicsView *cv, Window *w)
     canvas = cv;
     window = w;
     scene = new QGraphicsScene(vMin.x(), vMin.y(), vMax.x(), vMax.y(), canvas);
+    
 }
 
 ViewPort::~ViewPort()

@@ -12,6 +12,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
 
+    //QPainter painter(ui->widgetQPainter);
+    //painter.setPen(QPen(Qt::black, 3));
+    //painter.drawLine(1,1,50,50);
+    
+    //ui->widgetQPainter
+
     listening();
 }
 
