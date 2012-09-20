@@ -20,7 +20,6 @@ Point ViewPort::transform(Point & wCoord)
     return Point(vCoordX, vCoordY);
 }
 
-#include <iostream>
 void ViewPort::draw()
 {
     unsigned int i;
@@ -51,6 +50,7 @@ void ViewPort::draw()
                 startPoint = obj->point(0);
                 startPoint = transform(startPoint);
                 canvas->drawLine(endPoint, startPoint);
+                displayFile->update();
             }
         }
     }

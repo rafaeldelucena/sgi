@@ -15,28 +15,31 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     objectsList = new QStringListModel();
     objectPosition = 0;
 
-    Object *line = new Object(LINE);
-    line->addPoint(Point(-220, 0, 0));
-    line->addPoint(Point(220, 0, 0));
-    addObjectToListView(line, QString("x axis"));
+    xAxis = new Object(LINE);
+    xAxis->addPoint(Point(-220, 0, 0));
+    xAxis->addPoint(Point(220, 0, 0));
+    addObjectToListView(xAxis, QString("x axis"));
 
-    Object *line1 = new Object(LINE);
-    line1->addPoint(Point(0, -170, 0));
-    line1->addPoint(Point(0, 170, 0));
-    addObjectToListView(line, QString("y axis"));
+    yAxis = new Object(LINE);
+    yAxis->addPoint(Point(0, -170, 0));
+    yAxis->addPoint(Point(0, 170, 0));
+    addObjectToListView(yAxis, QString("y axis"));
 
-    Object *line2 = new Object(LINE);
-    line1->addPoint(Point(0, 0, 0));
-    line1->addPoint(Point(0, 200, 0));
-    addObjectToListView(line, QString("diagonal"));
-
-    viewPort->draw();
+    zAxis = new Object(LINE);
+    zAxis->addPoint(Point(0, 0, 0));
+    zAxis->addPoint(Point(0, 200, 0));
+    addObjectToListView(zAxis, QString("diagonal"));
 
     listening();
+    
+    viewPort->draw();
 }
 
 MainWindow::~MainWindow()
 {
+    if (xAxis) delete xAxis;
+    if (yAxis) delete yAxis;
+    if (zAxis) delete zAxis;
     points.clear();
     pointsListNames.clear();
     delete objectsList;
@@ -135,8 +138,8 @@ void MainWindow::onPushDeleteButton(void)
         removeObjectToListViewAt(objectPosition);
         displayFile.removeObjectAt(objectPosition); 
         viewPort->draw();
-        objectPosition = 0;
     }
+    objectPosition = 0;
 }
 
 void MainWindow::onPushPolygonAddButton(void)
@@ -181,7 +184,6 @@ void MainWindow::onPushMoveRightButton(void)
     viewPort->draw();
 }
 
-#include <iostream>
 void MainWindow::onPushZoomInButton(void)
 {
     window->decrease(ui->zoomFactor->text().toDouble());

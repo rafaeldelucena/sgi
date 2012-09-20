@@ -14,10 +14,6 @@
 
 #include "ui_mainwindow.h"
 
-
-//#include "forms/canhamo.h"
-
-
 namespace Ui {
     class MainWindow;
 }
@@ -67,6 +63,7 @@ private:
     DisplayFile displayFile;
     Window *window;
     ViewPort *viewPort;
+    Object *xAxis, *yAxis, *zAxis;
     unsigned int objectPosition;
 };
 

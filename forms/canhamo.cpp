@@ -9,7 +9,7 @@ void Canhamo::paintEvent(QPaintEvent*) {
 
     painter.begin(this);
 
-    painter.setPen(QPen(Qt::blue, 1));
+    painter.setPen(QPen(Qt::black, 1));
     painter.fillRect(0, 0, width(), height(), Qt::white);
 
     unsigned int i;
