@@ -25,11 +25,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     yAxis->addPoint(Point(0, 170, 0));
     addObjectToListView(yAxis, QString("y axis"));
 
+    /*
     zAxis = new Object(LINE);
     zAxis->addPoint(Point(0, 0, 0));
-    zAxis->addPoint(Point(0, 200, 0));
-    addObjectToListView(zAxis, QString("diagonal"));
-
+    zAxis->addPoint(Point(0, 0, 200));
+    addObjectToListView(zAxis, QString("z axis"));
+    */
+    
+    
     listening();
     
     viewPort->draw();

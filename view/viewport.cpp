@@ -22,6 +22,10 @@ Point ViewPort::transform(Point & wCoord)
 
 void ViewPort::draw()
 {
+
+
+    canvas->clear();
+
     unsigned int i;
     for (i=0; i < displayFile->objectsSize(); i++)
     {

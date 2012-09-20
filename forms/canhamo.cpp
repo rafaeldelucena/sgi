@@ -18,7 +18,6 @@ void Canhamo::paintEvent(QPaintEvent*) {
     }
 
     painter.end();
-    canvasLines.clear();
 }
 
 void Canhamo::drawLine(const Point &begin, const Point &end){
@@ -30,4 +29,9 @@ void Canhamo::drawLine(const Point &begin, const Point &end){
 void Canhamo::refresh()
 {
     this->update();
+}
+
+void Canhamo::clear()
+{
+    canvasLines.clear();
 }

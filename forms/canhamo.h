@@ -20,6 +20,8 @@ public:
     void paintEvent(QPaintEvent*);
     void drawLine(const Point &begin, const Point &end);
     void refresh();
+    void clear();
+
     
 private:
     QPainter painter;
