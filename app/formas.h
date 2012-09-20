@@ -35,7 +35,7 @@ public:
     Object(Shape type);
     virtual ~Object(void);
     Shape type(void) const;
-    int pointsCount(void) const;
+    unsigned int pointsCount(void) const;
     Point point(int index) const;
     void addPoint(const Point &point);
 

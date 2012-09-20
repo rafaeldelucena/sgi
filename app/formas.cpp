@@ -32,7 +32,7 @@ void Object::addPoint(const Point &point)
     points.push_back(point);
 }
 
-int Object::pointsCount(void) const
+unsigned int Object::pointsCount(void) const
 {
     return points.size();
 }
