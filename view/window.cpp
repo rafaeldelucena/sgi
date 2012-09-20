@@ -63,36 +63,45 @@ void Window::enlarge(double value)
 {
    std::cout << "max point original is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
    std::cout << "min point original is " << minPoint.x() << "," << minPoint.y() << std::endl;
+   std::cout << "center point original is" << ((maxPoint.x() + minPoint.x())/2.0) << "," << ((maxPoint.y() + minPoint.y())/2.0) << std::endl;
 
-   double factor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
-   minPoint.x(minPoint.x() - factor);
-   factor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
-   minPoint.y(minPoint.y() - factor);
+   double minPointXfactor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
+   double minPointYfactor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
+   double maxPointXfactor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
+   double maxPointYfactor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
 
-   factor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
-   maxPoint.x(maxPoint.x() + factor);
-   factor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
-   maxPoint.y(maxPoint.y() + factor);
+   minPoint.x(minPoint.x() - minPointXfactor);
+   minPoint.y(minPoint.y() - minPointYfactor);
+   maxPoint.x(maxPoint.x() + maxPointXfactor);
+   maxPoint.y(maxPoint.y() + maxPointYfactor);
+
 
    std::cout << "max point now is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
    std::cout << "min point now is " << minPoint.x() << "," << minPoint.y() << std::endl;
+   std::cout << "center point now is " << ((maxPoint.x() + minPoint.x())/2.0) << "," << ((maxPoint.y() + minPoint.y())/2.0) << std::endl;
+
 }
 
 void Window::decrease(double value)
 {
    std::cout << "max point original is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
    std::cout << "min point original is " << minPoint.x() << "," << minPoint.y() << std::endl;
+   std::cout << "center point original is" << ((maxPoint.x() + minPoint.x())/2.0) << "," << ((maxPoint.y() + minPoint.y())/2.0) << std::endl;
 
-   double factor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
-   minPoint.x(minPoint.x() + factor);
-   factor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
-   minPoint.y(minPoint.y() + factor);
 
-   factor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
-   maxPoint.x(maxPoint.x() - factor);
-   factor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
-   maxPoint.y(maxPoint.y() - factor);
+   double minPointXfactor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
+   double minPointYfactor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
+   double maxPointXfactor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
+   double maxPointYfactor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
+
+   minPoint.x(minPoint.x() + minPointXfactor);
+   minPoint.y(minPoint.y() + minPointYfactor);
+   maxPoint.x(maxPoint.x() - maxPointXfactor);
+   maxPoint.y(maxPoint.y() - maxPointYfactor);
+
 
    std::cout << "max point now is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
    std::cout << "min point now is " << minPoint.x() << "," << minPoint.y() << std::endl;
+   std::cout << "center point now is " << ((maxPoint.x() + minPoint.x())/2.0) << "," << ((maxPoint.y() + minPoint.y())/2.0) << std::endl;
+
 }
