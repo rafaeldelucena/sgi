@@ -3,8 +3,8 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 
-    Point wMax(220.0, 170.0, 0.0);
-    Point wMin(-220.0, -170.0, 0.0);
+    Point wMax(250.0, 250.0, 0.0);
+    Point wMin(-250.0, -250.0, 0.0);
     window = new Window(wMin, wMax);
 
     ui->setupUi(this);
@@ -16,13 +16,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     objectPosition = 0;
 
     xAxis = new Object(LINE);
-    xAxis->addPoint(Point(-220, 0, 0));
-    xAxis->addPoint(Point(220, 0, 0));
+    xAxis->addPoint(Point(-150, 0, 0));
+    xAxis->addPoint(Point(150, 0, 0));
     addObjectToListView(xAxis, QString("x axis"));
 
     yAxis = new Object(LINE);
-    yAxis->addPoint(Point(0, -170, 0));
-    yAxis->addPoint(Point(0, 170, 0));
+    yAxis->addPoint(Point(0, -150, 0));
+    yAxis->addPoint(Point(0, 150, 0));
     addObjectToListView(yAxis, QString("y axis"));
 
     /*
@@ -31,11 +31,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     zAxis->addPoint(Point(0, 0, 200));
     addObjectToListView(zAxis, QString("z axis"));
     */
-    
-    
+
     listening();
-    
+
     viewPort->draw();
+    updateWindowPoints();
 }
 
 MainWindow::~MainWindow()
@@ -68,7 +68,8 @@ inline void MainWindow::listening(void)
     connect(ui->moveLeftButton, SIGNAL(pressed()), this, SLOT(onPushMoveLeftButton()));
     connect(ui->moveRightButton, SIGNAL(pressed()), this, SLOT(onPushMoveRightButton()));
     connect(ui->moveDownButton, SIGNAL(pressed()), this, SLOT(onPushMoveDownButton()));
-    connect(ui->centerViewPortButton, SIGNAL(pressed()), this, SLOT(onPushCenterViewPortButton()));
+    connect(ui->resetWindowButton, SIGNAL(pressed()), this, SLOT(onPushResetWindowButton()));
+    connect(ui->updateWindowButton, SIGNAL(pressed()), this, SLOT(onPushUpdateWindowButton()));
     connect(ui->zoomInButton, SIGNAL(pressed()), this, SLOT(onPushZoomInButton()));
     connect(ui->zoomOutButton, SIGNAL(pressed()), this, SLOT(onPushZoomOutButton()));
     connect(ui->objectsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectObject(const QModelIndex &)));
@@ -79,7 +80,7 @@ void MainWindow::onPushLineSaveButton(void)
     double startX = ui->lineStartX->text().toDouble();
     double startY = ui->lineStartY->text().toDouble();
     double startZ = ui->lineStartZ->text().toDouble();
-    
+
     double endX = ui->lineEndX->text().toDouble();
     double endY = ui->lineEndY->text().toDouble();
     double endZ = ui->lineEndZ->text().toDouble();
@@ -93,7 +94,7 @@ void MainWindow::onPushLineSaveButton(void)
     addObjectToListView(line, name);
 
     clearLineTextFields();
-    
+
     viewPort->draw();
 }
 
@@ -102,22 +103,22 @@ void MainWindow::onPushPointSaveButton(void)
     double x = ui->pointX->text().toDouble();
     double y = ui->pointY->text().toDouble();
     double z = ui->pointZ->text().toDouble();
-    
+
     QString name = ui->pointName->text();
-    
+
     Object *point = new Object(POINT);
     point->addPoint(Point(x, y, z));
-    
+
     addObjectToListView(point, name);
 
     clearPointTextFields();
-    
+
     viewPort->draw();
 }
 
 void MainWindow::onPushPolygonSaveButton(void)
 {
-    
+
     if (!points.empty()) {
         QString name = ui->polygonName->text();
         Object *polygon = new Object(POLYGON);
@@ -128,7 +129,7 @@ void MainWindow::onPushPolygonSaveButton(void)
         points.clear();
         addObjectToListView(polygon, name);
     }
-    
+
     pointsListNames.clear();
     clearPolygonTextFields();
 
@@ -139,7 +140,7 @@ void MainWindow::onPushDeleteButton(void)
 {
     if (displayFile.objectsSize() > 0) {
         removeObjectToListViewAt(objectPosition);
-        displayFile.removeObjectAt(objectPosition); 
+        displayFile.removeObjectAt(objectPosition);
         viewPort->draw();
     }
     objectPosition = 0;
@@ -151,7 +152,7 @@ void MainWindow::onPushPolygonAddButton(void)
     double y = ui->polygonY->text().toDouble();
     double z = ui->polygonZ->text().toDouble();
     Point point(x, y, z);
-    
+
     points.push_back(point);
 
     addPointsToPointsList(point);
@@ -161,23 +162,36 @@ void MainWindow::onPushMoveUpButton(void)
 {
     window->up(ui->moveStep->text().toDouble());
     viewPort->draw();
+    updateWindowPoints();
 }
 
 void MainWindow::onPushMoveLeftButton(void)
 {
     window->left(ui->moveStep->text().toDouble());
     viewPort->draw();
+    updateWindowPoints();
 }
 
 void MainWindow::onPushMoveDownButton(void)
 {
     window->down(ui->moveStep->text().toDouble());
     viewPort->draw();
+    updateWindowPoints();
 }
 
-void MainWindow::onPushCenterViewPortButton(void)
+void MainWindow::onPushResetWindowButton(void)
 {
-    window->centralize();
+    window->reset();
+    viewPort->draw();
+    updateWindowPoints();
+}
+
+void MainWindow::onPushUpdateWindowButton(void)
+{
+    window->reset(ui->windowMinX->text().toDouble(),
+                  ui->windowMinY->text().toDouble(),
+                  ui->windowMaxX->text().toDouble(),
+                  ui->windowMaxY->text().toDouble());
     viewPort->draw();
 }
 
@@ -185,23 +199,41 @@ void MainWindow::onPushMoveRightButton(void)
 {
     window->right(ui->moveStep->text().toDouble());
     viewPort->draw();
+    updateWindowPoints();
 }
 
 void MainWindow::onPushZoomInButton(void)
 {
     window->decrease(ui->zoomFactor->text().toDouble());
     viewPort->draw();
+    updateWindowPoints();
 }
 
 void MainWindow::onPushZoomOutButton(void)
 {
     window->enlarge(ui->zoomFactor->text().toDouble());
     viewPort->draw();
+    updateWindowPoints();
 }
 
 void MainWindow::onSelectObject(const QModelIndex & index)
 {
     objectPosition = index.row();
+}
+
+void MainWindow::updateWindowPoints(void)
+{
+
+    QString minx, miny, maxx, maxy;
+    minx = minx.setNum(window->min().x());
+    miny = miny.setNum(window->min().y());
+    maxx = maxx.setNum(window->max().x());
+    maxy = maxy.setNum(window->max().y());
+
+    ui->windowMinX->setText(minx);
+    ui->windowMinY->setText(miny);
+    ui->windowMaxX->setText(maxx);
+    ui->windowMaxY->setText(maxy);
 }
 
 void MainWindow::addObjectToListView(Object *object, QString name)
@@ -253,6 +285,6 @@ void MainWindow::clearPolygonTextFields(void)
     ui->polygonX->clear();
     ui->polygonY->clear();
     ui->polygonZ->clear();
-    
+
     ui->polygonName->clear();
 }

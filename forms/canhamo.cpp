@@ -22,7 +22,7 @@ void Canhamo::paintEvent(QPaintEvent*) {
 
 void Canhamo::drawLine(const Point &begin, const Point &end){
 
-    Line line = { { begin.x(), begin.y(), end.x(), end.y() } }; 
+    Line line = { { begin.x(), begin.y(), end.x(), end.y() } };
     canvasLines.push_back(line);
 }
 

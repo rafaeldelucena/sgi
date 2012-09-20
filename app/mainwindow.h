@@ -21,13 +21,13 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow(void);
 
     Canhamo* canvas(void);
-    
+
 private slots:
     void onPushPointSaveButton(void);
     void onPushLineSaveButton(void);
@@ -38,7 +38,8 @@ private slots:
     void onPushMoveLeftButton(void);
     void onPushMoveDownButton(void);
     void onPushMoveRightButton(void);
-    void onPushCenterViewPortButton(void);
+    void onPushResetWindowButton(void);
+    void onPushUpdateWindowButton(void);
     void onPushZoomInButton(void);
     void onPushZoomOutButton(void);
     void onSelectObject(const QModelIndex &);
@@ -50,7 +51,8 @@ private:
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);
-    
+    void updateWindowPoints(void);
+
     inline void listening(void);
 
     Ui::MainWindow *ui;

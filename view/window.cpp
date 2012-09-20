@@ -20,7 +20,7 @@ const Point& Window::min(void) const
 
 void Window::right(double value)
 {
-    minPoint.x(minPoint.x() + value); 
+    minPoint.x(minPoint.x() + value);
     maxPoint.x(maxPoint.x() + value);
 }
 
@@ -42,12 +42,20 @@ void Window::down(double value)
     maxPoint.y(maxPoint.y() - value);
 }
 
-void Window::centralize()
+void Window::reset()
 {
-    minPoint.x(-220);
-    minPoint.y(-170);
-    maxPoint.x(220);
-    maxPoint.y(170);
+    minPoint.x(-250);
+    minPoint.y(-250);
+    maxPoint.x(250);
+    maxPoint.y(250);
+}
+
+void Window::reset(double minx, double miny, double maxx, double maxy)
+{
+    minPoint.x(minx);
+    minPoint.y(miny);
+    maxPoint.x(maxx);
+    maxPoint.y(maxy);
 }
 
 #include <iostream>

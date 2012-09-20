@@ -18,7 +18,8 @@ public:
     void down(double value);
     void enlarge(double value);
     void decrease(double value);
-    void centralize(void);
+    void reset(void);
+    void reset(double minx, double miny, double maxx, double maxy);
 
 private:
     Point minPoint;

@@ -22,7 +22,6 @@ public:
     void refresh();
     void clear();
 
-    
 private:
     QPainter painter;
     Lines canvasLines;

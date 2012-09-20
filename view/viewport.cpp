@@ -1,7 +1,7 @@
 #include "view/viewport.h"
 
 ViewPort::ViewPort(Canhamo *cv, Window *w, DisplayFile *d)
-: vMin(0.0, 0.0, 0.0), vMax(440.0, 340.0, 0.0)
+: vMin(0.0, 0.0, 0.0), vMax(500.0, 500.0, 0.0)
 {
     canvas = cv;
     window = w;
