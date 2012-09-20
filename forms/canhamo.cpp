@@ -1,28 +1,33 @@
 #include "canhamo.h"
 
-Canhamo::Canhamo(QWidget* obj): QWidget(obj) {
-
-     b_inicial_x = 1000;
-     b_inicial_y = 1000;
-     b_final_x = 2000;
-     b_final_y = 2000;
+Canhamo::Canhamo(QWidget* obj): QWidget(obj)
+{
 }
 
+#include <iostream>
 void Canhamo::paintEvent(QPaintEvent*) {
 
     painter.begin(this);
 
-    painter.setPen(QPen(Qt::red, 2));
+    painter.setPen(QPen(Qt::blue, 1));
+    painter.fillRect(0, 0, width(), height(), Qt::white);
 
-    painter.drawLine(b_inicial_x,b_inicial_y, b_final_x, b_final_y);
+    unsigned int i;
+    for (i=0; i < canvasLines.size(); i++) {
+        painter.drawLine(canvasLines[i].v[0], canvasLines[i].v[1], canvasLines[i].v[2], canvasLines[i].v[3]);
+    }
+
     painter.end();
+    canvasLines.clear();
 }
 
-void Canhamo::drawLine(Point begin, Point end){
+void Canhamo::drawLine(const Point &begin, const Point &end){
 
-     b_inicial_x = begin.x();
-     b_inicial_y = begin.y();
-     b_final_x = end.x();
-     b_final_y = end.y();
-     this->update();
+    Line line = { { begin.x(), begin.y(), end.x(), end.y() } }; 
+    canvasLines.push_back(line);
+}
+
+void Canhamo::refresh()
+{
+    this->update();
 }

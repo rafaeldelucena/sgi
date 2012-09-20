@@ -54,4 +54,5 @@ void ViewPort::draw()
             }
         }
     }
+    canvas->refresh();
 }

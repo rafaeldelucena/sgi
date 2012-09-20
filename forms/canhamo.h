@@ -1,23 +1,29 @@
 #ifndef CANHAMO_H
 #define CANHAMO_H
 
+#include <vector>
 #include <QWidget>
 #include <QPainter>
 #include "app/formas.h"
+
+typedef struct
+{
+    int v[4];
+} Line;
+
+typedef std::vector<Line> Lines;
 
 class Canhamo : public QWidget {
     Q_OBJECT
 public:
     Canhamo(QWidget* obj=0);
     void paintEvent(QPaintEvent*);
-    void drawLine(Point begin, Point End);
+    void drawLine(const Point &begin, const Point &end);
+    void refresh();
     
 private:
     QPainter painter;
-    int b_inicial_x;
-    int b_inicial_y;
-    int b_final_x;
-    int b_final_y;
+    Lines canvasLines;
 };
 
 #endif // CANHAMO_H
