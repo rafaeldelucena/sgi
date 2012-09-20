@@ -1,15 +1,77 @@
 #include "view/viewport.h"
 
-ViewPort::ViewPort(Canhamo *cv, Window *w, DisplayFile *d)
+ViewPort::ViewPort(Canhamo *cv, DisplayFile *d)
 : vMin(0.0, 0.0, 0.0), vMax(500.0, 500.0, 0.0)
 {
     canvas = cv;
-    window = w;
     displayFile = d;
+
+    Point wMax(250.0, 250.0, 0.0);
+    Point wMin(-250.0, -250.0, 0.0);
+    window = new Window(wMin, wMax);
 }
 
 ViewPort::~ViewPort()
 {
+    delete window;
+}
+
+void ViewPort::up(double value)
+{
+    window->up(value);
+    draw();
+}
+
+void ViewPort::down(double value)
+{
+    window->down(value);
+    draw();
+}
+
+void ViewPort::left(double value)
+{
+    window->left(value);
+    draw();
+}
+
+void ViewPort::right(double value)
+{
+    window->right(value);
+    draw();
+}
+
+void ViewPort::reset(void)
+{
+    window->reset();
+    draw();
+}
+
+void ViewPort::reset(double minx, double miny, double maxx, double maxy)
+{
+    window->reset(minx, miny, maxx, maxy);
+    draw();
+}
+
+void ViewPort::zoomIn(double value)
+{
+    window->decrease(value);
+    draw();
+}
+
+void ViewPort::zoomOut(double value)
+{
+    window->enlarge(value);
+    draw();
+}
+
+Point ViewPort::minWindowPoint(void)
+{
+    return window->min();
+}
+
+Point ViewPort::maxWindowPoint(void)
+{
+    return window->max();
 }
 
 Point ViewPort::transform(Point & wCoord)
@@ -22,8 +84,6 @@ Point ViewPort::transform(Point & wCoord)
 
 void ViewPort::draw()
 {
-
-
     canvas->clear();
 
     unsigned int i;
@@ -37,7 +97,6 @@ void ViewPort::draw()
             // desenha um X com centro no ponto
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0));
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0));
-
 
         } else {
             unsigned int i;

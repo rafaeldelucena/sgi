@@ -9,7 +9,6 @@
 #include "app/formas.h"
 
 #include "view/displayfile.h"
-#include "view/window.h"
 #include "view/viewport.h"
 
 #include "ui_mainwindow.h"
@@ -63,7 +62,6 @@ private:
 
     Points points;
     DisplayFile displayFile;
-    Window *window;
     ViewPort *viewPort;
     Object *xAxis, *yAxis, *zAxis;
     unsigned int objectPosition;

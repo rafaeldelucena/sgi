@@ -3,13 +3,9 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 
-    Point wMax(250.0, 250.0, 0.0);
-    Point wMin(-250.0, -250.0, 0.0);
-    window = new Window(wMin, wMax);
-
     ui->setupUi(this);
 
-    viewPort = new ViewPort(this->canvas(), window, &displayFile);
+    viewPort = new ViewPort(this->canvas(), &displayFile);
 
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
@@ -49,7 +45,6 @@ MainWindow::~MainWindow()
     delete pointsList;
     delete viewPort;
     delete ui;
-    delete window;
 }
 
 Canhamo* MainWindow::canvas(void)
@@ -160,59 +155,49 @@ void MainWindow::onPushPolygonAddButton(void)
 
 void MainWindow::onPushMoveUpButton(void)
 {
-    window->up(ui->moveStep->text().toDouble());
-    viewPort->draw();
+    viewPort->up(ui->moveStep->text().toDouble());
     updateWindowPoints();
 }
 
 void MainWindow::onPushMoveLeftButton(void)
 {
-    window->left(ui->moveStep->text().toDouble());
-    viewPort->draw();
+    viewPort->left(ui->moveStep->text().toDouble());
     updateWindowPoints();
 }
 
 void MainWindow::onPushMoveDownButton(void)
 {
-    window->down(ui->moveStep->text().toDouble());
-    viewPort->draw();
+    viewPort->down(ui->moveStep->text().toDouble());
     updateWindowPoints();
 }
 
 void MainWindow::onPushResetWindowButton(void)
 {
-    window->reset();
-    viewPort->draw();
+    viewPort->reset();
     updateWindowPoints();
 }
 
 void MainWindow::onPushUpdateWindowButton(void)
 {
-    window->reset(ui->windowMinX->text().toDouble(),
-                  ui->windowMinY->text().toDouble(),
-                  ui->windowMaxX->text().toDouble(),
-                  ui->windowMaxY->text().toDouble());
-    viewPort->draw();
+    viewPort->reset(ui->windowMinX->text().toDouble(), ui->windowMinY->text().toDouble(),
+                  ui->windowMaxX->text().toDouble(), ui->windowMaxY->text().toDouble());
 }
 
 void MainWindow::onPushMoveRightButton(void)
 {
-    window->right(ui->moveStep->text().toDouble());
-    viewPort->draw();
+    viewPort->right(ui->moveStep->text().toDouble());
     updateWindowPoints();
 }
 
 void MainWindow::onPushZoomInButton(void)
 {
-    window->decrease(ui->zoomFactor->text().toDouble());
-    viewPort->draw();
+    viewPort->zoomIn(ui->zoomFactor->text().toDouble());
     updateWindowPoints();
 }
 
 void MainWindow::onPushZoomOutButton(void)
 {
-    window->enlarge(ui->zoomFactor->text().toDouble());
-    viewPort->draw();
+    viewPort->zoomOut(ui->zoomFactor->text().toDouble());
     updateWindowPoints();
 }
 
@@ -223,12 +208,11 @@ void MainWindow::onSelectObject(const QModelIndex & index)
 
 void MainWindow::updateWindowPoints(void)
 {
-
     QString minx, miny, maxx, maxy;
-    minx = minx.setNum(window->min().x());
-    miny = miny.setNum(window->min().y());
-    maxx = maxx.setNum(window->max().x());
-    maxy = maxy.setNum(window->max().y());
+    minx = minx.setNum(viewPort->minWindowPoint().x());
+    miny = miny.setNum(viewPort->minWindowPoint().y());
+    maxx = maxx.setNum(viewPort->maxWindowPoint().x());
+    maxy = maxy.setNum(viewPort->maxWindowPoint().y());
 
     ui->windowMinX->setText(minx);
     ui->windowMinY->setText(miny);

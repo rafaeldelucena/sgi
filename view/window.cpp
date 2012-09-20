@@ -42,7 +42,7 @@ void Window::down(double value)
     maxPoint.y(maxPoint.y() - value);
 }
 
-void Window::reset()
+void Window::reset(void)
 {
     minPoint.x(-250);
     minPoint.y(-250);
