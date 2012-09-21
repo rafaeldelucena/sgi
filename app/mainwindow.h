@@ -46,8 +46,9 @@ private slots:
     void onPushTransformationsApplyButton(void);
 
 private:
-    void addPointsToPointsList(const Point &point);
-    void addObjectToListView(Object *object, QString name);
+    void addToPointsList(const Point &point);
+    void addToObjectsList(Object *object, QString name);
+    void addToTransformationsList(QString transformation);
     void removeObjectToListViewAt(unsigned int index);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
@@ -59,8 +60,10 @@ private:
     Ui::MainWindow *ui;
     QStringList pointsListNames;
     QStringList objectsListNames;
+    QStringList transformationsListNames;
     QStringListModel *pointsList;
     QStringListModel *objectsList;
+    QStringListModel *transformationsList;
 
     Points points;
     DisplayFile displayFile;

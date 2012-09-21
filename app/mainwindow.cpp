@@ -9,23 +9,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
+    transformationsList = new QStringListModel();
     objectPosition = 0;
 
     xAxis = new Object(LINE);
     xAxis->addPoint(Point(-150, 0, 0));
     xAxis->addPoint(Point(150, 0, 0));
-    addObjectToListView(xAxis, QString("x axis"));
+    addToObjectsList(xAxis, QString("x axis"));
 
     yAxis = new Object(LINE);
     yAxis->addPoint(Point(0, -150, 0));
     yAxis->addPoint(Point(0, 150, 0));
-    addObjectToListView(yAxis, QString("y axis"));
+    addToObjectsList(yAxis, QString("y axis"));
 
     /*
     zAxis = new Object(LINE);
     zAxis->addPoint(Point(0, 0, 0));
     zAxis->addPoint(Point(0, 0, 200));
-    addObjectToListView(zAxis, QString("z axis"));
+    addToObjectsList(zAxis, QString("z axis"));
     */
 
     listening();
@@ -92,7 +93,7 @@ void MainWindow::onPushLineSaveButton(void)
     line->addPoint(Point(startX, startY, startZ));
     line->addPoint(Point(endX, endY, endZ));
 
-    addObjectToListView(line, name);
+    addToObjectsList(line, name);
 
     clearLineTextFields();
 
@@ -114,7 +115,7 @@ void MainWindow::onPushPointSaveButton(void)
     Object *point = new Object(POINT, r, g, b);
     point->addPoint(Point(x, y, z));
 
-    addObjectToListView(point, name);
+    addToObjectsList(point, name);
 
     clearPointTextFields();
 
@@ -137,7 +138,7 @@ void MainWindow::onPushPolygonSaveButton(void)
             polygon->addPoint(points[i]);
         }
         points.clear();
-        addObjectToListView(polygon, name);
+        addToObjectsList(polygon, name);
     }
 
     pointsListNames.clear();
@@ -165,7 +166,7 @@ void MainWindow::onPushPolygonAddButton(void)
 
     points.push_back(point);
 
-    addPointsToPointsList(point);
+    addToPointsList(point);
 }
 
 void MainWindow::onPushMoveUpButton(void)
@@ -218,6 +219,46 @@ void MainWindow::onPushZoomOutButton(void)
 
 void MainWindow::onPushTransformationAddButton(void)
 {
+
+    QString transformation = QString("");
+    if (objectPosition >= 0) {
+
+        Object* obj = displayFile.getObjectAt(objectPosition);
+
+        if (ui->transformTranslate->isChecked()) {
+
+            QStringList params = ui->transformationParams->text().split(",");
+
+            if (params.size() == 2) {
+                addToTransformationsList(QString("translate(")+params.at(0)+QString(",")+params.at(1)+QString(")"));
+            }
+
+        } else if (ui->transformRotateOrigin->isChecked()) {
+
+            addToTransformationsList(QString("rotate_origin("+ui->transformationParams->text()+QString(")")));
+
+        } else if (ui->transformRotateCenter->isChecked()) {
+
+            addToTransformationsList(QString("rotate_center("+ui->transformationParams->text()+QString(")")));
+
+        } else if (ui->transformRotatePoint->isChecked()) {
+
+            QStringList params = ui->transformationParams->text().split(",");
+
+            if (params.size() == 3) {
+                addToTransformationsList(QString("rotate_point("+params.at(0)+QString(",")+
+                                                                  params.at(1)+QString(",")+
+                                                                  params.at(2)+QString(")")));
+            }
+        } else if (ui->transformScale->isChecked()) {
+
+            QStringList params = ui->transformationParams->text().split(",");
+
+            if (params.size() == 2) {
+                addToTransformationsList(QString("scale("+params.at(0)+QString(",")+params.at(1)+QString(")")));
+            }
+        }
+    }
 }
 
 void MainWindow::onPushTransformationsApplyButton(void)
@@ -251,7 +292,7 @@ void MainWindow::updateWindowPoints(void)
     ui->windowMaxY->setText(maxy);
 }
 
-void MainWindow::addObjectToListView(Object *object, QString name)
+void MainWindow::addToObjectsList(Object *object, QString name)
 {
     displayFile.insertObject(object, name);
     objectsListNames.append(name);
@@ -266,7 +307,14 @@ void MainWindow::removeObjectToListViewAt(unsigned int index)
     ui->objectsListView->setModel(objectsList);
 }
 
-void MainWindow::addPointsToPointsList(const Point& point)
+void MainWindow::addToTransformationsList(QString transformation)
+{
+    transformationsListNames.append(transformation);
+    transformationsList->setStringList(transformationsListNames);
+    ui->transformationsListView->setModel(transformationsList);
+}
+
+void MainWindow::addToPointsList(const Point& point)
 {
     pointsListNames.append(QString::fromStdString(point.toString()));
     pointsList->setStringList(pointsListNames);

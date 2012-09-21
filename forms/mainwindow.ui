@@ -1360,7 +1360,7 @@
       <string>Translate (x,y)</string>
      </property>
     </widget>
-    <widget class="QListView" name="transformationsList">
+    <widget class="QListView" name="transformationsListView">
      <property name="geometry">
       <rect>
        <x>0</x>
