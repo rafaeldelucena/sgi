@@ -36,10 +36,18 @@ private:
 
 typedef std::vector<Point> Points;
 
+typedef struct
+{
+    int r;
+    int g;
+    int b;
+} Color;
+
 class Object {
 public:
     Object(Shape type);
-    virtual ~Object(void);
+    Object(Shape type, int r, int g, int b);
+    ~Object(void);
     Shape type(void) const;
     unsigned int pointsCount(void) const;
     Point point(int index) const;
@@ -49,11 +57,12 @@ public:
     Object* scale(const Point& vector);
     Object* translate(const Point& displacement);
 
-    virtual std::string toString(void) const;
+    std::string toString(void) const;
+
+    Color color;
 
 private:
     Shape shape;
-    int color;
     Points points;
 };
 typedef std::vector<Object*> Objects;

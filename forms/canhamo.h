@@ -8,7 +8,7 @@
 
 typedef struct
 {
-    int v[4];
+    int v[7];
 } Line;
 
 typedef std::vector<Line> Lines;
@@ -18,7 +18,7 @@ class Canhamo : public QWidget {
 public:
     Canhamo(QWidget* obj=0);
     void paintEvent(QPaintEvent*);
-    void drawLine(const Point &begin, const Point &end);
+    void drawLine(const Point &begin, const Point &end, int r, int g, int b);
     void refresh();
     void clear();
 

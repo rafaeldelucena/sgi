@@ -82,9 +82,13 @@ void MainWindow::onPushLineSaveButton(void)
     double endY = ui->lineEndY->text().toDouble();
     double endZ = ui->lineEndZ->text().toDouble();
 
+    int r = ui->lineColorR->text().toInt();
+    int g = ui->lineColorG->text().toInt();
+    int b = ui->lineColorB->text().toInt();
+
     QString name = ui->lineName->text();
 
-    Object *line = new Object(LINE);
+    Object *line = new Object(LINE, r, g, b);
     line->addPoint(Point(startX, startY, startZ));
     line->addPoint(Point(endX, endY, endZ));
 
@@ -101,9 +105,13 @@ void MainWindow::onPushPointSaveButton(void)
     double y = ui->pointY->text().toDouble();
     double z = ui->pointZ->text().toDouble();
 
+    int r = ui->pointColorR->text().toInt();
+    int g = ui->pointColorG->text().toInt();
+    int b = ui->pointColorB->text().toInt();
+
     QString name = ui->pointName->text();
 
-    Object *point = new Object(POINT);
+    Object *point = new Object(POINT, r, g, b);
     point->addPoint(Point(x, y, z));
 
     addObjectToListView(point, name);
@@ -118,7 +126,12 @@ void MainWindow::onPushPolygonSaveButton(void)
 
     if (!points.empty()) {
         QString name = ui->polygonName->text();
-        Object *polygon = new Object(POLYGON);
+
+        int r = ui->polygonColorR->text().toInt();
+        int g = ui->polygonColorG->text().toInt();
+        int b = ui->polygonColorB->text().toInt();
+
+        Object *polygon = new Object(POLYGON, r, g, b);
         unsigned int i;
         for (i=0; i < points.size(); i++) {
             polygon->addPoint(points[i]);

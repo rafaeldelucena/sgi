@@ -6,7 +6,17 @@
 Object::Object(Shape type)
 {
     shape = type;
-    color = 0;
+    color.r = 0;
+    color.g = 0;
+    color.b = 0;
+}
+
+Object::Object(Shape type, int r, int g, int b)
+{
+    shape = type;
+    color.r = r;
+    color.g = g;
+    color.b = b;
 }
 
 Object::~Object(void)
