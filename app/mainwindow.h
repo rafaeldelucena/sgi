@@ -42,6 +42,8 @@ private slots:
     void onPushZoomInButton(void);
     void onPushZoomOutButton(void);
     void onSelectObject(const QModelIndex &);
+    void onPushTransformationAddButton(void);
+    void onPushTransformationsApplyButton(void);
 
 private:
     void addPointsToPointsList(const Point &point);

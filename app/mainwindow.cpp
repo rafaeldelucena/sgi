@@ -67,6 +67,8 @@ inline void MainWindow::listening(void)
     connect(ui->updateWindowButton, SIGNAL(pressed()), this, SLOT(onPushUpdateWindowButton()));
     connect(ui->zoomInButton, SIGNAL(pressed()), this, SLOT(onPushZoomInButton()));
     connect(ui->zoomOutButton, SIGNAL(pressed()), this, SLOT(onPushZoomOutButton()));
+    connect(ui->transformationAddButton, SIGNAL(pressed()), this, SLOT(onPushTransformationAddButton()));
+    connect(ui->transformationsApplyButton, SIGNAL(pressed()), this, SLOT(onPushTransformationsApplyButton()));
     connect(ui->objectsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectObject(const QModelIndex &)));
 }
 
@@ -201,9 +203,25 @@ void MainWindow::onPushZoomOutButton(void)
     updateWindowPoints();
 }
 
+void MainWindow::onPushTransformationAddButton(void)
+{
+}
+
+void MainWindow::onPushTransformationsApplyButton(void)
+{
+}
+
 void MainWindow::onSelectObject(const QModelIndex & index)
 {
     objectPosition = index.row();
+    Object* obj = displayFile.getObjectAt(objectPosition);
+    if (obj->type() == POINT) {
+        ui->selectedObjType->setText("Point");
+    } else if (obj->type() == LINE) {
+        ui->selectedObjType->setText("Line");
+    } else {
+        ui->selectedObjType->setText("Polygon");
+    }
 }
 
 void MainWindow::updateWindowPoints(void)

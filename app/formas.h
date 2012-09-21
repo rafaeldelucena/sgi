@@ -22,10 +22,16 @@ public:
     void y(double);
     void z(double);
 
+    Point rotate(double a);
+    Point scale(const Point& vector);
+    Point translate(const Point& displacement);
+
     std::string toString(void) const;
 
 private:
     double coordX, coordY, coordZ;
+
+    Point transform(double matrix[9]);
 };
 
 typedef std::vector<Point> Points;
@@ -39,10 +45,15 @@ public:
     Point point(int index) const;
     void addPoint(const Point &point);
 
+    Object* rotate(double a);
+    Object* scale(const Point& vector);
+    Object* translate(const Point& displacement);
+
     virtual std::string toString(void) const;
 
 private:
     Shape shape;
+    int color;
     Points points;
 };
 typedef std::vector<Object*> Objects;
