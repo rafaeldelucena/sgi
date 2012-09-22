@@ -53,7 +53,9 @@ public:
     Point point(int index) const;
     void addPoint(const Point &point);
 
-    Object* rotate(double a);
+    Object* rotate_origin(double angle);
+    Object* rotate_center(double angle);
+    Object* rotate_point(double angle,const Point& p);
     Object* scale(const Point& vector);
     Object* translate(const Point& displacement);
 

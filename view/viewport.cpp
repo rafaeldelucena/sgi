@@ -114,9 +114,9 @@ void ViewPort::draw()
                 startPoint = obj->point(0);
                 startPoint = transform(startPoint);
                 canvas->drawLine(endPoint, startPoint, obj->color.r, obj->color.g, obj->color.b);
-                displayFile->update();
             }
         }
     }
+    displayFile->update();
     canvas->refresh();
 }

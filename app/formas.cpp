@@ -1,5 +1,6 @@
 #include "app/formas.h"
 #include <math.h>
+#include <iostream>
 
 #define PI 3.14159265
 
@@ -56,7 +57,7 @@ Point Object::point(int index) const
     return points[index];
 }
 
-Object* Object::rotate(double a)
+Object* Object::rotate_origin(double a)
 {
     Object* new_obj = new Object(type()); // add color
     for (unsigned int i=0; i < pointsCount(); i++)
@@ -64,6 +65,13 @@ Object* Object::rotate(double a)
         new_obj->addPoint(point(i).rotate(a));
     }
     return new_obj;
+}
+Object* Object::rotate_center(double a)
+{
+}
+
+Object* Object::rotate_point(double a, const Point& p)
+{
 }
 
 Object* Object::scale(const Point& vector)

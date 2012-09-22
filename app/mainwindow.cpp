@@ -37,9 +37,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow()
 {
-    if (xAxis) delete xAxis;
-    if (yAxis) delete yAxis;
-    if (zAxis) delete zAxis;
     points.clear();
     pointsListNames.clear();
     delete objectsList;
@@ -230,32 +227,31 @@ void MainWindow::onPushTransformationAddButton(void)
             QStringList params = ui->transformationParams->text().split(",");
 
             if (params.size() == 2) {
-                addToTransformationsList(QString("translate(")+params.at(0)+QString(",")+params.at(1)+QString(")"));
+                addToTransformationsList(QString("translate ")+params.at(0)+QString(",")+params.at(1));
             }
 
         } else if (ui->transformRotateOrigin->isChecked()) {
 
-            addToTransformationsList(QString("rotate_origin("+ui->transformationParams->text()+QString(")")));
+            addToTransformationsList(QString("rotate_origin "+ui->transformationParams->text()));
 
         } else if (ui->transformRotateCenter->isChecked()) {
 
-            addToTransformationsList(QString("rotate_center("+ui->transformationParams->text()+QString(")")));
+            addToTransformationsList(QString("rotate_center "+ui->transformationParams->text()));
 
         } else if (ui->transformRotatePoint->isChecked()) {
 
             QStringList params = ui->transformationParams->text().split(",");
 
             if (params.size() == 3) {
-                addToTransformationsList(QString("rotate_point("+params.at(0)+QString(",")+
-                                                                  params.at(1)+QString(",")+
-                                                                  params.at(2)+QString(")")));
+                addToTransformationsList(QString("rotate_point "+params.at(0)+QString(",")+
+                                                                  params.at(1)+QString(",")));
             }
         } else if (ui->transformScale->isChecked()) {
 
             QStringList params = ui->transformationParams->text().split(",");
 
             if (params.size() == 2) {
-                addToTransformationsList(QString("scale("+params.at(0)+QString(",")+params.at(1)+QString(")")));
+                addToTransformationsList(QString("scale "+params.at(0)+QString(",")+params.at(1)));
             }
         }
     }
@@ -263,6 +259,29 @@ void MainWindow::onPushTransformationAddButton(void)
 
 void MainWindow::onPushTransformationsApplyButton(void)
 {
+
+    for (int i = 0; i < transformationsListNames.size(); ++i) {
+
+        QStringList t = transformationsListNames.at(i).split(" ");
+
+        Object* obj = displayFile.getObjectAt(objectPosition);
+
+        if (t.at(0) == "rotate_origin") {
+            obj->rotate_origin(t.at(1).toDouble());
+        } else if (t.at(0) == "rotate_center") {
+            obj->rotate_center(t.at(1).toDouble());
+        } else if (t.at(0) == "rotate_point") {
+            QStringList p = t.at(1).split(",");
+            obj->rotate_point(t.at(0).toDouble(), Point(p.at(1).toDouble(), p.at(2).toDouble()));
+        } else if (t.at(0) == "scale") {
+            QStringList p = t.at(1).split(",");
+            obj->scale(Point(p.at(0).toDouble(), p.at(1).toDouble()));
+        } else if (t.at(0) == "translate") {
+            QStringList p = t.at(1).split(",");
+            obj->translate(Point(p.at(0).toDouble(), p.at(1).toDouble()));
+            break;
+        }
+    }
 }
 
 void MainWindow::onSelectObject(const QModelIndex & index)
