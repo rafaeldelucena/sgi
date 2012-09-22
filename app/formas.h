@@ -34,7 +34,7 @@ private:
     void transform(double matrix[9]);
 };
 
-typedef std::vector<Point> Points;
+typedef std::vector<Point*> Points;
 
 typedef struct
 {
@@ -45,13 +45,12 @@ typedef struct
 
 class Object {
 public:
-    Object(Shape type);
-    Object(Shape type, int r, int g, int b);
+    Object(Shape type, int r = 0, int g = 0, int b = 0);
     ~Object(void);
     Shape type(void) const;
     unsigned int pointsCount(void) const;
-    Point point(int index) const;
-    void addPoint(const Point &point);
+    Point& point(int index) const;
+    void addPoint(double x, double y, double z);
 
     void rotate_origin(double angle);
     void rotate_center(double angle);

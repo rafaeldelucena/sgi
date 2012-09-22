@@ -42,20 +42,26 @@ private slots:
     void onPushZoomInButton(void);
     void onPushZoomOutButton(void);
     void onSelectObject(const QModelIndex &);
+    void onSelectTransformation(const QModelIndex &);
     void onPushTransformationAddButton(void);
+    void onPushTransformationDeleteButton(void);
     void onPushTransformationsApplyButton(void);
 
 private:
     void addToPointsList(const Point &point);
     void addToObjectsList(Object *object, QString name);
     void addToTransformationsList(QString transformation);
-    void removeObjectToListViewAt(unsigned int index);
+    void deleteFromObjectsList(unsigned int index);
+    void deleteFromTransformationsList(unsigned int index);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);
     void updateWindowPoints(void);
 
-    inline void listening(void);
+    unsigned int objectPosition;
+    unsigned int transformationPosition;
+
+    inline void listen(void);
 
     Ui::MainWindow *ui;
     QStringList pointsListNames;
@@ -65,11 +71,11 @@ private:
     QStringListModel *objectsList;
     QStringListModel *transformationsList;
 
-    Points points;
+    Object* tmpObject;
     DisplayFile displayFile;
     ViewPort *viewPort;
     Object *xAxis, *yAxis, *zAxis;
-    unsigned int objectPosition;
+
 };
 
 #endif // MAINWINDOW_H

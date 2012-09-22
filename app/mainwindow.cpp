@@ -1,35 +1,38 @@
 #include "app/mainwindow.h"
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-
     ui->setupUi(this);
 
     viewPort = new ViewPort(this->canvas(), &displayFile);
 
+    tmpObject = new Object(POLYGON);
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
     transformationsList = new QStringListModel();
+
     objectPosition = 0;
+    transformationPosition = 0;
 
     xAxis = new Object(LINE);
-    xAxis->addPoint(Point(-150, 0, 0));
-    xAxis->addPoint(Point(150, 0, 0));
+    xAxis->addPoint(-150, 0, 0);
+    xAxis->addPoint(150, 0, 0);
     addToObjectsList(xAxis, QString("x axis"));
 
     yAxis = new Object(LINE);
-    yAxis->addPoint(Point(0, -150, 0));
-    yAxis->addPoint(Point(0, 150, 0));
+    yAxis->addPoint(0, -150, 0);
+    yAxis->addPoint(0, 150, 0);
     addToObjectsList(yAxis, QString("y axis"));
 
     /*
     zAxis = new Object(LINE);
-    zAxis->addPoint(Point(0, 0, 0));
-    zAxis->addPoint(Point(0, 0, 200));
+    zAxis->addPoint(0, 0, 0);
+    zAxis->addPoint(0, 0, 200);
     addToObjectsList(zAxis, QString("z axis"));
     */
 
-    listening();
+    listen();
 
     viewPort->draw();
     updateWindowPoints();
@@ -37,9 +40,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow()
 {
-    points.clear();
     pointsListNames.clear();
+    delete tmpObject;
     delete objectsList;
+    delete transformationsList;
     delete pointsList;
     delete viewPort;
     delete ui;
@@ -50,7 +54,7 @@ Canhamo* MainWindow::canvas(void)
     return ui->widgetCanhamo;
 }
 
-inline void MainWindow::listening(void)
+inline void MainWindow::listen(void)
 {
     connect(ui->saveLineButton, SIGNAL(pressed()), this,  SLOT(onPushLineSaveButton()));
     connect(ui->savePointButton, SIGNAL(pressed()), this, SLOT(onPushPointSaveButton()));
@@ -66,8 +70,10 @@ inline void MainWindow::listening(void)
     connect(ui->zoomInButton, SIGNAL(pressed()), this, SLOT(onPushZoomInButton()));
     connect(ui->zoomOutButton, SIGNAL(pressed()), this, SLOT(onPushZoomOutButton()));
     connect(ui->transformationAddButton, SIGNAL(pressed()), this, SLOT(onPushTransformationAddButton()));
+    connect(ui->transformationDeleteButton, SIGNAL(pressed()), this, SLOT(onPushTransformationDeleteButton()));
     connect(ui->transformationsApplyButton, SIGNAL(pressed()), this, SLOT(onPushTransformationsApplyButton()));
     connect(ui->objectsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectObject(const QModelIndex &)));
+    connect(ui->transformationsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectTransformation(const QModelIndex &)));
 }
 
 void MainWindow::onPushLineSaveButton(void)
@@ -87,8 +93,8 @@ void MainWindow::onPushLineSaveButton(void)
     QString name = ui->lineName->text();
 
     Object *line = new Object(LINE, r, g, b);
-    line->addPoint(Point(startX, startY, startZ));
-    line->addPoint(Point(endX, endY, endZ));
+    line->addPoint(startX, startY, startZ);
+    line->addPoint(endX, endY, endZ);
 
     addToObjectsList(line, name);
 
@@ -110,7 +116,7 @@ void MainWindow::onPushPointSaveButton(void)
     QString name = ui->pointName->text();
 
     Object *point = new Object(POINT, r, g, b);
-    point->addPoint(Point(x, y, z));
+    point->addPoint(x, y, z);
 
     addToObjectsList(point, name);
 
@@ -121,33 +127,20 @@ void MainWindow::onPushPointSaveButton(void)
 
 void MainWindow::onPushPolygonSaveButton(void)
 {
-
-    if (!points.empty()) {
+    if (tmpObject) {
         QString name = ui->polygonName->text();
-
-        int r = ui->polygonColorR->text().toInt();
-        int g = ui->polygonColorG->text().toInt();
-        int b = ui->polygonColorB->text().toInt();
-
-        Object *polygon = new Object(POLYGON, r, g, b);
-        unsigned int i;
-        for (i=0; i < points.size(); i++) {
-            polygon->addPoint(points[i]);
-        }
-        points.clear();
-        addToObjectsList(polygon, name);
+        addToObjectsList(tmpObject, name);
+        delete tmpObject;
     }
-
     pointsListNames.clear();
     clearPolygonTextFields();
-
     viewPort->draw();
 }
 
 void MainWindow::onPushDeleteButton(void)
 {
     if (displayFile.objectsSize() > 0) {
-        removeObjectToListViewAt(objectPosition);
+        deleteFromObjectsList(objectPosition);
         displayFile.removeObjectAt(objectPosition);
         viewPort->draw();
     }
@@ -156,13 +149,18 @@ void MainWindow::onPushDeleteButton(void)
 
 void MainWindow::onPushPolygonAddButton(void)
 {
+    if (!tmpObject) {
+        int r = ui->polygonColorR->text().toInt();
+        int g = ui->polygonColorG->text().toInt();
+        int b = ui->polygonColorB->text().toInt();
+        tmpObject = new Object(POLYGON, r, g, b);
+    }
     double x = ui->polygonX->text().toDouble();
     double y = ui->polygonY->text().toDouble();
     double z = ui->polygonZ->text().toDouble();
+
+    tmpObject->addPoint(x, y, z);
     Point point(x, y, z);
-
-    points.push_back(point);
-
     addToPointsList(point);
 }
 
@@ -257,10 +255,14 @@ void MainWindow::onPushTransformationAddButton(void)
     }
 }
 
+void MainWindow::onPushTransformationDeleteButton(void)
+{
+    deleteFromTransformationsList(transformationPosition);
+}
+
 void MainWindow::onPushTransformationsApplyButton(void)
 {
-
-    for (int i = 0; i < transformationsListNames.size(); ++i) {
+    for (int i = 0; i < transformationsListNames.size(); i++) {
 
         QStringList t = transformationsListNames.at(i).split(" ");
 
@@ -277,11 +279,13 @@ void MainWindow::onPushTransformationsApplyButton(void)
             QStringList p = t.at(1).split(",");
             obj->scale(Point(p.at(0).toDouble(), p.at(1).toDouble()));
         } else if (t.at(0) == "translate") {
+            std::cout << t.at(0).toStdString() << std::endl;
             QStringList p = t.at(1).split(",");
+            std::cout << t.at(0).toStdString() <<  p.at(0).toStdString() << "," << p.at(1).toStdString() << std::endl; 
             obj->translate(Point(p.at(0).toDouble(), p.at(1).toDouble()));
-            break;
         }
     }
+    viewPort->draw();
 }
 
 void MainWindow::onSelectObject(const QModelIndex & index)
@@ -295,6 +299,11 @@ void MainWindow::onSelectObject(const QModelIndex & index)
     } else {
         ui->selectedObjType->setText("Polygon");
     }
+}
+
+void MainWindow::onSelectTransformation(const QModelIndex & index)
+{
+    transformationPosition = index.row();
 }
 
 void MainWindow::updateWindowPoints(void)
@@ -319,7 +328,7 @@ void MainWindow::addToObjectsList(Object *object, QString name)
     ui->objectsListView->setModel(objectsList);
 }
 
-void MainWindow::removeObjectToListViewAt(unsigned int index)
+void MainWindow::deleteFromObjectsList(unsigned int index)
 {
     objectsListNames.removeAt(index);
     objectsList->setStringList(objectsListNames);
@@ -329,6 +338,13 @@ void MainWindow::removeObjectToListViewAt(unsigned int index)
 void MainWindow::addToTransformationsList(QString transformation)
 {
     transformationsListNames.append(transformation);
+    transformationsList->setStringList(transformationsListNames);
+    ui->transformationsListView->setModel(transformationsList);
+}
+
+void MainWindow::deleteFromTransformationsList(unsigned int index)
+{
+    transformationsListNames.removeAt(index);
     transformationsList->setStringList(transformationsListNames);
     ui->transformationsListView->setModel(transformationsList);
 }

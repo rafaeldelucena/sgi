@@ -1445,6 +1445,19 @@
       <string>Rotate point (degrees, x, y)</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="transformationDeleteButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>97</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Delete</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

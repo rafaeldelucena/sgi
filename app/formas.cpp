@@ -4,14 +4,6 @@
 
 #define PI 3.14159265
 
-Object::Object(Shape type)
-{
-    shape = type;
-    color.r = 0;
-    color.g = 0;
-    color.b = 0;
-}
-
 Object::Object(Shape type, int r, int g, int b)
 {
     shape = type;
@@ -42,9 +34,10 @@ std::string Object::toString(void) const
 
     return s.str();
 }
-void Object::addPoint(const Point &point)
+void Object::addPoint(double x, double y, double z)
 {
-    points.push_back(point);
+    Point* p = new Point(x, y, z);
+    points.push_back(p);
 }
 
 unsigned int Object::pointsCount(void) const
@@ -52,9 +45,9 @@ unsigned int Object::pointsCount(void) const
     return points.size();
 }
 
-Point Object::point(int index) const
+Point& Object::point(int index) const
 {
-    return points[index];
+    return *points[index];
 }
 
 void Object::rotate_origin(double a)
@@ -145,6 +138,7 @@ void Point::scale(const Point& vector)
     double m[9] = { 0 };
     m[0] = vector.x();
     m[4] = vector.y();
+    m[8] = 1;
     transform(m);
     // [Sx 0  0
     //  0  Sy 0
