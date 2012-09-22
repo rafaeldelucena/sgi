@@ -11,7 +11,7 @@ enum Shape { POINT, LINE, POLYGON };
 class Point
 {
 public:
-    Point(double x, double y, double z = 1.0);
+    Point(double x = 0.0, double y =0.0, double z = 0.0);
     Point(const Point& point);
 
     double x(void) const;
@@ -25,7 +25,6 @@ public:
     void rotate(double a);
     void scale(const Point& vector);
     void translate(const Point& displacement);
-
     std::string toString(void) const;
 
 private:
@@ -49,7 +48,7 @@ public:
     ~Object(void);
     Shape type(void) const;
     unsigned int pointsCount(void) const;
-    Point& point(int index) const;
+    Point* point(int index) const;
     void addPoint(double x, double y, double z);
 
     void rotate_origin(double angle);

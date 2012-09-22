@@ -28,7 +28,7 @@ std::string Object::toString(void) const
     unsigned int i;
     for (i=0; i < pointsCount(); i++)
     {
-        s << "(" << point(i).x() << "," << point(i).y() << "," << point(i).z() << "),";
+        s << "(" << point(i)->x() << "," << point(i)->y() << "," << point(i)->z() << "),";
     }
     s << "]" << std::endl;
 
@@ -45,16 +45,16 @@ unsigned int Object::pointsCount(void) const
     return points.size();
 }
 
-Point& Object::point(int index) const
+Point* Object::point(int index) const
 {
-    return *points[index];
+    return points[index];
 }
 
 void Object::rotate_origin(double a)
 {
     for (unsigned int i=0; i < pointsCount(); i++)
     {
-        point(i).rotate(a);
+        point(i)->rotate(a);
     }
 }
 
@@ -70,7 +70,7 @@ void Object::scale(const Point& vector)
 {
     for (unsigned int i=0; i < pointsCount(); i++)
     {
-        point(i).scale(vector);
+        point(i)->scale(vector);
     }
 }
 
@@ -78,7 +78,7 @@ void Object::translate(const Point& displacement)
 {
     for (unsigned int i=0; i < pointsCount(); i++)
     {
-        point(i).translate(displacement);
+        point(i)->translate(displacement);
     }
 }
 

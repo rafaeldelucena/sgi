@@ -74,8 +74,6 @@ private:
     Object* tmpObject;
     DisplayFile displayFile;
     ViewPort *viewPort;
-    Object *xAxis, *yAxis, *zAxis;
-
 };
 
 #endif // MAINWINDOW_H

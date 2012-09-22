@@ -15,15 +15,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     objectPosition = 0;
     transformationPosition = 0;
 
-    xAxis = new Object(LINE);
+    Object* xAxis = new Object(LINE);
     xAxis->addPoint(-150, 0, 0);
     xAxis->addPoint(150, 0, 0);
     addToObjectsList(xAxis, QString("x axis"));
 
-    yAxis = new Object(LINE);
+    Object* yAxis = new Object(LINE);
     yAxis->addPoint(0, -150, 0);
     yAxis->addPoint(0, 150, 0);
     addToObjectsList(yAxis, QString("y axis"));
+
+    Object* triangle = new Object(POLYGON);
+    triangle->addPoint(50, -50, 0);
+    triangle->addPoint(100, 50, 0);
+    triangle->addPoint(100, 150, 0);
+    addToObjectsList(triangle, QString("triangle"));
 
     /*
     zAxis = new Object(LINE);
@@ -132,7 +138,6 @@ void MainWindow::onPushPolygonSaveButton(void)
         addToObjectsList(tmpObject, name);
         delete tmpObject;
     }
-    pointsListNames.clear();
     clearPolygonTextFields();
     viewPort->draw();
 }
@@ -349,7 +354,7 @@ void MainWindow::deleteFromTransformationsList(unsigned int index)
     ui->transformationsListView->setModel(transformationsList);
 }
 
-void MainWindow::addToPointsList(const Point& point)
+void MainWindow::addToPointsList(const Point &point)
 {
     pointsListNames.append(QString::fromStdString(point.toString()));
     pointsList->setStringList(pointsListNames);

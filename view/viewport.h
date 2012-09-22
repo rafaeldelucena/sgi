@@ -12,7 +12,7 @@ public:
     ViewPort(Canhamo* canvas, DisplayFile* displayfile);
     ~ViewPort(void);
 
-    Point transform(Point &point);
+    Point transform(const Point &wCoord);
     Point minWindowPoint(void);
     Point maxWindowPoint(void);
     void draw(void);
