@@ -50,7 +50,7 @@ Point* Object::point(int index) const
     return points[index];
 }
 
-void Object::rotate_origin(double a)
+void Object::rotateOrigin(double a)
 {
     for (unsigned int i=0; i < pointsCount(); i++)
     {
@@ -58,12 +58,34 @@ void Object::rotate_origin(double a)
     }
 }
 
-void Object::rotate_center(double a)
+Point Object::center(void)
+{
+    double x = 0;
+    double y = 0;
+    unsigned int i;
+    for (i=0; i < pointsCount(); i++)
+    {
+        x += point(i)->x();
+        y += point(i)->y();
+    }
+
+    x = x/i;
+    y = y/i;
+    
+    return Point(x, y);
+}
+
+void Object::rotateCenter(double a)
 {
 }
 
-void Object::rotate_point(double a, const Point& p)
+void Object::rotatePoint(double a, const Point& p)
 {
+    for (unsigned int i=0; i < pointsCount(); i++)
+    {
+        point(i)->translate(p);
+        point(i)->rotate(a);
+    }
 }
 
 void Object::scale(const Point& vector)

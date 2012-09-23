@@ -7,7 +7,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     viewPort = new ViewPort(this->canvas(), &displayFile);
 
-    tmpObject = new Object(POLYGON);
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
     transformationsList = new QStringListModel();
@@ -30,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     triangle->addPoint(100, 50, 0);
     triangle->addPoint(100, 150, 0);
     addToObjectsList(triangle, QString("triangle"));
+
+    tmpObject = 0;
 
     /*
     zAxis = new Object(LINE);
@@ -135,8 +136,11 @@ void MainWindow::onPushPolygonSaveButton(void)
 {
     if (tmpObject) {
         QString name = ui->polygonName->text();
-        addToObjectsList(tmpObject, name);
+        Object *polygon = new Object(POLYGON);
+        *polygon = *tmpObject;
+        addToObjectsList(polygon, name);
         delete tmpObject;
+        tmpObject = 0;
     }
     clearPolygonTextFields();
     viewPort->draw();
@@ -274,12 +278,12 @@ void MainWindow::onPushTransformationsApplyButton(void)
         Object* obj = displayFile.getObjectAt(objectPosition);
 
         if (t.at(0) == "rotate_origin") {
-            obj->rotate_origin(t.at(1).toDouble());
+            obj->rotateOrigin(t.at(1).toDouble());
         } else if (t.at(0) == "rotate_center") {
-            obj->rotate_center(t.at(1).toDouble());
+            obj->rotateCenter(t.at(1).toDouble());
         } else if (t.at(0) == "rotate_point") {
             QStringList p = t.at(1).split(",");
-            obj->rotate_point(t.at(0).toDouble(), Point(p.at(1).toDouble(), p.at(2).toDouble()));
+            obj->rotatePoint(t.at(0).toDouble(), Point(p.at(1).toDouble(), p.at(2).toDouble()));
         } else if (t.at(0) == "scale") {
             QStringList p = t.at(1).split(",");
             obj->scale(Point(p.at(0).toDouble(), p.at(1).toDouble()));
@@ -390,4 +394,7 @@ void MainWindow::clearPolygonTextFields(void)
     ui->polygonZ->clear();
 
     ui->polygonName->clear();
+    pointsListNames.clear();
+    pointsList->setStringList(pointsListNames);
+    ui->pointsListView->setModel(pointsList);
 }

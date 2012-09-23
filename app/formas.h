@@ -50,10 +50,11 @@ public:
     unsigned int pointsCount(void) const;
     Point* point(int index) const;
     void addPoint(double x, double y, double z);
+    Point center(void);
 
-    void rotate_origin(double angle);
-    void rotate_center(double angle);
-    void rotate_point(double angle,const Point& p);
+    void rotateOrigin(double angle);
+    void rotateCenter(double angle);
+    void rotatePoint(double angle,const Point& p);
     void scale(const Point& vector);
     void translate(const Point& displacement);
 
