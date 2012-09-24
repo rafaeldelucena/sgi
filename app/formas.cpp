@@ -81,10 +81,13 @@ void Object::rotatePoint(double a, const Point& p)
 
 void Object::scale(const Point& vector)
 {
+    Point p = getCenterPoint();
+    this->translate(Point(-p.x(), -p.y()));
     for (unsigned int i=0; i < pointsCount(); i++)
     {
         point(i)->scale(vector);
     }
+    this->translate(Point(p.x(), p.y()));
 }
 
 void Object::translate(const Point& displacement)
