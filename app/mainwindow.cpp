@@ -24,11 +24,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     yAxis->addPoint(0, 150, 0);
     addToObjectsList(yAxis, QString("y axis"));
 
-    Object* triangle = new Object(POLYGON);
+    Object* triangle = new Object(POLYGON, 0, 255, 0);
     triangle->addPoint(50, -50, 0);
     triangle->addPoint(100, 50, 0);
     triangle->addPoint(100, 150, 0);
     addToObjectsList(triangle, QString("triangle"));
+
+    Object* square = new Object(POLYGON, 255, 0, 0);
+    square->addPoint(-50, -50, 0);
+    square->addPoint(-150, -50, 0);
+    square->addPoint(-150, -150, 0);
+    square->addPoint(-50, -150, 0);
+    addToObjectsList(square, QString("square"));
 
     tmpObject = 0;
 
@@ -251,7 +258,8 @@ void MainWindow::onPushTransformationAddButton(void)
 
             if (params.size() == 3) {
                 addToTransformationsList(QString("rotate_point "+params.at(0)+QString(",")+
-                                                                  params.at(1)+QString(",")));
+                                                                  params.at(1)+QString(",")+
+                                                                  params.at(2)));
             }
         } else if (ui->transformScale->isChecked()) {
 
@@ -277,21 +285,41 @@ void MainWindow::onPushTransformationsApplyButton(void)
 
         Object* obj = displayFile.getObjectAt(objectPosition);
 
+        std::cout << t.at(0).toStdString() << std::endl;
+
         if (t.at(0) == "rotate_origin") {
+
             obj->rotateOrigin(t.at(1).toDouble());
+
+            std::cout << t.at(1).toStdString() << std::endl;
+
         } else if (t.at(0) == "rotate_center") {
+
             obj->rotateCenter(t.at(1).toDouble());
+
+            std::cout << t.at(1).toStdString() << std::endl;
+
         } else if (t.at(0) == "rotate_point") {
+
             QStringList p = t.at(1).split(",");
-            obj->rotatePoint(t.at(0).toDouble(), Point(p.at(1).toDouble(), p.at(2).toDouble()));
+            obj->rotatePoint(p.at(0).toDouble(), Point(p.at(1).toDouble(), p.at(2).toDouble()));
+
+            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << "," << p.at(2).toStdString() << std::endl;
+
         } else if (t.at(0) == "scale") {
+
             QStringList p = t.at(1).split(",");
             obj->scale(Point(p.at(0).toDouble(), p.at(1).toDouble()));
+
+            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << std::endl;
+
         } else if (t.at(0) == "translate") {
-            std::cout << t.at(0).toStdString() << std::endl;
+
             QStringList p = t.at(1).split(",");
-            std::cout << t.at(0).toStdString() <<  p.at(0).toStdString() << "," << p.at(1).toStdString() << std::endl; 
             obj->translate(Point(p.at(0).toDouble(), p.at(1).toDouble()));
+
+            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << std::endl;
+
         }
     }
     viewPort->draw();

@@ -50,7 +50,7 @@ public:
     unsigned int pointsCount(void) const;
     Point* point(int index) const;
     void addPoint(double x, double y, double z);
-    Point center(void);
+    Point getCenterPoint(void);
 
     void rotateOrigin(double angle);
     void rotateCenter(double angle);

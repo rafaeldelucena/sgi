@@ -58,34 +58,25 @@ void Object::rotateOrigin(double a)
     }
 }
 
-Point Object::center(void)
-{
-    double x = 0;
-    double y = 0;
-    unsigned int i;
-    for (i=0; i < pointsCount(); i++)
-    {
-        x += point(i)->x();
-        y += point(i)->y();
-    }
-
-    x = x/i;
-    y = y/i;
-    
-    return Point(x, y);
-}
-
 void Object::rotateCenter(double a)
 {
+    Point p = getCenterPoint();
+    this->translate(Point(-p.x(), -p.y()));
+    for (unsigned int i=0; i < pointsCount(); i++)
+    {
+        point(i)->rotate(a);
+    }
+    this->translate(Point(p.x(), p.y()));
 }
 
 void Object::rotatePoint(double a, const Point& p)
 {
+    this->translate(Point(-p.x(), -p.y()));
     for (unsigned int i=0; i < pointsCount(); i++)
     {
-        point(i)->translate(p);
         point(i)->rotate(a);
     }
+    this->translate(Point(p.x(), p.y()));
 }
 
 void Object::scale(const Point& vector)
@@ -103,6 +94,24 @@ void Object::translate(const Point& displacement)
         point(i)->translate(displacement);
     }
 }
+
+Point Object::getCenterPoint(void)
+{
+    double x = 0;
+    double y = 0;
+    unsigned int i;
+    for (i=0; i < pointsCount(); i++)
+    {
+        x += point(i)->x();
+        y += point(i)->y();
+    }
+
+    x = x/i;
+    y = y/i;
+
+    return Point(x, y);
+}
+
 
 Point::Point(double x, double y, double z) : coordX(x), coordY(y), coordZ(z)
 {
@@ -144,10 +153,10 @@ void Point::z(double z)
 void Point::rotate(double a)
 {
     double m[9] = { 0 };
-    m[1] = cos(a * PI/180);
-    m[2] = -sin(a * PI/180);
-    m[4] = sin(a * PI/180);
-    m[5] = cos(a * PI/180);
+    m[0] = cos(a * PI/180.0);
+    m[1] = -sin(a * PI/180.0);
+    m[3] = sin(a * PI/180.0);
+    m[4] = cos(a * PI/180.0);
     m[8] = 1.0;
     transform(m);
     // [cos(a) -sin(a) 0
@@ -184,9 +193,12 @@ void Point::translate(const Point& displacement)
 void Point::transform(double matrix[9])
 {
     //return [x y 1]*[matrix]
-    x((x() * matrix[0]) + (y() * matrix[3]) + matrix[6]);
-    y((x() * matrix[1]) + (y() * matrix[4]) + matrix[7]);
-    z((x() * matrix[2]) + (y() * matrix[5]) + matrix[8]);
+    double new_x = (x() * matrix[0]) + (y() * matrix[3]) + matrix[6];
+    double new_y = (x() * matrix[1]) + (y() * matrix[4]) + matrix[7];
+    double new_z = (x() * matrix[2]) + (y() * matrix[5]) + matrix[8];
+    x(new_x);
+    y(new_y);
+    z(new_z);
 }
 
 std::string Point::toString(void) const
