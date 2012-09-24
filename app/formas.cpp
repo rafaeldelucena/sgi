@@ -10,6 +10,7 @@ Object::Object(Shape type, int r, int g, int b)
     color.r = r;
     color.g = g;
     color.b = b;
+    clearTransformations();
 }
 
 Object::~Object(void)
@@ -50,52 +51,132 @@ Point* Object::point(int index) const
     return points[index];
 }
 
+void Object::updateTransform(double matrix[9])
+{
+    //return [transformationMatrix]*[matrix]
+
+    double *t = transformationMatrix;
+
+    // linha 1
+    double new_x1 = (t[0] * matrix[0]) + (t[1] * matrix[3]) + (t[2] * matrix[6]);
+    double new_y1 = (t[0] * matrix[1]) + (t[1] * matrix[4]) + (t[2] * matrix[7]);
+    double new_z1 = (t[0] * matrix[2]) + (t[1] * matrix[5]) + (t[2] * matrix[8]);
+
+    // linha 2
+    double new_x2 = (t[3] * matrix[0]) + (t[4] * matrix[3]) + (t[5] * matrix[6]);
+    double new_y2 = (t[3] * matrix[1]) + (t[4] * matrix[4]) + (t[5] * matrix[7]);
+    double new_z2 = (t[3] * matrix[2]) + (t[4] * matrix[5]) + (t[5] * matrix[8]);
+
+    // linha 3
+    double new_x3 = (t[6] * matrix[0]) + (t[7] * matrix[3]) + (t[8] * matrix[6]);
+    double new_y3 = (t[6] * matrix[1]) + (t[7] * matrix[4]) + (t[8] * matrix[7]);
+    double new_z3 = (t[6] * matrix[2]) + (t[7] * matrix[5]) + (t[8] * matrix[8]);
+
+    t[0] = new_x1;
+    t[1] = new_y1;
+    t[2] = new_z1;
+    t[3] = new_x2;
+    t[4] = new_y2;
+    t[5] = new_z2;
+    t[6] = new_x3;
+    t[7] = new_y3;
+    t[8] = new_z3;
+}
+
+void Object::clearTransformations(void)
+{
+    transformationMatrix[0] = 1;
+    transformationMatrix[1] = 0;
+    transformationMatrix[2] = 0;
+    transformationMatrix[3] = 0;
+    transformationMatrix[4] = 1;
+    transformationMatrix[5] = 0;
+    transformationMatrix[6] = 0;
+    transformationMatrix[7] = 0;
+    transformationMatrix[8] = 1;
+}
+
 void Object::rotateOrigin(double a)
 {
-    for (unsigned int i=0; i < pointsCount(); i++)
-    {
-        point(i)->rotate(a);
-    }
+    // [cos(a) -sin(a) 0
+    //  sin(a)  cos(a) 0
+    //    0       0    1]
+    double m[9] = { 0 };
+    m[0] = cos(a * PI/180.0);
+    m[1] = -sin(a * PI/180.0);
+    m[3] = sin(a * PI/180.0);
+    m[4] = cos(a * PI/180.0);
+    m[8] = 1.0;
+    updateTransform(m);
 }
 
 void Object::rotateCenter(double a)
 {
     Point p = getCenterPoint();
     this->translate(Point(-p.x(), -p.y()));
-    for (unsigned int i=0; i < pointsCount(); i++)
-    {
-        point(i)->rotate(a);
-    }
+
+    // [cos(a) -sin(a) 0
+    //  sin(a)  cos(a) 0
+    //    0       0    1]
+    double m[9] = { 0 };
+    m[0] = cos(a * PI/180.0);
+    m[1] = -sin(a * PI/180.0);
+    m[3] = sin(a * PI/180.0);
+    m[4] = cos(a * PI/180.0);
+    m[8] = 1.0;
+    updateTransform(m);
+
     this->translate(Point(p.x(), p.y()));
 }
 
 void Object::rotatePoint(double a, const Point& p)
 {
-    this->translate(Point(-p.x(), -p.y()));
-    for (unsigned int i=0; i < pointsCount(); i++)
-    {
-        point(i)->rotate(a);
-    }
-    this->translate(Point(p.x(), p.y()));
+    translate(Point(-p.x(), -p.y()));
+
+    // [cos(a) -sin(a) 0
+    //  sin(a)  cos(a) 0
+    //    0       0    1]
+    double m[9] = { 0 };
+    m[0] = cos(a * PI/180.0);
+    m[1] = -sin(a * PI/180.0);
+    m[3] = sin(a * PI/180.0);
+    m[4] = cos(a * PI/180.0);
+    m[8] = 1.0;
+    updateTransform(m);
+
+    translate(Point(p.x(), p.y()));
 }
 
 void Object::scale(const Point& vector)
 {
+    // [Sx 0  0
+    //  0  Sy 0
+    //  0  0  1]
     Point p = getCenterPoint();
     this->translate(Point(-p.x(), -p.y()));
-    for (unsigned int i=0; i < pointsCount(); i++)
-    {
-        point(i)->scale(vector);
-    }
+
+    double m[9] = { 0 };
+    m[0] = vector.x();
+    m[4] = vector.y();
+    m[8] = 1;
+
+    updateTransform(m);
+
     this->translate(Point(p.x(), p.y()));
 }
 
 void Object::translate(const Point& displacement)
 {
-    for (unsigned int i=0; i < pointsCount(); i++)
-    {
-        point(i)->translate(displacement);
-    }
+    // [1  0  0
+    //  0  1  0
+    //  dx dy 1]
+    double m[9] = { 0 };
+    m[0] = 1.0;
+    m[4] = 1.0;
+    m[6] = displacement.x();
+    m[7] = displacement.y();
+    m[8] = 1.0;
+    updateTransform(m);
 }
 
 Point Object::getCenterPoint(void)
@@ -115,6 +196,14 @@ Point Object::getCenterPoint(void)
     return Point(x, y);
 }
 
+void Object::transform(void)
+{
+    for (unsigned int i=0; i < pointsCount(); i++)
+    {
+        point(i)->transform(transformationMatrix);
+    }
+    clearTransformations();
+}
 
 Point::Point(double x, double y, double z) : coordX(x), coordY(y), coordZ(z)
 {
@@ -151,46 +240,6 @@ void Point::y(double y)
 void Point::z(double z)
 {
     this->coordZ = z;
-}
-
-void Point::rotate(double a)
-{
-    double m[9] = { 0 };
-    m[0] = cos(a * PI/180.0);
-    m[1] = -sin(a * PI/180.0);
-    m[3] = sin(a * PI/180.0);
-    m[4] = cos(a * PI/180.0);
-    m[8] = 1.0;
-    transform(m);
-    // [cos(a) -sin(a) 0
-    //  sin(a)  cos(a) 0
-    //    0       0    1]
-}
-
-void Point::scale(const Point& vector)
-{
-    double m[9] = { 0 };
-    m[0] = vector.x();
-    m[4] = vector.y();
-    m[8] = 1;
-    transform(m);
-    // [Sx 0  0
-    //  0  Sy 0
-    //  0  0  1]
-}
-
-void Point::translate(const Point& displacement)
-{
-    double m[9] = { 0 };
-    m[0] = 1.0;
-    m[4] = 1.0;
-    m[6] = displacement.x();
-    m[7] = displacement.y();
-    m[8] = 1.0;
-    transform(m);
-    // [1  0  0
-    //  0  1  0
-    //  dx dy 1]
 }
 
 void Point::transform(double matrix[9])

@@ -279,11 +279,11 @@ void MainWindow::onPushTransformationDeleteButton(void)
 
 void MainWindow::onPushTransformationsApplyButton(void)
 {
+    Object* obj = displayFile.getObjectAt(objectPosition);
+    obj->clearTransformations();
     for (int i = 0; i < transformationsListNames.size(); i++) {
 
         QStringList t = transformationsListNames.at(i).split(" ");
-
-        Object* obj = displayFile.getObjectAt(objectPosition);
 
         std::cout << t.at(0).toStdString() << std::endl;
 
@@ -322,6 +322,7 @@ void MainWindow::onPushTransformationsApplyButton(void)
 
         }
     }
+    obj->transform();
     viewPort->draw();
 }
 
