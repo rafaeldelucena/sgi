@@ -246,11 +246,19 @@ void MainWindow::onPushTransformationAddButton(void)
 
         } else if (ui->transformRotateOrigin->isChecked()) {
 
-            addToTransformationsList(QString("rotate_origin "+ui->transformationParams->text()));
+            QStringList params = ui->transformationParams->text().split(",");
+
+            if (params.size() == 1) {
+                addToTransformationsList(QString("rotate_origin ")+params.at(0));
+            }
 
         } else if (ui->transformRotateCenter->isChecked()) {
 
-            addToTransformationsList(QString("rotate_center "+ui->transformationParams->text()));
+            QStringList params = ui->transformationParams->text().split(",");
+
+            if (params.size() == 1) {
+                addToTransformationsList(QString("rotate_center ")+params.at(0));
+            }
 
         } else if (ui->transformRotatePoint->isChecked()) {
 

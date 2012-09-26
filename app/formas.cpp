@@ -113,7 +113,8 @@ void Object::rotateOrigin(double a)
 void Object::rotateCenter(double a)
 {
     Point p = getCenterPoint();
-    this->translate(Point(-p.x(), -p.y()));
+    p.transform(this->transformationMatrix);
+    translate(Point(-p.x(), -p.y()));
 
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
@@ -126,11 +127,12 @@ void Object::rotateCenter(double a)
     m[8] = 1.0;
     updateTransform(m);
 
-    this->translate(Point(p.x(), p.y()));
+    translate(Point(p.x(), p.y()));
 }
 
 void Object::rotatePoint(double a, const Point& p)
 {
+
     translate(Point(-p.x(), -p.y()));
 
     // [cos(a) -sin(a) 0
