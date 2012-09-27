@@ -207,7 +207,7 @@ void MainWindow::onPushResetWindowButton(void)
 void MainWindow::onPushUpdateWindowButton(void)
 {
     viewPort->reset(ui->windowMinX->text().toDouble(), ui->windowMinY->text().toDouble(),
-                  ui->windowMaxX->text().toDouble(), ui->windowMaxY->text().toDouble());
+            ui->windowMaxX->text().toDouble(), ui->windowMaxY->text().toDouble());
 }
 
 void MainWindow::onPushMoveRightButton(void)
@@ -232,9 +232,7 @@ void MainWindow::onPushTransformationAddButton(void)
 {
 
     QString transformation = QString("");
-    if (objectPosition >= 0) {
-
-        Object* obj = displayFile.getObjectAt(objectPosition);
+    if (objectPosition > 0) {
 
         if (ui->transformTranslate->isChecked()) {
 
@@ -288,7 +286,7 @@ void MainWindow::onPushTransformationDeleteButton(void)
 void MainWindow::onPushTransformationsApplyButton(void)
 {
     Object* obj = displayFile.getObjectAt(objectPosition);
-    obj->clearTransformations();
+    //obj->clearTransformations();
     for (int i = 0; i < transformationsListNames.size(); i++) {
 
         QStringList t = transformationsListNames.at(i).split(" ");
@@ -330,7 +328,7 @@ void MainWindow::onPushTransformationsApplyButton(void)
 
         }
     }
-    obj->transform();
+//    obj->transform();
     viewPort->draw();
 }
 
@@ -368,7 +366,7 @@ void MainWindow::updateWindowPoints(void)
 
 void MainWindow::addToObjectsList(Object *object, QString name)
 {
-    displayFile.insertObject(object, name);
+    displayFile.insertObject(object);
     objectsListNames.append(name);
     objectsList->setStringList(objectsListNames);
     ui->objectsListView->setModel(objectsList);

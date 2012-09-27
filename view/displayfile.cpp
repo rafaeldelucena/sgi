@@ -9,7 +9,7 @@ DisplayFile::~DisplayFile()
     worldObjects.clear();
 }
 
-void DisplayFile::insertObject(Object *object, QString name)
+void DisplayFile::insertObject(Object *object)
 {
     worldObjects.push_back(object);
 }

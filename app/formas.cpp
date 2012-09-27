@@ -51,49 +51,49 @@ Point* Object::point(int index) const
     return points[index];
 }
 
-void Object::updateTransform(double matrix[9])
+void Object::updateTransform(const Matrix& matrix)
 {
     //return [transformationMatrix]*[matrix]
 
-    double *t = transformationMatrix;
+    Matrix *t = &transformationMatrix;
 
     // linha 1
-    double new_x1 = (t[0] * matrix[0]) + (t[1] * matrix[3]) + (t[2] * matrix[6]);
-    double new_y1 = (t[0] * matrix[1]) + (t[1] * matrix[4]) + (t[2] * matrix[7]);
-    double new_z1 = (t[0] * matrix[2]) + (t[1] * matrix[5]) + (t[2] * matrix[8]);
+    double new_x1 = (t->v[0] * matrix.v[0]) + (t->v[1] * matrix.v[3]) + (t->v[2] * matrix.v[6]);
+    double new_y1 = (t->v[0] * matrix.v[1]) + (t->v[1] * matrix.v[4]) + (t->v[2] * matrix.v[7]);
+    double new_z1 = (t->v[0] * matrix.v[2]) + (t->v[1] * matrix.v[5]) + (t->v[2] * matrix.v[8]);
 
     // linha 2
-    double new_x2 = (t[3] * matrix[0]) + (t[4] * matrix[3]) + (t[5] * matrix[6]);
-    double new_y2 = (t[3] * matrix[1]) + (t[4] * matrix[4]) + (t[5] * matrix[7]);
-    double new_z2 = (t[3] * matrix[2]) + (t[4] * matrix[5]) + (t[5] * matrix[8]);
+    double new_x2 = (t->v[3] * matrix.v[0]) + (t->v[4] * matrix.v[3]) + (t->v[5] * matrix.v[6]);
+    double new_y2 = (t->v[3] * matrix.v[1]) + (t->v[4] * matrix.v[4]) + (t->v[5] * matrix.v[7]);
+    double new_z2 = (t->v[3] * matrix.v[2]) + (t->v[4] * matrix.v[5]) + (t->v[5] * matrix.v[8]);
 
     // linha 3
-    double new_x3 = (t[6] * matrix[0]) + (t[7] * matrix[3]) + (t[8] * matrix[6]);
-    double new_y3 = (t[6] * matrix[1]) + (t[7] * matrix[4]) + (t[8] * matrix[7]);
-    double new_z3 = (t[6] * matrix[2]) + (t[7] * matrix[5]) + (t[8] * matrix[8]);
+    double new_x3 = (t->v[6] * matrix.v[0]) + (t->v[7] * matrix.v[3]) + (t->v[8] * matrix.v[6]);
+    double new_y3 = (t->v[6] * matrix.v[1]) + (t->v[7] * matrix.v[4]) + (t->v[8] * matrix.v[7]);
+    double new_z3 = (t->v[6] * matrix.v[2]) + (t->v[7] * matrix.v[5]) + (t->v[8] * matrix.v[8]);
 
-    t[0] = new_x1;
-    t[1] = new_y1;
-    t[2] = new_z1;
-    t[3] = new_x2;
-    t[4] = new_y2;
-    t[5] = new_z2;
-    t[6] = new_x3;
-    t[7] = new_y3;
-    t[8] = new_z3;
+    t->v[0] = new_x1;
+    t->v[1] = new_y1;
+    t->v[2] = new_z1;
+    t->v[3] = new_x2;
+    t->v[4] = new_y2;
+    t->v[5] = new_z2;
+    t->v[6] = new_x3;
+    t->v[7] = new_y3;
+    t->v[8] = new_z3;
 }
 
 void Object::clearTransformations(void)
 {
-    transformationMatrix[0] = 1;
-    transformationMatrix[1] = 0;
-    transformationMatrix[2] = 0;
-    transformationMatrix[3] = 0;
-    transformationMatrix[4] = 1;
-    transformationMatrix[5] = 0;
-    transformationMatrix[6] = 0;
-    transformationMatrix[7] = 0;
-    transformationMatrix[8] = 1;
+    transformationMatrix.v[0] = 1;
+    transformationMatrix.v[1] = 0;
+    transformationMatrix.v[2] = 0;
+    transformationMatrix.v[3] = 0;
+    transformationMatrix.v[4] = 1;
+    transformationMatrix.v[5] = 0;
+    transformationMatrix.v[6] = 0;
+    transformationMatrix.v[7] = 0;
+    transformationMatrix.v[8] = 1;
 }
 
 void Object::rotateOrigin(double a)
@@ -101,30 +101,30 @@ void Object::rotateOrigin(double a)
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
     //    0       0    1]
-    double m[9] = { 0 };
-    m[0] = cos(a * PI/180.0);
-    m[1] = -sin(a * PI/180.0);
-    m[3] = sin(a * PI/180.0);
-    m[4] = cos(a * PI/180.0);
-    m[8] = 1.0;
+    Matrix m;
+    m.v[0] = cos(a * PI/180.0);
+    m.v[1] = -sin(a * PI/180.0);
+    m.v[3] = sin(a * PI/180.0);
+    m.v[4] = cos(a * PI/180.0);
+    m.v[8] = 1.0;
     updateTransform(m);
 }
 
 void Object::rotateCenter(double a)
 {
     Point p = getCenterPoint();
-    p.transform(this->transformationMatrix);
+    p = p.transform2(this->transformationMatrix);
     translate(Point(-p.x(), -p.y()));
 
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
     //    0       0    1]
-    double m[9] = { 0 };
-    m[0] = cos(a * PI/180.0);
-    m[1] = -sin(a * PI/180.0);
-    m[3] = sin(a * PI/180.0);
-    m[4] = cos(a * PI/180.0);
-    m[8] = 1.0;
+    Matrix m;
+    m.v[0] = cos(a * PI/180.0);
+    m.v[1] = -sin(a * PI/180.0);
+    m.v[3] = sin(a * PI/180.0);
+    m.v[4] = cos(a * PI/180.0);
+    m.v[8] = 1.0;
     updateTransform(m);
 
     translate(Point(p.x(), p.y()));
@@ -138,12 +138,12 @@ void Object::rotatePoint(double a, const Point& p)
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
     //    0       0    1]
-    double m[9] = { 0 };
-    m[0] = cos(a * PI/180.0);
-    m[1] = -sin(a * PI/180.0);
-    m[3] = sin(a * PI/180.0);
-    m[4] = cos(a * PI/180.0);
-    m[8] = 1.0;
+    Matrix m;
+    m.v[0] = cos(a * PI/180.0);
+    m.v[1] = -sin(a * PI/180.0);
+    m.v[3] = sin(a * PI/180.0);
+    m.v[4] = cos(a * PI/180.0);
+    m.v[8] = 1.0;
     updateTransform(m);
 
     translate(Point(p.x(), p.y()));
@@ -157,10 +157,10 @@ void Object::scale(const Point& vector)
     Point p = getCenterPoint();
     this->translate(Point(-p.x(), -p.y()));
 
-    double m[9] = { 0 };
-    m[0] = vector.x();
-    m[4] = vector.y();
-    m[8] = 1;
+    Matrix m;
+    m.v[0] = vector.x();
+    m.v[4] = vector.y();
+    m.v[8] = 1;
 
     updateTransform(m);
 
@@ -172,12 +172,12 @@ void Object::translate(const Point& displacement)
     // [1  0  0
     //  0  1  0
     //  dx dy 1]
-    double m[9] = { 0 };
-    m[0] = 1.0;
-    m[4] = 1.0;
-    m[6] = displacement.x();
-    m[7] = displacement.y();
-    m[8] = 1.0;
+    Matrix m;
+    m.v[0] = 1.0;
+    m.v[4] = 1.0;
+    m.v[6] = displacement.x();
+    m.v[7] = displacement.y();
+    m.v[8] = 1.0;
     updateTransform(m);
 }
 
@@ -205,6 +205,11 @@ void Object::transform(void)
         point(i)->transform(transformationMatrix);
     }
     clearTransformations();
+}
+
+Matrix Object::transformations()
+{
+    return transformationMatrix;
 }
 
 Point::Point(double x, double y, double z) : coordX(x), coordY(y), coordZ(z)
@@ -244,20 +249,29 @@ void Point::z(double z)
     this->coordZ = z;
 }
 
-void Point::transform(double matrix[9])
+void Point::transform(const Matrix &m)
 {
     //return [x y 1]*[matrix]
-    double new_x = (x() * matrix[0]) + (y() * matrix[3]) + matrix[6];
-    double new_y = (x() * matrix[1]) + (y() * matrix[4]) + matrix[7];
-    double new_z = (x() * matrix[2]) + (y() * matrix[5]) + matrix[8];
+    double new_x = (x() * m.v[0]) + (y() * m.v[3]) + m.v[6];
+    double new_y = (x() * m.v[1]) + (y() * m.v[4]) + m.v[7];
+    double new_z = (x() * m.v[2]) + (y() * m.v[5]) + m.v[8];
     x(new_x);
     y(new_y);
     z(new_z);
 }
 
+Point Point::transform2(const Matrix &m)
+{
+    //return [x y 1]*[matrix]
+    double new_x = (x() * m.v[0]) + (y() * m.v[3]) + m.v[6];
+    double new_y = (x() * m.v[1]) + (y() * m.v[4]) + m.v[7];
+    double new_z = (x() * m.v[2]) + (y() * m.v[5]) + m.v[8];
+    return Point(new_x, new_y, new_z);
+}
+
 std::string Point::toString(void) const
 {
     std::stringstream s;
-    s << "Point(" << x() << ","<< y() << "," << z() << ")" << std::endl;
+    s << "v " << x() << " "<< y() << " " << z() << std::endl;
     return s.str();
 }
