@@ -81,7 +81,7 @@ Point ViewPort::transform(const Point &wCoord)
 
     return Point(vCoordX, vCoordY);
 }
-
+#include <iostream>
 void ViewPort::draw()
 {
     canvas->clear();
@@ -93,7 +93,9 @@ void ViewPort::draw()
         if (obj->type() == POINT) {
             // desenha um X com centro no ponto
 
-            Point vPoint = transform(*obj->point(0));
+            Point vPoint = *obj->point(0);
+            vPoint = vPoint.transform2(obj->transformations());
+            vPoint = transform(vPoint);
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
                              obj->color.r, obj->color.g, obj->color.b);
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
@@ -104,13 +106,17 @@ void ViewPort::draw()
             Point endPoint(*obj->point(obj->pointsCount() - 1));
             for (i=0; i < obj->pointsCount() - 1; i++) {
                 startPoint = *obj->point(i);
-                startPoint = transform(startPoint);
                 endPoint = *obj->point(i+1);
+                startPoint = startPoint.transform2(obj->transformations());
+                endPoint = endPoint.transform2(obj->transformations());
+                startPoint = transform(startPoint);
                 endPoint = transform(endPoint);
+                
                 canvas->drawLine(startPoint, endPoint, obj->color.r, obj->color.g, obj->color.b);
             }
             if (obj->type() == POLYGON) {
                 startPoint = *obj->point(0);
+                startPoint = startPoint.transform2(obj->transformations());
                 startPoint = transform(startPoint);
                 canvas->drawLine(endPoint, startPoint, obj->color.r, obj->color.g, obj->color.b);
             }

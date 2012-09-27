@@ -2,7 +2,6 @@
 #define DISPLAYFILE_H
 
 #include <vector>
-#include <QString>
 #include "app/formas.h"
 
 class DisplayFile
@@ -12,7 +11,7 @@ public:
     ~DisplayFile();
     unsigned int objectsSize();
     void update();
-    void insertObject(Object *, QString);
+    void insertObject(Object *);
     void removeObjectAt(unsigned int index);
     Object* getObjectAt(unsigned int index);
 private:

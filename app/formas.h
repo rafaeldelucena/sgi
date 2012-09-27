@@ -8,6 +8,11 @@
 
 enum Shape { POINT, LINE, POLYGON };
 
+typedef struct
+{
+    double v[9];
+} Matrix;
+
 class Point
 {
 public:
@@ -22,7 +27,8 @@ public:
     void y(double);
     void z(double);
 
-    void transform(double matrix[9]);
+    void transform(const Matrix &matrix);
+    Point transform2(const Matrix &matrix);
 
     std::string toString(void) const;
 
@@ -57,6 +63,8 @@ public:
     void transform(void);
     void clearTransformations(void);
 
+    Matrix transformations();
+
     std::string toString(void) const;
 
     Color color;
@@ -64,8 +72,8 @@ public:
 private:
     Shape shape;
     Points points;
-    double transformationMatrix[9];
-    void updateTransform(double m[9]);
+    Matrix transformationMatrix;
+    void updateTransform(const Matrix &);
 };
 typedef std::vector<Object*> Objects;
 
