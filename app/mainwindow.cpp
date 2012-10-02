@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
 
     viewPort = new ViewPort(this->canvas(), &displayFile);
+    parser = new Parser(&displayFile);
 
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
@@ -88,6 +89,8 @@ inline void MainWindow::listen(void)
     connect(ui->transformationsApplyButton, SIGNAL(pressed()), this, SLOT(onPushTransformationsApplyButton()));
     connect(ui->objectsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectObject(const QModelIndex &)));
     connect(ui->transformationsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectTransformation(const QModelIndex &)));
+    connect(ui->importObjAction, SIGNAL(triggered()), this, SLOT(onActionImportObjTriggered()));
+    connect(ui->exportObjAction, SIGNAL(triggered()), this, SLOT(onActionExportObjTriggered()));
 }
 
 void MainWindow::onPushLineSaveButton(void)
@@ -432,4 +435,14 @@ void MainWindow::clearPolygonTextFields(void)
     pointsListNames.clear();
     pointsList->setStringList(pointsListNames);
     ui->pointsListView->setModel(pointsList);
+}
+
+void MainWindow::onActionImportObjTriggered(void)
+{
+//    parser->importFromObj("new-file.obj");
+}
+
+void MainWindow::onActionExportObjTriggered(void)
+{
+    parser->exportToObj("new-file.obj");
 }

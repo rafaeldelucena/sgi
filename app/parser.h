@@ -5,11 +5,11 @@
 #include "view/displayfile.h"
 #include "app/formas.h"
 
-class ObjParser
+class Parser
 {
     public:
-        ObjParser(DisplayFile *df);
-        ~ObjParser();
+        Parser(DisplayFile *df);
+        ~Parser();
 
         void exportToObj(const std::string &path);
         void importFromObj(const std::string &path);

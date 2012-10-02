@@ -1469,7 +1469,31 @@
      <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="importObjAction"/>
+    <addaction name="exportObjAction"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
+  <action name="importObjAction">
+   <property name="text">
+    <string>Import from .Obj</string>
+   </property>
+   <property name="toolTip">
+    <string>Import from .Obj</string>
+   </property>
+  </action>
+  <action name="exportObjAction">
+   <property name="text">
+    <string>Export to .Obj</string>
+   </property>
+   <property name="toolTip">
+    <string>Export to .Obj</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
