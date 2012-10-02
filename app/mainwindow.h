@@ -7,6 +7,7 @@
 #include <QPainter>
 
 #include "app/formas.h"
+#include "app/parser.h"
 
 #include "view/displayfile.h"
 #include "view/viewport.h"
@@ -46,6 +47,8 @@ private slots:
     void onPushTransformationAddButton(void);
     void onPushTransformationDeleteButton(void);
     void onPushTransformationsApplyButton(void);
+    void onActionImportObjTriggered(void);
+    void onActionExportObjTriggered(void);
 
 private:
     void addToPointsList(const Point &point);
@@ -74,6 +77,7 @@ private:
     Object* tmpObject;
     DisplayFile displayFile;
     ViewPort *viewPort;
+    Parser *parser;
 };
 
 #endif // MAINWINDOW_H

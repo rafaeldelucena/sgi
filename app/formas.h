@@ -24,6 +24,7 @@ public:
 
     Point transform(double matrix[9]);
     std::string toString(void) const;
+    std::string toObj(void) const;
 
 private:
     double coordX, coordY, coordZ;

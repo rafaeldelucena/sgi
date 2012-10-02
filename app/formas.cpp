@@ -236,3 +236,10 @@ std::string Point::toString(void) const
     s << "Point(" << x() << ","<< y() << "," << z() << ")" << std::endl;
     return s.str();
 }
+
+std::string Point::toObj(void) const
+{
+    std::stringstream s;
+    s << "v " << x() << " "<< y() << " " << z() << std::endl;
+    return s.str();
+}
