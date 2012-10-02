@@ -101,7 +101,7 @@ void Object::rotateOrigin(double a)
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
     //    0       0    1]
-    Matrix m;
+    Matrix m = {0};
     m.v[0] = cos(a * PI/180.0);
     m.v[1] = -sin(a * PI/180.0);
     m.v[3] = sin(a * PI/180.0);
@@ -119,7 +119,7 @@ void Object::rotateCenter(double a)
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
     //    0       0    1]
-    Matrix m;
+    Matrix m = {0};
     m.v[0] = cos(a * PI/180.0);
     m.v[1] = -sin(a * PI/180.0);
     m.v[3] = sin(a * PI/180.0);
@@ -138,7 +138,7 @@ void Object::rotatePoint(double a, const Point& p)
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
     //    0       0    1]
-    Matrix m;
+    Matrix m = {0};
     m.v[0] = cos(a * PI/180.0);
     m.v[1] = -sin(a * PI/180.0);
     m.v[3] = sin(a * PI/180.0);
@@ -157,7 +157,7 @@ void Object::scale(const Point& vector)
     Point p = getCenterPoint();
     this->translate(Point(-p.x(), -p.y()));
 
-    Matrix m;
+    Matrix m = {0};
     m.v[0] = vector.x();
     m.v[4] = vector.y();
     m.v[8] = 1;
@@ -172,7 +172,7 @@ void Object::translate(const Point& displacement)
     // [1  0  0
     //  0  1  0
     //  dx dy 1]
-    Matrix m;
+    Matrix m = {0};
     m.v[0] = 1.0;
     m.v[4] = 1.0;
     m.v[6] = displacement.x();
@@ -270,6 +270,13 @@ Point Point::transform2(const Matrix &m)
 }
 
 std::string Point::toString(void) const
+{
+    std::stringstream s;
+    s << "Point (" << x() << ","<< y() << "," << z() << ")" << std::endl;
+    return s.str();
+}
+
+std::string Point::toObj(void) const
 {
     std::stringstream s;
     s << "v " << x() << " "<< y() << " " << z() << std::endl;

@@ -31,6 +31,7 @@ public:
     Point transform2(const Matrix &matrix);
 
     std::string toString(void) const;
+    std::string toObj(void) const;
 
 private:
     double coordX, coordY, coordZ;
