@@ -8,7 +8,8 @@
 
 typedef struct
 {
-    int v[7];
+    double v[4];
+    int c[3];
 } Line;
 
 typedef std::vector<Line> Lines;
