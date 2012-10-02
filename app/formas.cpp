@@ -22,19 +22,6 @@ Shape Object::type(void) const
     return shape;
 }
 
-std::string Object::toString(void) const
-{
-    std::stringstream s;
-    s << "Object[type=" << type() << ";pontos=";
-    unsigned int i;
-    for (i=0; i < pointsCount(); i++)
-    {
-        s << "(" << point(i)->x() << "," << point(i)->y() << "," << point(i)->z() << "),";
-    }
-    s << "]" << std::endl;
-
-    return s.str();
-}
 void Object::addPoint(double x, double y, double z)
 {
     Point* p = new Point(x, y, z);
@@ -46,9 +33,10 @@ unsigned int Object::pointsCount(void) const
     return points.size();
 }
 
-Point* Object::point(int index) const
+Point Object::point(int index)
 {
-    return points[index];
+    Point *p = points[index];
+    return p->transform(transformationMatrix);
 }
 
 void Object::updateTransform(double matrix[9])
@@ -113,7 +101,6 @@ void Object::rotateOrigin(double a)
 void Object::rotateCenter(double a)
 {
     Point p = getCenterPoint();
-    p.transform(this->transformationMatrix);
     translate(Point(-p.x(), -p.y()));
 
     // [cos(a) -sin(a) 0
@@ -132,7 +119,6 @@ void Object::rotateCenter(double a)
 
 void Object::rotatePoint(double a, const Point& p)
 {
-
     translate(Point(-p.x(), -p.y()));
 
     // [cos(a) -sin(a) 0
@@ -188,23 +174,14 @@ Point Object::getCenterPoint(void)
     unsigned int i;
     for (i=0; i < pointsCount(); i++)
     {
-        x += point(i)->x();
-        y += point(i)->y();
+        x += point(i).x();
+        y += point(i).y();
     }
 
     x = x/i;
     y = y/i;
 
     return Point(x, y);
-}
-
-void Object::transform(void)
-{
-    for (unsigned int i=0; i < pointsCount(); i++)
-    {
-        point(i)->transform(transformationMatrix);
-    }
-    clearTransformations();
 }
 
 Point::Point(double x, double y, double z) : coordX(x), coordY(y), coordZ(z)
@@ -244,15 +221,13 @@ void Point::z(double z)
     this->coordZ = z;
 }
 
-void Point::transform(double matrix[9])
+Point Point::transform(double matrix[9])
 {
     //return [x y 1]*[matrix]
     double new_x = (x() * matrix[0]) + (y() * matrix[3]) + matrix[6];
     double new_y = (x() * matrix[1]) + (y() * matrix[4]) + matrix[7];
     double new_z = (x() * matrix[2]) + (y() * matrix[5]) + matrix[8];
-    x(new_x);
-    y(new_y);
-    z(new_z);
+    return Point(new_x, new_y, new_z);
 }
 
 std::string Point::toString(void) const

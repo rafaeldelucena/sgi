@@ -232,9 +232,7 @@ void MainWindow::onPushTransformationAddButton(void)
 {
 
     QString transformation = QString("");
-    if (objectPosition >= 0) {
-
-        Object* obj = displayFile.getObjectAt(objectPosition);
+    if (displayFile.objectsSize() > 0) {
 
         if (ui->transformTranslate->isChecked()) {
 
@@ -288,7 +286,6 @@ void MainWindow::onPushTransformationDeleteButton(void)
 void MainWindow::onPushTransformationsApplyButton(void)
 {
     Object* obj = displayFile.getObjectAt(objectPosition);
-    obj->clearTransformations();
     for (int i = 0; i < transformationsListNames.size(); i++) {
 
         QStringList t = transformationsListNames.at(i).split(" ");
@@ -330,7 +327,6 @@ void MainWindow::onPushTransformationsApplyButton(void)
 
         }
     }
-    obj->transform();
     viewPort->draw();
 }
 

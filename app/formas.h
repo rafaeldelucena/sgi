@@ -22,8 +22,7 @@ public:
     void y(double);
     void z(double);
 
-    void transform(double matrix[9]);
-
+    Point transform(double matrix[9]);
     std::string toString(void) const;
 
 private:
@@ -45,7 +44,7 @@ public:
     ~Object(void);
     Shape type(void) const;
     unsigned int pointsCount(void) const;
-    Point* point(int index) const;
+    Point point(int index);
     void addPoint(double x, double y, double z);
     Point getCenterPoint(void);
 
@@ -54,10 +53,7 @@ public:
     void rotatePoint(double angle,const Point& p);
     void scale(const Point& vector);
     void translate(const Point& displacement);
-    void transform(void);
     void clearTransformations(void);
-
-    std::string toString(void) const;
 
     Color color;
 
