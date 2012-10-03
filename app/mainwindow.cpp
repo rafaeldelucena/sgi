@@ -82,6 +82,7 @@ inline void MainWindow::listen(void)
     connect(ui->moveDownButton, SIGNAL(pressed()), this, SLOT(onPushMoveDownButton()));
     connect(ui->resetWindowButton, SIGNAL(pressed()), this, SLOT(onPushResetWindowButton()));
     connect(ui->updateWindowButton, SIGNAL(pressed()), this, SLOT(onPushUpdateWindowButton()));
+    connect(ui->rotateWindowButton, SIGNAL(pressed()), this, SLOT(onPushRotateWindowButton()));
     connect(ui->zoomInButton, SIGNAL(pressed()), this, SLOT(onPushZoomInButton()));
     connect(ui->zoomOutButton, SIGNAL(pressed()), this, SLOT(onPushZoomOutButton()));
     connect(ui->transformationAddButton, SIGNAL(pressed()), this, SLOT(onPushTransformationAddButton()));
@@ -211,6 +212,12 @@ void MainWindow::onPushUpdateWindowButton(void)
 {
     viewPort->reset(ui->windowMinX->text().toDouble(), ui->windowMinY->text().toDouble(),
             ui->windowMaxX->text().toDouble(), ui->windowMaxY->text().toDouble());
+}
+
+void MainWindow::onPushRotateWindowButton(void)
+{
+    viewPort->rotate(ui->rotateAngle->text().toDouble());
+    updateWindowPoints();
 }
 
 void MainWindow::onPushMoveRightButton(void)

@@ -135,6 +135,13 @@ void Object::rotatePoint(double a, const Point& p)
     translate(Point(p.x(), p.y()));
 }
 
+void Object::updateSNC(double u,double vup)
+{
+    for (int i = 0; i < pointsCount(); i++) {
+        point(i).updateSNC(u, vup);
+    }
+}
+
 void Object::scale(const Point& vector)
 {
     // [Sx 0  0
@@ -184,41 +191,63 @@ Point Object::getCenterPoint(void)
     return Point(x, y);
 }
 
-Point::Point(double x, double y, double z) : coordX(x), coordY(y), coordZ(z)
+Point::Point(double x, double y, double z) : wcX(x), wcY(y), wcZ(z)
 {
 }
 
-Point::Point(const Point &point) : coordX(point.x()), coordY(point.y()), coordZ(point.z())
+Point::Point(const Point &point) : wcX(point.x()), wcY(point.y()), wcZ(point.z())
 {
+}
+
+void Point::updateSNC(double u, double vup)
+{
+    snc_X = x() / u;
+    snc_Y = y() / vup;
+    snc_Z = 1;
+}
+
+double Point::sncX(void) const
+{
+    return snc_X;
+}
+
+double Point::sncY(void) const
+{
+    return snc_Y;
+}
+
+double Point::sncZ(void) const
+{
+    return snc_Z;
 }
 
 double Point::x(void) const
 {
-    return coordX;
+    return wcX;
 }
 
 double Point::y(void) const
 {
-    return coordY;
+    return wcY;
 }
 
 double Point::z(void) const
 {
-    return coordZ;
+    return wcZ;
 }
 
 void Point::x(double x)
 {
-    this->coordX = x;
+    this->wcX = x;
 }
 
 void Point::y(double y)
 {
-    this->coordY = y;
+    this->wcY = y;
 }
 void Point::z(double z)
 {
-    this->coordZ = z;
+    this->wcZ = z;
 }
 
 Point Point::transform(double matrix[9])

@@ -24,6 +24,7 @@ public:
     void zoomOut(double value);
     void reset(void);
     void reset(double minx, double miny, double maxx, double maxy);
+    void rotate(double angle);
 
 private:
     Point vMin;

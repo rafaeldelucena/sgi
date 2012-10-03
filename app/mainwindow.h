@@ -40,6 +40,7 @@ private slots:
     void onPushMoveRightButton(void);
     void onPushResetWindowButton(void);
     void onPushUpdateWindowButton(void);
+    void onPushRotateWindowButton(void);
     void onPushZoomInButton(void);
     void onPushZoomOutButton(void);
     void onSelectObject(const QModelIndex &);

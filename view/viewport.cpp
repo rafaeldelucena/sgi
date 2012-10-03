@@ -64,20 +64,32 @@ void ViewPort::zoomOut(double value)
     draw();
 }
 
+void ViewPort::rotate(double angle)
+{
+    window->rotate(angle);
+    unsigned int i;
+    for (i=0; i < displayFile->objectsSize(); i++)
+    {
+        Object* obj = displayFile->getObjectAt(i);
+        obj->updateSNC(window->u(), window->vup());
+    }
+    draw();
+}
+
 Point ViewPort::minWindowPoint(void)
 {
-    return window->min();
+    return window->WCmin();
 }
 
 Point ViewPort::maxWindowPoint(void)
 {
-    return window->max();
+    return window->WCmax();
 }
 
 Point ViewPort::transform(const Point &wCoord)
 {
-    double vCoordX = ( (wCoord.x() - window->min().x()) / (window->max().x() - window->min().x()) ) * (vMax.x() - vMin.x());
-    double vCoordY = (1.0 - ( (wCoord.y() - window->min().y()) / (window->max().y() - window->min().y()))) * (vMax.y() - vMin.y());
+    double vCoordX = ( (wCoord.sncX() - window->sncmin_x()) / (window->sncmax_x() - window->sncmin_x()) ) * (vMax.x() - vMin.x());
+    double vCoordY = (1.0 - ( (wCoord.sncY() - window->sncmin_y()) / (window->sncmax_y() - window->sncmin_y()))) * (vMax.y() - vMin.y());
 
     return Point(vCoordX, vCoordY);
 }

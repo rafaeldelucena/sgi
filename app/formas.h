@@ -18,16 +18,23 @@ public:
     double y(void) const;
     double z(void) const;
 
+    double sncX(void) const;
+    double sncY(void) const;
+    double sncZ(void) const;
+
     void x(double);
     void y(double);
     void z(double);
+
+    void updateSNC(double u, double vup);
 
     Point transform(double matrix[9]);
     std::string toString(void) const;
     std::string toObj(void) const;
 
 private:
-    double coordX, coordY, coordZ;
+    double wcX, wcY, wcZ;
+    double snc_X, snc_Y, snc_Z;
 };
 
 typedef std::vector<Point*> Points;
@@ -55,6 +62,8 @@ public:
     void scale(const Point& vector);
     void translate(const Point& displacement);
     void clearTransformations(void);
+
+    void updateSNC(double u, double vup);
 
     Color color;
 

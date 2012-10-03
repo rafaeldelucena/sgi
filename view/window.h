@@ -7,10 +7,17 @@
 class Window
 {
 public:
-    Window(const Point &min, const Point &max);
+    Window(const Point &WCmin, const Point &WCmax);
     ~Window();
-    const Point &max(void) const;
-    const Point &min(void) const;
+    const Point &WCmin(void) const;
+    const Point &WCmax(void) const;
+    double u(void);
+    double vup(void);
+
+    double sncmax_x(void);
+    double sncmax_y(void);
+    double sncmin_x(void);
+    double sncmin_y(void);
 
     void right(double value);
     void left(double value);
@@ -20,10 +27,13 @@ public:
     void decrease(double value);
     void reset(void);
     void reset(double minx, double miny, double maxx, double maxy);
+    void rotate(double angle);
 
 private:
-    Point minPoint;
-    Point maxPoint;
+    Point WC_min;
+    Point WC_max;
+    double _vup;
+    double _u;
 };
 
 #endif // WINDOW_H
