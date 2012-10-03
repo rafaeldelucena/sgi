@@ -11,6 +11,7 @@ DisplayFile::~DisplayFile()
 
 void DisplayFile::insertObject(Object *object, QString name)
 {
+    object->name(name.toStdString());
     worldObjects.push_back(object);
 }
 

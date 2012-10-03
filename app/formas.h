@@ -44,11 +44,12 @@ public:
     Object(Shape type, int r = 0, int g = 0, int b = 0);
     ~Object(void);
     Shape type(void) const;
+    std::string name(void) const;
+    void name(const std::string &);
     unsigned int pointsCount(void) const;
     Point point(int index);
     void addPoint(double x, double y, double z);
     Point getCenterPoint(void);
-
     void rotateOrigin(double angle);
     void rotateCenter(double angle);
     void rotatePoint(double angle,const Point& p);
@@ -63,6 +64,7 @@ private:
     Points points;
     double transformationMatrix[9];
     void updateTransform(double m[9]);
+    std::string objName;
 };
 typedef std::vector<Object*> Objects;
 

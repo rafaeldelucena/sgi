@@ -22,6 +22,16 @@ Shape Object::type(void) const
     return shape;
 }
 
+void Object::name(const std::string & str)
+{
+    objName = str;
+}
+
+std::string Object::name(void) const
+{
+    return objName;
+}
+
 void Object::addPoint(double x, double y, double z)
 {
     Point* p = new Point(x, y, z);
@@ -239,7 +249,9 @@ std::string Point::toString(void) const
 
 std::string Point::toObj(void) const
 {
-    std::stringstream s;
+    std::ostringstream s;
+    s.precision(5);
+    s << std::fixed;
     s << "v " << x() << " "<< y() << " " << z() << std::endl;
     return s.str();
 }
