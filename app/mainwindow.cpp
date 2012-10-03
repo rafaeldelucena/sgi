@@ -437,7 +437,7 @@ void MainWindow::clearPolygonTextFields(void)
 
 void MainWindow::onActionImportObjTriggered(void)
 {
-    parser->importFromObj("file.obj");
+    //parser->importFromObj("file.obj");
 }
 
 void MainWindow::onActionExportObjTriggered(void)
