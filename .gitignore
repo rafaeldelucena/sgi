@@ -1,4 +1,5 @@
 Makefile
+makefile
 
 #binarios
 sgi.app
@@ -8,6 +9,10 @@ sgi
 moc_mainwindow.cpp
 moc_canhamo.cpp
 ui_mainwindow.h
+
+tags
+
+sgi.pro.user
 
 #tem um .cpp e .h ai, mas são output do make
 *.o

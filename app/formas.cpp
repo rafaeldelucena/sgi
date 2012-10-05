@@ -135,21 +135,21 @@ void Object::rotatePoint(double a, const Point& p)
     translate(Point(p.x(), p.y()));
 }
 
-void Object::updateSNC(double u,double vup)
+void Object::updateSNC(const Point& windowCenter, double vup,const Point& scale)
 {
-    for (int i = 0; i < pointsCount(); i++) {
-        point(i).updateSNC(u, vup);
+    for (unsigned int i = 0; i < pointsCount(); i++) {
+        point(i).updateSNC(windowCenter, vup, scale);
     }
 }
 
 void Object::scale(const Point& vector)
 {
-    // [Sx 0  0
-    //  0  Sy 0
-    //  0  0  1]
     Point p = getCenterPoint();
     this->translate(Point(-p.x(), -p.y()));
 
+    // [Sx 0  0
+    //  0  Sy 0
+    //  0  0  1]
     double m[9] = { 0 };
     m[0] = vector.x();
     m[4] = vector.y();
@@ -199,11 +199,48 @@ Point::Point(const Point &point) : wcX(point.x()), wcY(point.y()), wcZ(point.z()
 {
 }
 
-void Point::updateSNC(double u, double vup)
+void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
 {
-    snc_X = x() / u;
-    snc_Y = y() / vup;
-    snc_Z = 1;
+    //translate
+    // [1  0  0
+    //  0  1  0
+    //  dx dy 1]
+    double m[9] = { 0 };
+    m[0] = 1.0;
+    m[4] = 1.0;
+    m[6] = windowCenter.x();
+    m[7] = windowCenter.y();
+    m[8] = 1.0;
+
+    Point new_snc = transform(m); 
+
+    // rotate
+    // [cos(a) -sin(a) 0
+    //  sin(a)  cos(a) 0
+    //    0       0    1]
+    double m1[9] = { 0 };
+    m1[0] = cos(-vup * PI/180.0);
+    m1[1] = -sin(-vup * PI/180.0);
+    m1[3] = sin(-vup * PI/180.0);
+    m1[4] = cos(-vup * PI/180.0);
+    m1[8] = 1.0;
+
+    new_snc = new_snc.transform(m1);
+
+    // scale
+    // [Sx 0  0
+    //  0  Sy 0
+    //  0  0  1]
+    double m2[9] = { 0 };
+    m2[0] = scale.x();
+    m2[4] = scale.y();
+    m2[8] = 1;
+
+    new_snc = new_snc.transform(m2);
+    
+    snc_X = new_snc.x();
+    snc_Y = new_snc.y();
+    snc_Z = new_snc.z();
 }
 
 double Point::sncX(void) const

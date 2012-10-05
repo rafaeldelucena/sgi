@@ -1,4 +1,5 @@
 #include "view/viewport.h"
+#include <iostream>
 
 ViewPort::ViewPort(Canhamo *cv, DisplayFile *d)
 : vMin(0.0, 0.0, 0.0), vMax(500.0, 500.0, 0.0)
@@ -67,12 +68,6 @@ void ViewPort::zoomOut(double value)
 void ViewPort::rotate(double angle)
 {
     window->rotate(angle);
-    unsigned int i;
-    for (i=0; i < displayFile->objectsSize(); i++)
-    {
-        Object* obj = displayFile->getObjectAt(i);
-        obj->updateSNC(window->u(), window->vup());
-    }
     draw();
 }
 
@@ -86,10 +81,10 @@ Point ViewPort::maxWindowPoint(void)
     return window->WCmax();
 }
 
-Point ViewPort::transform(const Point &wCoord)
+Point ViewPort::transform(const Point &point)
 {
-    double vCoordX = ( (wCoord.sncX() - window->sncmin_x()) / (window->sncmax_x() - window->sncmin_x()) ) * (vMax.x() - vMin.x());
-    double vCoordY = (1.0 - ( (wCoord.sncY() - window->sncmin_y()) / (window->sncmax_y() - window->sncmin_y()))) * (vMax.y() - vMin.y());
+    double vCoordX = ( (point.sncX() - window->sncmin_x()) / (window->sncmax_x() - window->sncmin_x()) ) * (vMax.x() - vMin.x());
+    double vCoordY = (1.0 - ( (point.sncY() - window->sncmin_y()) / (window->sncmax_y() - window->sncmin_y()))) * (vMax.y() - vMin.y());
 
     return Point(vCoordX, vCoordY);
 }
@@ -102,10 +97,14 @@ void ViewPort::draw()
     for (i=0; i < displayFile->objectsSize(); i++)
     {
         Object* obj = displayFile->getObjectAt(i);
+        obj->updateSNC(window->center(), window->vup(), window->scale());
         if (obj->type() == POINT) {
             // desenha um X com centro no ponto
 
             Point vPoint = transform(obj->point(0));
+
+            std::cout << vPoint.x() << "," << vPoint.y() << std::endl;
+
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
                              obj->color.r, obj->color.g, obj->color.b);
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),

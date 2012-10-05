@@ -11,7 +11,8 @@ public:
     ~Window();
     const Point &WCmin(void) const;
     const Point &WCmax(void) const;
-    double u(void);
+    Point center(void);
+    Point scale(void);
     double vup(void);
 
     double sncmax_x(void);
@@ -30,10 +31,12 @@ public:
     void rotate(double angle);
 
 private:
-    Point WC_min;
-    Point WC_max;
+    Point windowMin;
+    Point windowMax;
+    Point _windowCenter;
+    Point windowCenterSNC;
+    Point _scale;
     double _vup;
-    double _u;
 };
 
 #endif // WINDOW_H

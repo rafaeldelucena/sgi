@@ -26,7 +26,7 @@ public:
     void y(double);
     void z(double);
 
-    void updateSNC(double u, double vup);
+    void updateSNC(const Point& windowCenter, double vup, const Point& scale);
 
     Point transform(double matrix[9]);
     std::string toString(void) const;
@@ -63,7 +63,7 @@ public:
     void translate(const Point& displacement);
     void clearTransformations(void);
 
-    void updateSNC(double u, double vup);
+    void updateSNC(const Point& windowCenter, double vup, const Point& scale);
 
     Color color;
 
