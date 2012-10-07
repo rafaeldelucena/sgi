@@ -30,13 +30,13 @@ void ViewPort::down(double value)
 
 void ViewPort::left(double value)
 {
-    window->left(value);
+    window->right(value);
     draw();
 }
 
 void ViewPort::right(double value)
 {
-    window->right(value);
+    window->left(value);
     draw();
 }
 
