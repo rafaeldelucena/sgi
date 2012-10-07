@@ -6,9 +6,9 @@
 #include <QPushButton>
 #include <QPainter>
 
-#include "app/formas.h"
 #include "app/parser.h"
 
+#include "view/formas.h"
 #include "view/displayfile.h"
 #include "view/viewport.h"
 

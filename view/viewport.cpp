@@ -1,5 +1,4 @@
 #include "view/viewport.h"
-#include <iostream>
 
 ViewPort::ViewPort(Canhamo *cv, DisplayFile *d)
 : vMin(0.0, 0.0, 0.0), vMax(500.0, 500.0, 0.0)
@@ -83,56 +82,61 @@ Point ViewPort::maxWindowPoint(void)
 
 Point ViewPort::transform(const Point &point)
 {
-    vMin.updateSNC(window->center(), window->vup(), window->scale());
-    vMax.updateSNC(window->center(), window->vup(), window->scale());
-
-    std::cout << "Point SCN: " << point.sncX() << "," << point.sncY() << std::endl;
     double vCoordX = ( (point.sncX() - window->sncmin_x()) / (window->sncmax_x() - window->sncmin_x()) ) * (vMax.x() - vMin.x());
     double vCoordY = (1.0 - ( (point.sncY() - window->sncmin_y()) / (window->sncmax_y() - window->sncmin_y()))) * (vMax.y() - vMin.y());
 
     Point p(vCoordX, vCoordY);
 
-    std::cout << "Window Center: " << window->center().toString();
-    std::cout << "Window Vup: " << window->vup() << std::endl;
-    std::cout << "Window Scale: " << window->scale().toString();
-    p.updateSNC(window->center(), window->vup(), window->scale());
     return p;    
 }
 
-void ViewPort::draw()
+void ViewPort::draw(void)
 {
     canvas->clear();
+
+    window->updateSNC();
 
     unsigned int i;
     for (i=0; i < displayFile->objectsSize(); i++)
     {
         Object* obj = displayFile->getObjectAt(i);
-        obj->updateSNC(window->center(), window->vup(), window->scale());
+
         if (obj->type() == POINT) {
             // desenha um X com centro no ponto
 
-            Point vPoint = transform(obj->point(0));
-            std::cout << vPoint.toString();
+            Point p = obj->point(0);
+            p.updateSNC(window->center(), window->vup(), window->scale());
+
+            Point vPoint = transform(p);
+
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
                              obj->color.r, obj->color.g, obj->color.b);
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
                              obj->color.r, obj->color.g, obj->color.b);
         } else {
-            unsigned int i;
+
             Point startPoint(obj->point(0));
+
             Point endPoint(obj->point(obj->pointsCount() - 1));
-            for (i=0; i < obj->pointsCount() - 1; i++) {
+
+            for (unsigned int i = 0; i < obj->pointsCount() - 1; i++) {
+
                 startPoint = obj->point(i);
+                startPoint.updateSNC(window->center(), window->vup(), window->scale());
                 startPoint = transform(startPoint);
-                std::cout << startPoint.toString();
+
                 endPoint = obj->point(i+1);
+                endPoint.updateSNC(window->center(), window->vup(), window->scale());
                 endPoint = transform(endPoint);
-                std::cout << endPoint.toString();
+
                 canvas->drawLine(startPoint, endPoint, obj->color.r, obj->color.g, obj->color.b);
             }
             if (obj->type() == POLYGON) {
+
                 startPoint = obj->point(0);
+                startPoint.updateSNC(window->center(), window->vup(), window->scale());
                 startPoint = transform(startPoint);
+
                 canvas->drawLine(endPoint, startPoint, obj->color.r, obj->color.g, obj->color.b);
             }
         }

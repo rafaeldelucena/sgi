@@ -3,7 +3,8 @@
 
 #include "view/window.h"
 #include "view/displayfile.h"
-#include "app/formas.h"
+#include "view/formas.h"
+
 #include "forms/canhamo.h"
 
 class ViewPort

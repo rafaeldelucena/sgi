@@ -1,5 +1,4 @@
 #include "app/mainwindow.h"
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -300,40 +299,28 @@ void MainWindow::onPushTransformationsApplyButton(void)
 
         QStringList t = transformationsListNames.at(i).split(" ");
 
-        std::cout << t.at(0).toStdString() << std::endl;
-
         if (t.at(0) == "rotate_origin") {
 
             obj->rotateOrigin(t.at(1).toDouble());
 
-            std::cout << t.at(1).toStdString() << std::endl;
-
         } else if (t.at(0) == "rotate_center") {
 
             obj->rotateCenter(t.at(1).toDouble());
-
-            std::cout << t.at(1).toStdString() << std::endl;
 
         } else if (t.at(0) == "rotate_point") {
 
             QStringList p = t.at(1).split(",");
             obj->rotatePoint(p.at(0).toDouble(), Point(p.at(1).toDouble(), p.at(2).toDouble()));
 
-            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << "," << p.at(2).toStdString() << std::endl;
-
         } else if (t.at(0) == "scale") {
 
             QStringList p = t.at(1).split(",");
             obj->scale(Point(p.at(0).toDouble(), p.at(1).toDouble()));
 
-            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << std::endl;
-
         } else if (t.at(0) == "translate") {
 
             QStringList p = t.at(1).split(",");
             obj->translate(Point(p.at(0).toDouble(), p.at(1).toDouble()));
-
-            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << std::endl;
 
         }
     }

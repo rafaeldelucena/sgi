@@ -3,7 +3,7 @@
 
 #include <string>
 #include "view/displayfile.h"
-#include "app/formas.h"
+#include "view/formas.h"
 
 class Parser
 {
@@ -22,6 +22,5 @@ class Parser
         
         DisplayFile *displayFile;
 };
-
 
 #endif /* SGI_PARSER_H_ */

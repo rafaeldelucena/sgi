@@ -1,6 +1,5 @@
-#include "app/formas.h"
+#include "view/formas.h"
 #include <math.h>
-#include <iostream>
 
 #define PI 3.14159265
 
@@ -135,13 +134,6 @@ void Object::rotatePoint(double a, const Point& p)
     translate(Point(p.x(), p.y()));
 }
 
-void Object::updateSNC(const Point& windowCenter, double vup,const Point& scale)
-{
-    for (unsigned int i = 0; i < pointsCount(); i++) {
-        point(i).updateSNC(windowCenter, vup, scale);
-    }
-}
-
 void Object::scale(const Point& vector)
 {
     Point p = getCenterPoint();
@@ -201,12 +193,6 @@ Point::Point(const Point &point) : wcX(point.x()), wcY(point.y()), wcZ(point.z()
 
 void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
 {
-    std::cout << "Antes do Update" << toString();
-    std::cout << "---- UPDATE SNC ----" << std::endl;
-    std::cout << "WindowCenter: "<< windowCenter.toString();
-    std::cout << "Vup:" << vup << std::endl;
-    std::cout << "Scale:" << scale.toString();
-    std::cout << "--------------------" << std::endl;
     //translate
     // [1  0  0
     //  0  1  0
@@ -217,8 +203,8 @@ void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
     m[6] = windowCenter.x();
     m[7] = windowCenter.y();
     m[8] = 1.0;
+
     Point new_snc = transform(m); 
-    std::cout << "Translate SNC: " << new_snc.toString();
 
     // rotate
     // [cos(a) -sin(a) 0
@@ -232,7 +218,6 @@ void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
     m1[8] = 1.0;
 
     new_snc = new_snc.transform(m1);
-    std::cout << "Rotate SNC: " << new_snc.toString();
 
     // scale
     // [Sx 0  0
@@ -244,15 +229,10 @@ void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
     m2[8] = 1.0;
 
     new_snc = new_snc.transform(m2);
-    std::cout << "Scale SNC: " << new_snc.toString();
     
     snc_X = new_snc.x();
     snc_Y = new_snc.y();
     snc_Z = new_snc.z();
-
-    std::cout << "SCN:" << snc_X << "," << snc_Y << "," << snc_Z << std::endl;
-    std::cout << "--------------------" << std::endl;
-    std::cout << "--------------------" << std::endl;
 }
 
 double Point::sncX(void) const

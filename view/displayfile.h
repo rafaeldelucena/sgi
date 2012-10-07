@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <QString>
-#include "app/formas.h"
+
+#include "view/formas.h"
 
 class DisplayFile
 {

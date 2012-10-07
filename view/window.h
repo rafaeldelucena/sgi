@@ -2,7 +2,8 @@
 #define WINDOW_H
 
 #include <math.h>
-#include "app/formas.h"
+
+#include "view/formas.h"
 
 class Window
 {
@@ -12,6 +13,7 @@ public:
     const Point &WCmin(void) const;
     const Point &WCmax(void) const;
     Point center(void);
+    Point centerSNC(void);
     Point scale(void);
     double vup(void);
 
@@ -29,6 +31,8 @@ public:
     void reset(void);
     void reset(double minx, double miny, double maxx, double maxy);
     void rotate(double angle);
+
+    void updateSNC(void);
 
 private:
     Point windowMin;
