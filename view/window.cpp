@@ -22,7 +22,7 @@ Point Window::scale(void)
 Point Window::center(void)
 {
     Point _windowCenter((windowMax.x() - windowMin.x())/2, (windowMax.y() - windowMin.y())/2);
-        return _windowCenter;
+    return _windowCenter;
 }
 
 double Window::sncmin_x(void)
