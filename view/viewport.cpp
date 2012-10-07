@@ -83,10 +83,20 @@ Point ViewPort::maxWindowPoint(void)
 
 Point ViewPort::transform(const Point &point)
 {
+    vMin.updateSNC(window->center(), window->vup(), window->scale());
+    vMax.updateSNC(window->center(), window->vup(), window->scale());
+
+    std::cout << "Point SCN: " << point.sncX() << "," << point.sncY() << std::endl;
     double vCoordX = ( (point.sncX() - window->sncmin_x()) / (window->sncmax_x() - window->sncmin_x()) ) * (vMax.x() - vMin.x());
     double vCoordY = (1.0 - ( (point.sncY() - window->sncmin_y()) / (window->sncmax_y() - window->sncmin_y()))) * (vMax.y() - vMin.y());
 
-    return Point(vCoordX, vCoordY);
+    Point p(vCoordX, vCoordY);
+
+    std::cout << "Window Center: " << window->center().toString();
+    std::cout << "Window Vup: " << window->vup() << std::endl;
+    std::cout << "Window Scale: " << window->scale().toString();
+    p.updateSNC(window->center(), window->vup(), window->scale());
+    return p;    
 }
 
 void ViewPort::draw()
@@ -102,9 +112,7 @@ void ViewPort::draw()
             // desenha um X com centro no ponto
 
             Point vPoint = transform(obj->point(0));
-
-            std::cout << vPoint.x() << "," << vPoint.y() << std::endl;
-
+            std::cout << vPoint.toString();
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
                              obj->color.r, obj->color.g, obj->color.b);
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
@@ -116,8 +124,10 @@ void ViewPort::draw()
             for (i=0; i < obj->pointsCount() - 1; i++) {
                 startPoint = obj->point(i);
                 startPoint = transform(startPoint);
+                std::cout << startPoint.toString();
                 endPoint = obj->point(i+1);
                 endPoint = transform(endPoint);
+                std::cout << endPoint.toString();
                 canvas->drawLine(startPoint, endPoint, obj->color.r, obj->color.g, obj->color.b);
             }
             if (obj->type() == POLYGON) {

@@ -33,9 +33,7 @@ public:
 private:
     Point windowMin;
     Point windowMax;
-    Point _windowCenter;
     Point windowCenterSNC;
-    Point _scale;
     double _vup;
 };
 

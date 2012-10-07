@@ -4,9 +4,7 @@
 #define PI 3.14159265
 
 Window::Window(const Point &min, const Point &max) 
-  : windowMin(min), windowMax(max),
-    _windowCenter((windowMax.x() - windowMin.x())/2, (windowMax.y() - windowMin.y())/2),
-    _scale(windowMax.x() - windowMin.x(), windowMax.y() - windowMin.y())
+  : windowMin(min), windowMax(max)
 {
     _vup = 0;
 }
@@ -17,12 +15,14 @@ Window::~Window(void)
 
 Point Window::scale(void)
 {
+    Point _scale(windowMax.x() - windowMin.x(), windowMax.y() - windowMin.y());
     return _scale;
 }
 
 Point Window::center(void)
 {
-    return _windowCenter;
+    Point _windowCenter((windowMax.x() - windowMin.x())/2, (windowMax.y() - windowMin.y())/2);
+        return _windowCenter;
 }
 
 double Window::sncmin_x(void)
@@ -55,11 +55,11 @@ void Window::rotate(double angle)
     double m[9] = { 0 };
     m[0] = 1.0;
     m[4] = 1.0;
-    m[6] = -_windowCenter.x();
-    m[7] = -_windowCenter.y();
+    m[6] = -center().x();
+    m[7] = -center().y();
     m[8] = 1.0;
 
-    windowCenterSNC = _windowCenter.transform(m);
+    windowCenterSNC = center().transform(m);
 
     _vup = _vup + angle;
 
@@ -122,9 +122,6 @@ void Window::reset(void)
     windowMin.y(-250);
     windowMax.x(250);
     windowMax.y(250);
-
-   _scale.x(windowMax.x() - windowMin.x());
-   _scale.y(windowMax.y() - windowMin.y());
 }
 
 void Window::reset(double minx, double miny, double maxx, double maxy)
@@ -133,9 +130,6 @@ void Window::reset(double minx, double miny, double maxx, double maxy)
     windowMin.y(miny);
     windowMax.x(maxx);
     windowMax.y(maxy);
-
-   _scale.x(windowMax.x() - windowMin.x());
-   _scale.y(windowMax.y() - windowMin.y());
 }
 
 #include <iostream>
@@ -154,9 +148,6 @@ void Window::enlarge(double value)
    windowMin.y(windowMin.y() - windowMinYfactor);
    windowMax.x(windowMax.x() + windowMaxXfactor);
    windowMax.y(windowMax.y() + windowMaxYfactor);
-
-   _scale.x(windowMax.x() - windowMin.x());
-   _scale.y(windowMax.y() - windowMin.y());
 
    std::cout << "max point now is " << windowMax.x() << "," << windowMax.y() << std::endl;
    std::cout << "min point now is " << windowMin.x() << "," << windowMin.y() << std::endl;
@@ -180,9 +171,6 @@ void Window::decrease(double value)
    windowMin.y(windowMin.y() + windowMinYfactor);
    windowMax.x(windowMax.x() - windowMaxXfactor);
    windowMax.y(windowMax.y() - windowMaxYfactor);
-
-   _scale.x(windowMax.x() - windowMin.x());
-   _scale.y(windowMax.y() - windowMin.y());
 
    std::cout << "max point now is " << windowMax.x() << "," << windowMax.y() << std::endl;
    std::cout << "min point now is " << windowMin.x() << "," << windowMin.y() << std::endl;
