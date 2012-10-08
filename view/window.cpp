@@ -1,107 +1,165 @@
 #include "view/window.h"
+#include <math.h>
 
-Window::Window(const Point &min, const Point &max) : minPoint(min), maxPoint(max)
+#define PI 3.14159265
+
+Window::Window(const Point &min, const Point &max) 
+  : windowMin(min), windowMax(max)
 {
+    _vup = 0;
 }
 
 Window::~Window(void)
 {
 }
 
-const Point& Window::max(void) const
+Point Window::scale(void)
 {
-    return maxPoint;
+    Point _scale(windowMax.x() - windowMin.x(), windowMax.y() - windowMin.y());
+    return _scale;
 }
 
-const Point& Window::min(void) const
+Point Window::center(void)
 {
-    return minPoint;
+    Point _windowCenter((windowMax.x() + windowMin.x())/2, (windowMax.y() + windowMin.y())/2);
+    return _windowCenter;
+}
+Point Window::centerSNC(void)
+{
+    return windowCenterSNC;
+}
+
+double Window::sncmin_x(void)
+{
+    return -1;
+}
+
+double Window::sncmin_y(void)
+{
+    return -1;
+}
+
+double Window::sncmax_x(void)
+{
+    return 1;
+}
+
+double Window::sncmax_y(void)
+{
+    return 1;
+}
+
+void Window::rotate(double angle)
+{
+    _vup = _vup + angle;
+}
+
+void Window::updateSNC(void)
+{
+    // transladar window center
+    // [1  0  0
+    //  0  1  0
+    //  dx dy 1]
+    double m[9] = { 0 };
+    m[0] = 1.0;
+    m[4] = 1.0;
+    m[6] = -center().x();
+    m[7] = -center().y();
+    m[8] = 1.0;
+
+    windowCenterSNC = center().transform(m);
+
+    // rotacionar window center
+    // [cos(a) -sin(a) 0
+    //  sin(a)  cos(a) 0
+    //    0       0    1]
+    double m2[9] = { 0 };
+    m2[0] = cos(-_vup * PI/180.0);
+    m2[1] = -sin(-_vup * PI/180.0);
+    m2[3] = sin(-_vup * PI/180.0);
+    m2[4] = cos(-_vup * PI/180.0);
+    m2[8] = 1.0;
+
+    windowCenterSNC = windowCenterSNC.transform(m2);
+}
+
+double Window::vup(void)
+{
+    return _vup;
+}
+
+const Point& Window::WCmax(void) const
+{
+    return windowMax;
+}
+
+const Point& Window::WCmin(void) const
+{
+    return windowMin;
 }
 
 void Window::right(double value)
 {
-    minPoint.x(minPoint.x() + value);
-    maxPoint.x(maxPoint.x() + value);
+    windowMin.x(windowMin.x() + value);
+    windowMax.x(windowMax.x() + value);
 }
 
 void Window::left(double value)
 {
-    minPoint.x(minPoint.x() - value);
-    maxPoint.x(maxPoint.x() - value);
+    windowMin.x(windowMin.x() - value);
+    windowMax.x(windowMax.x() - value);
 }
 
 void Window::up(double value)
 {
-    minPoint.y(minPoint.y() + value);
-    maxPoint.y(maxPoint.y() + value);
+    windowMin.y(windowMin.y() + value);
+    windowMax.y(windowMax.y() + value);
 }
 
 void Window::down(double value)
 {
-    minPoint.y(minPoint.y() - value);
-    maxPoint.y(maxPoint.y() - value);
+    windowMin.y(windowMin.y() - value);
+    windowMax.y(windowMax.y() - value);
 }
 
 void Window::reset(void)
 {
-    minPoint.x(-250);
-    minPoint.y(-250);
-    maxPoint.x(250);
-    maxPoint.y(250);
+    windowMin.x(-250);
+    windowMin.y(-250);
+    windowMax.x(250);
+    windowMax.y(250);
 }
 
 void Window::reset(double minx, double miny, double maxx, double maxy)
 {
-    minPoint.x(minx);
-    minPoint.y(miny);
-    maxPoint.x(maxx);
-    maxPoint.y(maxy);
+    windowMin.x(minx);
+    windowMin.y(miny);
+    windowMax.x(maxx);
+    windowMax.y(maxy);
 }
 
-#include <iostream>
 void Window::enlarge(double value)
 {
-   std::cout << "max point original is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
-   std::cout << "min point original is " << minPoint.x() << "," << minPoint.y() << std::endl;
-   std::cout << "center point original is" << ((maxPoint.x() + minPoint.x())/2.0) << "," << ((maxPoint.y() + minPoint.y())/2.0) << std::endl;
+   double windowMinXfactor = (windowMax.x() - windowMin.x()) * (value / 100) / 2;
+   double windowMinYfactor = (windowMax.y() - windowMin.y()) * (value / 100) / 2;
+   double windowMaxXfactor = (windowMax.x() - windowMin.x()) * (value / 100) / 2;
+   double windowMaxYfactor = (windowMax.y() - windowMin.y()) * (value / 100) / 2;
 
-   double minPointXfactor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
-   double minPointYfactor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
-   double maxPointXfactor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
-   double maxPointYfactor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
-
-   minPoint.x(minPoint.x() - minPointXfactor);
-   minPoint.y(minPoint.y() - minPointYfactor);
-   maxPoint.x(maxPoint.x() + maxPointXfactor);
-   maxPoint.y(maxPoint.y() + maxPointYfactor);
-
-
-   std::cout << "max point now is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
-   std::cout << "min point now is " << minPoint.x() << "," << minPoint.y() << std::endl;
-   std::cout << "center point now is " << ((maxPoint.x() + minPoint.x())/2.0) << "," << ((maxPoint.y() + minPoint.y())/2.0) << std::endl;
-
+   windowMin.x(windowMin.x() - windowMinXfactor);
+   windowMin.y(windowMin.y() - windowMinYfactor);
+   windowMax.x(windowMax.x() + windowMaxXfactor);
+   windowMax.y(windowMax.y() + windowMaxYfactor);
 }
 
 void Window::decrease(double value)
 {
-   std::cout << "max point original is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
-   std::cout << "min point original is " << minPoint.x() << "," << minPoint.y() << std::endl;
-   std::cout << "center point original is" << ((maxPoint.x() + minPoint.x())/2.0) << "," << ((maxPoint.y() + minPoint.y())/2.0) << std::endl;
+   double windowMinXfactor = (windowMax.x() - windowMin.x()) * (value / 100) / 2;
+   double windowMinYfactor = (windowMax.y() - windowMin.y()) * (value / 100) / 2;
+   double windowMaxXfactor = (windowMax.x() - windowMin.x()) * (value / 100) / 2;
+   double windowMaxYfactor = (windowMax.y() - windowMin.y()) * (value / 100) / 2;
 
-
-   double minPointXfactor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
-   double minPointYfactor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
-   double maxPointXfactor = (maxPoint.x() - minPoint.x()) * (value / 100) / 2;
-   double maxPointYfactor = (maxPoint.y() - minPoint.y()) * (value / 100) / 2;
-
-   minPoint.x(minPoint.x() + minPointXfactor);
-   minPoint.y(minPoint.y() + minPointYfactor);
-   maxPoint.x(maxPoint.x() - maxPointXfactor);
-   maxPoint.y(maxPoint.y() - maxPointYfactor);
-
-
-   std::cout << "max point now is " << maxPoint.x() << "," << maxPoint.y() << std::endl;
-   std::cout << "min point now is " << minPoint.x() << "," << minPoint.y() << std::endl;
-   std::cout << "center point now is " << ((maxPoint.x() + minPoint.x())/2.0) << "," << ((maxPoint.y() + minPoint.y())/2.0) << std::endl;
-
+   windowMin.x(windowMin.x() + windowMinXfactor);
+   windowMin.y(windowMin.y() + windowMinYfactor);
+   windowMax.x(windowMax.x() - windowMaxXfactor);
+   windowMax.y(windowMax.y() - windowMaxYfactor);
 }

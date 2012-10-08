@@ -9,8 +9,8 @@ CONFIG += qt debug
 
 SOURCES += app/app.cpp\
     app/mainwindow.cpp \
-    app/formas.cpp \
     app/parser.cpp \
+    view/formas.cpp \
     view/displayfile.cpp \
     view/viewport.cpp \
     view/window.cpp \
@@ -18,8 +18,8 @@ SOURCES += app/app.cpp\
 
 HEADERS  +=\
     app/mainwindow.h \
-    app/formas.h \
     app/parser.h \
+    view/formas.h \
     view/displayfile.h \
     view/viewport.h \
     view/window.h \

@@ -30,13 +30,13 @@ void ViewPort::down(double value)
 
 void ViewPort::left(double value)
 {
-    window->left(value);
+    window->right(value);
     draw();
 }
 
 void ViewPort::right(double value)
 {
-    window->right(value);
+    window->left(value);
     draw();
 }
 
@@ -64,54 +64,79 @@ void ViewPort::zoomOut(double value)
     draw();
 }
 
+void ViewPort::rotate(double angle)
+{
+    window->rotate(angle);
+    draw();
+}
+
 Point ViewPort::minWindowPoint(void)
 {
-    return window->min();
+    return window->WCmin();
 }
 
 Point ViewPort::maxWindowPoint(void)
 {
-    return window->max();
+    return window->WCmax();
 }
 
-Point ViewPort::transform(const Point &wCoord)
+Point ViewPort::transform(const Point &point)
 {
-    double vCoordX = ( (wCoord.x() - window->min().x()) / (window->max().x() - window->min().x()) ) * (vMax.x() - vMin.x());
-    double vCoordY = (1.0 - ( (wCoord.y() - window->min().y()) / (window->max().y() - window->min().y()))) * (vMax.y() - vMin.y());
+    double vCoordX = ( (point.sncX() - window->sncmin_x()) / (window->sncmax_x() - window->sncmin_x()) ) * (vMax.x() - vMin.x());
+    double vCoordY = (1.0 - ( (point.sncY() - window->sncmin_y()) / (window->sncmax_y() - window->sncmin_y()))) * (vMax.y() - vMin.y());
 
-    return Point(vCoordX, vCoordY);
+    Point p(vCoordX, vCoordY);
+
+    return p;    
 }
 
-void ViewPort::draw()
+void ViewPort::draw(void)
 {
     canvas->clear();
 
+    window->updateSNC();
+
     unsigned int i;
-    for (i=0; i < displayFile->objectsSize(); i++)
+    for (i=0; i < displayFile->objectsCount(); i++)
     {
         Object* obj = displayFile->getObjectAt(i);
+
         if (obj->type() == POINT) {
             // desenha um X com centro no ponto
 
-            Point vPoint = transform(obj->point(0));
+            Point p = obj->point(0);
+            p.updateSNC(window->center(), window->vup(), window->scale());
+
+            Point vPoint = transform(p);
+
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
                              obj->color.r, obj->color.g, obj->color.b);
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
                              obj->color.r, obj->color.g, obj->color.b);
         } else {
-            unsigned int i;
+
             Point startPoint(obj->point(0));
+
             Point endPoint(obj->point(obj->pointsCount() - 1));
-            for (i=0; i < obj->pointsCount() - 1; i++) {
+
+            for (unsigned int i = 0; i < obj->pointsCount() - 1; i++) {
+
                 startPoint = obj->point(i);
+                startPoint.updateSNC(window->center(), window->vup(), window->scale());
                 startPoint = transform(startPoint);
+
                 endPoint = obj->point(i+1);
+                endPoint.updateSNC(window->center(), window->vup(), window->scale());
                 endPoint = transform(endPoint);
+
                 canvas->drawLine(startPoint, endPoint, obj->color.r, obj->color.g, obj->color.b);
             }
             if (obj->type() == POLYGON) {
+
                 startPoint = obj->point(0);
+                startPoint.updateSNC(window->center(), window->vup(), window->scale());
                 startPoint = transform(startPoint);
+
                 canvas->drawLine(endPoint, startPoint, obj->color.r, obj->color.g, obj->color.b);
             }
         }

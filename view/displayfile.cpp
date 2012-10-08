@@ -9,9 +9,8 @@ DisplayFile::~DisplayFile()
     worldObjects.clear();
 }
 
-void DisplayFile::insertObject(Object *object, QString name)
+void DisplayFile::insertObject(Object *object)
 {
-    object->name(name.toStdString());
     worldObjects.push_back(object);
 }
 
@@ -26,7 +25,7 @@ Object* DisplayFile::getObjectAt(unsigned int index)
     return worldObjects[index];
 }
 
-unsigned int DisplayFile::objectsSize(void)
+unsigned int DisplayFile::objectsCount(void)
 {
     return worldObjects.size();
 }

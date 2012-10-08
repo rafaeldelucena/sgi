@@ -1,6 +1,5 @@
-#include "app/formas.h"
+#include "view/formas.h"
 #include <math.h>
-#include <iostream>
 
 #define PI 3.14159265
 
@@ -20,16 +19,6 @@ Object::~Object(void)
 Shape Object::type(void) const
 {
     return shape;
-}
-
-void Object::name(const std::string & str)
-{
-    objName = str;
-}
-
-std::string Object::name(void) const
-{
-    return objName;
 }
 
 void Object::addPoint(double x, double y, double z)
@@ -147,12 +136,12 @@ void Object::rotatePoint(double a, const Point& p)
 
 void Object::scale(const Point& vector)
 {
-    // [Sx 0  0
-    //  0  Sy 0
-    //  0  0  1]
     Point p = getCenterPoint();
     this->translate(Point(-p.x(), -p.y()));
 
+    // [Sx 0  0
+    //  0  Sy 0
+    //  0  0  1]
     double m[9] = { 0 };
     m[0] = vector.x();
     m[4] = vector.y();
@@ -194,41 +183,100 @@ Point Object::getCenterPoint(void)
     return Point(x, y);
 }
 
-Point::Point(double x, double y, double z) : coordX(x), coordY(y), coordZ(z)
+Point::Point(double x, double y, double z) : wcX(x), wcY(y), wcZ(z)
 {
 }
 
-Point::Point(const Point &point) : coordX(point.x()), coordY(point.y()), coordZ(point.z())
+Point::Point(const Point &point) : wcX(point.x()), wcY(point.y()), wcZ(point.z())
 {
+}
+
+void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
+{
+    //translate
+    // [1  0  0
+    //  0  1  0
+    //  dx dy 1]
+    double m[9] = { 0 };
+    m[0] = 1.0;
+    m[4] = 1.0;
+    m[6] = windowCenter.x();
+    m[7] = windowCenter.y();
+    m[8] = 1.0;
+
+    Point new_snc = transform(m); 
+
+    // rotate
+    // [cos(a) -sin(a) 0
+    //  sin(a)  cos(a) 0
+    //    0       0    1]
+    double m1[9] = { 0 };
+    m1[0] = cos(-vup * PI/180.0);
+    m1[1] = -sin(-vup * PI/180.0);
+    m1[3] = sin(-vup * PI/180.0);
+    m1[4] = cos(-vup * PI/180.0);
+    m1[8] = 1.0;
+
+    new_snc = new_snc.transform(m1);
+
+    // scale
+    // [Sx 0  0
+    //  0  Sy 0
+    //  0  0  1]
+    double m2[9] = { 0 };
+    m2[0] = 2.0/scale.x();
+    m2[4] = 2.0/scale.y();
+    m2[8] = 1.0;
+
+    new_snc = new_snc.transform(m2);
+    
+    snc_X = new_snc.x();
+    snc_Y = new_snc.y();
+    snc_Z = new_snc.z();
+}
+
+double Point::sncX(void) const
+{
+    return snc_X;
+}
+
+double Point::sncY(void) const
+{
+    return snc_Y;
+}
+
+double Point::sncZ(void) const
+{
+    return snc_Z;
 }
 
 double Point::x(void) const
 {
-    return coordX;
+    return wcX;
 }
 
 double Point::y(void) const
 {
-    return coordY;
+    return wcY;
 }
 
 double Point::z(void) const
 {
-    return coordZ;
+    return wcZ;
 }
 
 void Point::x(double x)
 {
-    this->coordX = x;
+    this->wcX = x;
 }
 
 void Point::y(double y)
 {
-    this->coordY = y;
+    this->wcY = y;
 }
 void Point::z(double z)
 {
-    this->coordZ = z;
+    this->wcZ = z;
 }
 
 Point Point::transform(double matrix[9])
@@ -249,9 +297,7 @@ std::string Point::toString(void) const
 
 std::string Point::toObj(void) const
 {
-    std::ostringstream s;
-    s.precision(5);
-    s << std::fixed;
+    std::stringstream s;
     s << "v " << x() << " "<< y() << " " << z() << std::endl;
     return s.str();
 }

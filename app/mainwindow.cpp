@@ -1,5 +1,4 @@
 #include "app/mainwindow.h"
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -82,6 +81,7 @@ inline void MainWindow::listen(void)
     connect(ui->moveDownButton, SIGNAL(pressed()), this, SLOT(onPushMoveDownButton()));
     connect(ui->resetWindowButton, SIGNAL(pressed()), this, SLOT(onPushResetWindowButton()));
     connect(ui->updateWindowButton, SIGNAL(pressed()), this, SLOT(onPushUpdateWindowButton()));
+    connect(ui->rotateWindowButton, SIGNAL(pressed()), this, SLOT(onPushRotateWindowButton()));
     connect(ui->zoomInButton, SIGNAL(pressed()), this, SLOT(onPushZoomInButton()));
     connect(ui->zoomOutButton, SIGNAL(pressed()), this, SLOT(onPushZoomOutButton()));
     connect(ui->transformationAddButton, SIGNAL(pressed()), this, SLOT(onPushTransformationAddButton()));
@@ -158,7 +158,7 @@ void MainWindow::onPushPolygonSaveButton(void)
 
 void MainWindow::onPushDeleteButton(void)
 {
-    if (displayFile.objectsSize() > 0) {
+    if (displayFile.objectsCount() > 0) {
         deleteFromObjectsList(objectPosition);
         displayFile.removeObjectAt(objectPosition);
         viewPort->draw();
@@ -213,6 +213,12 @@ void MainWindow::onPushUpdateWindowButton(void)
             ui->windowMaxX->text().toDouble(), ui->windowMaxY->text().toDouble());
 }
 
+void MainWindow::onPushRotateWindowButton(void)
+{
+    viewPort->rotate(ui->rotateAngle->text().toDouble());
+    updateWindowPoints();
+}
+
 void MainWindow::onPushMoveRightButton(void)
 {
     viewPort->right(ui->moveStep->text().toDouble());
@@ -235,7 +241,7 @@ void MainWindow::onPushTransformationAddButton(void)
 {
 
     QString transformation = QString("");
-    if (displayFile.objectsSize() > 0) {
+    if (displayFile.objectsCount() > 0) {
 
         if (ui->transformTranslate->isChecked()) {
 
@@ -293,40 +299,28 @@ void MainWindow::onPushTransformationsApplyButton(void)
 
         QStringList t = transformationsListNames.at(i).split(" ");
 
-        std::cout << t.at(0).toStdString() << std::endl;
-
         if (t.at(0) == "rotate_origin") {
 
             obj->rotateOrigin(t.at(1).toDouble());
 
-            std::cout << t.at(1).toStdString() << std::endl;
-
         } else if (t.at(0) == "rotate_center") {
 
             obj->rotateCenter(t.at(1).toDouble());
-
-            std::cout << t.at(1).toStdString() << std::endl;
 
         } else if (t.at(0) == "rotate_point") {
 
             QStringList p = t.at(1).split(",");
             obj->rotatePoint(p.at(0).toDouble(), Point(p.at(1).toDouble(), p.at(2).toDouble()));
 
-            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << "," << p.at(2).toStdString() << std::endl;
-
         } else if (t.at(0) == "scale") {
 
             QStringList p = t.at(1).split(",");
             obj->scale(Point(p.at(0).toDouble(), p.at(1).toDouble()));
 
-            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << std::endl;
-
         } else if (t.at(0) == "translate") {
 
             QStringList p = t.at(1).split(",");
             obj->translate(Point(p.at(0).toDouble(), p.at(1).toDouble()));
-
-            std::cout << p.at(0).toStdString() << "," << p.at(1).toStdString() << std::endl;
 
         }
     }
@@ -367,7 +361,7 @@ void MainWindow::updateWindowPoints(void)
 
 void MainWindow::addToObjectsList(Object *object, QString name)
 {
-    displayFile.insertObject(object, name);
+    displayFile.insertObject(object);
     objectsListNames.append(name);
     objectsList->setStringList(objectsListNames);
     ui->objectsListView->setModel(objectsList);

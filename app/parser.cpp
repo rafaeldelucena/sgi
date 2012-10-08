@@ -18,7 +18,7 @@ void Parser::exportToObj(const std::string &path)
     if (file.is_open()) {
         file << "mtllib " << path << ".mtl" << std::endl;
         unsigned int totalPoints = 0;
-        for (unsigned int i=0; i < displayFile->objectsSize(); i++) {
+        for (unsigned int i=0; i < displayFile->objectsCount(); i++) {
             std::stringstream s;
             Object *obj = displayFile->getObjectAt(i);
             for (unsigned int j=0; j < obj->pointsCount(); j++) {
@@ -35,7 +35,7 @@ void Parser::exportToObj(const std::string &path)
         }
         for (unsigned int k=0; k < objs.size(); k++) {
             Object *obj = displayFile->getObjectAt(k);
-            file << "o " << obj->name() << std::endl;
+            file << "o " << "Object" << k+1 << std::endl;
             file << objs[k] << std::endl;
         }
     }

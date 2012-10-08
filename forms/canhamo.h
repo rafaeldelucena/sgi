@@ -4,7 +4,8 @@
 #include <vector>
 #include <QWidget>
 #include <QPainter>
-#include "app/formas.h"
+
+#include "view/formas.h"
 
 typedef struct
 {

@@ -3,7 +3,8 @@
 
 #include "view/window.h"
 #include "view/displayfile.h"
-#include "app/formas.h"
+#include "view/formas.h"
+
 #include "forms/canhamo.h"
 
 class ViewPort
@@ -24,6 +25,7 @@ public:
     void zoomOut(double value);
     void reset(void);
     void reset(double minx, double miny, double maxx, double maxy);
+    void rotate(double angle);
 
 private:
     Point vMin;

@@ -6,9 +6,9 @@
 #include <QPushButton>
 #include <QPainter>
 
-#include "app/formas.h"
 #include "app/parser.h"
 
+#include "view/formas.h"
 #include "view/displayfile.h"
 #include "view/viewport.h"
 
@@ -40,6 +40,7 @@ private slots:
     void onPushMoveRightButton(void);
     void onPushResetWindowButton(void);
     void onPushUpdateWindowButton(void);
+    void onPushRotateWindowButton(void);
     void onPushZoomInButton(void);
     void onPushZoomOutButton(void);
     void onSelectObject(const QModelIndex &);
