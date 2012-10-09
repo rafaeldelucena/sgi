@@ -107,6 +107,11 @@ void ViewPort::draw(void)
             Point p = obj->point(0);
             p.updateSNC(window->center(), window->vup(), window->scale());
 
+            if ( ((p.sncX() < -1) || (p.sncX() > 1)) ||
+                 ((p.sncY() < -1) || (p.sncY() > 1))) {
+                continue;
+            }
+
             Point vPoint = transform(p);
 
             canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
