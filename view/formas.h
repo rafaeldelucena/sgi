@@ -62,12 +62,15 @@ public:
     void scale(const Point& vector);
     void translate(const Point& displacement);
     void clearTransformations(void);
+    bool isFilled(void);
+    void fill(bool);
 
     void updateSNC(const Point& windowCenter, double vup, const Point& scale);
 
     Color color;
 
 private:
+    bool filled;
     Shape shape;
     Points points;
     double transformationMatrix[9];

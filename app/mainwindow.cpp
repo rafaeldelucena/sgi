@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     addToObjectsList(square, QString("square"));
 
     tmpObject = 0;
+    objectFilled = false;
 
     /*
     zAxis = new Object(LINE);
@@ -91,6 +92,7 @@ inline void MainWindow::listen(void)
     connect(ui->transformationsListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onSelectTransformation(const QModelIndex &)));
     connect(ui->importObjAction, SIGNAL(triggered()), this, SLOT(onActionImportObjTriggered()));
     connect(ui->exportObjAction, SIGNAL(triggered()), this, SLOT(onActionExportObjTriggered()));
+    connect(ui->filledBox, SIGNAL(toggled(bool)), this, SLOT(onFilledBoxToggled(bool)));
 }
 
 void MainWindow::onPushLineSaveButton(void)
@@ -148,6 +150,7 @@ void MainWindow::onPushPolygonSaveButton(void)
         QString name = ui->polygonName->text();
         Object *polygon = new Object(POLYGON);
         *polygon = *tmpObject;
+        polygon->fill(objectFilled);
         addToObjectsList(polygon, name);
         delete tmpObject;
         tmpObject = 0;
@@ -437,4 +440,9 @@ void MainWindow::onActionImportObjTriggered(void)
 void MainWindow::onActionExportObjTriggered(void)
 {
     parser->exportToObj("new-file.obj");
+}
+
+void MainWindow::onFilledBoxToggled(bool checked)
+{
+    objectFilled = checked;
 }

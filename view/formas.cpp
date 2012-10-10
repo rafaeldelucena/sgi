@@ -10,6 +10,7 @@ Object::Object(Shape type, int r, int g, int b)
     color.g = g;
     color.b = b;
     clearTransformations();
+    filled = false;
 }
 
 Object::~Object(void)
@@ -181,6 +182,16 @@ Point Object::getCenterPoint(void)
     y = y/i;
 
     return Point(x, y);
+}
+
+bool Object::isFilled(void)
+{
+   return filled;
+}
+
+void Object::fill(bool value)
+{
+   filled = value;
 }
 
 Point::Point(double x, double y, double z) : wcX(x), wcY(y), wcZ(z)

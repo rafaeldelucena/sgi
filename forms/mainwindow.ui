@@ -469,7 +469,7 @@
       <string/>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <property name="enabled">
@@ -1257,6 +1257,19 @@
         <string>R</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="filledBox">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>200</y>
+         <width>98</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Filled</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>
@@ -1492,7 +1505,7 @@
      <x>0</x>
      <y>0</y>
      <width>1100</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

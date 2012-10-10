@@ -50,6 +50,7 @@ private slots:
     void onPushTransformationsApplyButton(void);
     void onActionImportObjTriggered(void);
     void onActionExportObjTriggered(void);
+    void onFilledBoxToggled(bool checked);
 
 private:
     void addToPointsList(const Point &point);
@@ -64,6 +65,7 @@ private:
 
     unsigned int objectPosition;
     unsigned int transformationPosition;
+    bool objectFilled;
 
     inline void listen(void);
 
