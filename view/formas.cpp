@@ -59,8 +59,7 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
         if ( ((p.sncX() < -1) || (p.sncX() > 1)) || ((p.sncY() < -1) || (p.sncY() > 1)) ) {
             return 0;
         } else {
-            Object* new_point = new Object(POINT, 0, 0 ,0);
-            new_point->color = this->color;
+            Object* new_point = new Object(POINT, color.r, color.g, color.b);
             new_point->addPoint(p.sncX(), p.sncY(), 1);
             return new_point;
         }
@@ -135,10 +134,9 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
         }
 
         if (accept) {
-            Object* new_obj = new Object(LINE, 0, 0, 0);
+            Object* new_obj = new Object(LINE, color.r, color.g, color.b);
             new_obj->addPoint(x0, y0, 1);
             new_obj->addPoint(x1, y1, 1);
-            new_obj->color = this->color;
             return new_obj;
         } else {
             return 0;
@@ -149,16 +147,15 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
         Point startPoint;
         Point endPoint;
 
-        Object* new_polygon = new Object(POLYGON, 0 ,0 ,0);
-        new_polygon->color = this->color;
-
+        Object* new_polygon = new Object(POLYGON, color.r ,color.g , color.b);
+        
         Point* goingIn = 0;
         Point* goingOut = 0;
 
         for (unsigned int i = 0; i < pointsCount() - 1; i++) {
 
-            Point p0 = point(i);
-            Point p1 = point(i+1);
+            Point p0(point(i));
+            Point p1(point(i+1));
 
             Object* cur_line = new Object(LINE, 0, 0, 0);
 
