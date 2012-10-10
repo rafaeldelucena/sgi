@@ -302,7 +302,7 @@ Point Point::transform(double matrix[9])
 std::string Point::toString(void) const
 {
     std::stringstream s;
-    s << "Point(" << x() << ","<< y() << "," << z() << ")" << std::endl;
+    s << "Point(" << x() << ","<< y() << "," << z() << ")";
     return s.str();
 }
 

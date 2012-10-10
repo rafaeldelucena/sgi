@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     pointsList = new QStringListModel();
     objectsList = new QStringListModel();
     transformationsList = new QStringListModel();
+    selectedObjPointsList = new QStringListModel();
 
     objectPosition = 0;
     transformationPosition = 0;
@@ -59,6 +60,7 @@ MainWindow::~MainWindow()
     delete tmpObject;
     delete objectsList;
     delete transformationsList;
+    delete selectedObjPointsList;
     delete pointsList;
     delete viewPort;
     delete ui;
@@ -332,6 +334,7 @@ void MainWindow::onPushTransformationsApplyButton(void)
 
 void MainWindow::onSelectObject(const QModelIndex & index)
 {
+    clearObjectsPointsList();
     objectPosition = index.row();
     Object* obj = displayFile.getObjectAt(objectPosition);
     if (obj->type() == POINT) {
@@ -341,6 +344,8 @@ void MainWindow::onSelectObject(const QModelIndex & index)
     } else {
         ui->selectedObjType->setText("Polygon");
     }
+    for (unsigned i=0; i < obj->pointsCount(); i++) {
+	addToSelectedObjectPointsList(QString::fromStdString(obj->point(i).toString()));	  }
 }
 
 void MainWindow::onSelectTransformation(const QModelIndex & index)
@@ -375,6 +380,7 @@ void MainWindow::deleteFromObjectsList(unsigned int index)
     objectsListNames.removeAt(index);
     objectsList->setStringList(objectsListNames);
     ui->objectsListView->setModel(objectsList);
+    clearObjectsPointsList();
 }
 
 void MainWindow::addToTransformationsList(QString transformation)
@@ -382,6 +388,20 @@ void MainWindow::addToTransformationsList(QString transformation)
     transformationsListNames.append(transformation);
     transformationsList->setStringList(transformationsListNames);
     ui->transformationsListView->setModel(transformationsList);
+}
+
+void MainWindow::addToSelectedObjectPointsList(QString point)
+{
+    selectedObjPointsListNames.append(point);
+    selectedObjPointsList->setStringList(selectedObjPointsListNames);
+    ui->selectedObjPointsListView->setModel(selectedObjPointsList);
+}
+
+void MainWindow::clearObjectsPointsList(void)
+{
+    selectedObjPointsListNames.clear();
+    selectedObjPointsList->setStringList(selectedObjPointsListNames);
+    ui->selectedObjPointsListView->setModel(selectedObjPointsList);
 }
 
 void MainWindow::deleteFromTransformationsList(unsigned int index)

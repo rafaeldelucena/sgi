@@ -56,11 +56,13 @@ private:
     void addToPointsList(const Point &point);
     void addToObjectsList(Object *object, QString name);
     void addToTransformationsList(QString transformation);
+    void addToSelectedObjectPointsList(QString point);
     void deleteFromObjectsList(unsigned int index);
     void deleteFromTransformationsList(unsigned int index);
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);
+    void clearObjectsPointsList(void);
     void updateWindowPoints(void);
 
     unsigned int objectPosition;
@@ -73,9 +75,11 @@ private:
     QStringList pointsListNames;
     QStringList objectsListNames;
     QStringList transformationsListNames;
+    QStringList selectedObjPointsListNames;
     QStringListModel *pointsList;
     QStringListModel *objectsList;
     QStringListModel *transformationsList;
+    QStringListModel *selectedObjPointsList;
 
     Object* tmpObject;
     DisplayFile displayFile;

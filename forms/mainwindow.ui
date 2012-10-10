@@ -1311,7 +1311,7 @@
       <string>Color:</string>
      </property>
     </widget>
-    <widget class="QListView" name="selectedObjPointsList">
+    <widget class="QListView" name="selectedObjPointsListView">
      <property name="geometry">
       <rect>
        <x>0</x>
