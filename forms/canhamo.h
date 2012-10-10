@@ -30,7 +30,7 @@ public:
     Canhamo(QWidget* obj=0);
     void paintEvent(QPaintEvent*);
     void drawLine(const Point &begin, const Point &end, int r, int g, int b);
-    void drawPolygon(std::vector<Point> & points, bool filled, int r, int g, int b);
+    void drawPolygon(const std::vector<Point> &points, bool filled, int r, int g, int b);
     void refresh();
     void clear();
 
