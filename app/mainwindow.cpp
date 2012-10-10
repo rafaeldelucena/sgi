@@ -25,17 +25,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     yAxis->addPoint(0, 150, 0);
     addToObjectsList(yAxis, QString("y axis"));
 
+    Object* new_line = new Object(LINE);
+    new_line->addPoint(124, 124, 0);
+    new_line->addPoint(169, 169, 0);
+    addToObjectsList(new_line, QString("new_line"));
+
     Object* triangle = new Object(POLYGON, 0, 255, 0);
-    triangle->addPoint(50, -50, 0);
-    triangle->addPoint(100, 50, 0);
     triangle->addPoint(100, 150, 0);
+    triangle->addPoint(200, 50, 0);
+    triangle->addPoint(50, 50, 0);
     addToObjectsList(triangle, QString("triangle"));
 
     Object* square = new Object(POLYGON, 255, 0, 0);
-    square->addPoint(-50, -50, 0);
-    square->addPoint(-150, -50, 0);
-    square->addPoint(-150, -150, 0);
+    square->addPoint(-75, -50, 0);
     square->addPoint(-50, -150, 0);
+    square->addPoint(-150, -150, 0);
+    square->addPoint(-100, -50, 0);
     addToObjectsList(square, QString("square"));
 
     tmpObject = 0;

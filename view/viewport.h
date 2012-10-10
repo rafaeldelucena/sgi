@@ -16,6 +16,7 @@ public:
     Point transform(const Point &wCoord);
     Point minWindowPoint(void);
     Point maxWindowPoint(void);
+    bool pointClipped(Point p);
     void draw(void);
     void right(double value);
     void left(double value);

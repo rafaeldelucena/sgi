@@ -50,11 +50,17 @@ class Object {
 public:
     Object(Shape type, int r = 0, int g = 0, int b = 0);
     ~Object(void);
+
     Shape type(void) const;
+
     unsigned int pointsCount(void) const;
+
+    int regionCode(double x, double y, double xmin, double ymin, double xmax, double ymax);
+
     Point point(int index);
-    void addPoint(double x, double y, double z);
     Point getCenterPoint(void);
+
+    void addPoint(double x, double y, double z);
 
     void rotateOrigin(double angle);
     void rotateCenter(double angle);
@@ -66,6 +72,9 @@ public:
     void fill(bool);
 
     void updateSNC(const Point& windowCenter, double vup, const Point& scale);
+
+    Object* clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
+                 const Point& windowCenter, double vup, const Point& scale);
 
     Color color;
 

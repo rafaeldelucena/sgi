@@ -82,14 +82,14 @@ Point ViewPort::maxWindowPoint(void)
 
 Point ViewPort::transform(const Point &point)
 {
-    double vCoordX = ( (point.sncX() - window->sncmin_x()) / (window->sncmax_x() - window->sncmin_x()) ) * (vMax.x() - vMin.x());
-    double vCoordY = (1.0 - ( (point.sncY() - window->sncmin_y()) / (window->sncmax_y() - window->sncmin_y()))) * (vMax.y() - vMin.y());
+    double vCoordX = ( (point.x() - window->sncmin_x()) / (window->sncmax_x() - window->sncmin_x()) ) * (vMax.x() - vMin.x());
+    double vCoordY = (1.0 - ( (point.y() - window->sncmin_y()) / (window->sncmax_y() - window->sncmin_y()))) * (vMax.y() - vMin.y());
 
     Point p(vCoordX, vCoordY);
 
     return p;    
 }
-#include <iostream>
+
 void ViewPort::draw(void)
 {
     canvas->clear();
@@ -101,40 +101,46 @@ void ViewPort::draw(void)
     {
         Object* obj = displayFile->getObjectAt(i);
 
-        if (obj->type() == POINT) {
-            // desenha um X com centro no ponto
+        Object* clipped = obj->clip(window->sncmin_x(), window->sncmin_y(), window->sncmax_x(), window->sncmax_y(),
+                window->center(), window->vup(), window->scale());
 
-            Point p = obj->point(0);
-            p.updateSNC(window->center(), window->vup(), window->scale());
+        if (clipped) {
 
-            Point vPoint = transform(p);
+            if (clipped->type() == POINT) {
 
-            canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
-                    obj->color.r, obj->color.g, obj->color.b);
-            canvas->drawLine(Point(vPoint.x() -1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
-                    obj->color.r, obj->color.g, obj->color.b);
-        } else {
-            if (obj->type() == LINE) {
-                Point startPoint(obj->point(0));
-                Point endPoint(obj->point(obj->pointsCount() - 1));
-                startPoint.updateSNC(window->center(), window->vup(), window->scale());
+                // desenha um X com centro no ponto
+                Point p = clipped->point(0);
+
+                Point vPoint = transform(p);
+
+                canvas->drawLine(Point(vPoint.x() - 1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
+                        obj->color.r, obj->color.g, obj->color.b);
+                canvas->drawLine(Point(vPoint.x() - 1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
+                        obj->color.r, obj->color.g, obj->color.b);
+
+            } else if (clipped->type() == LINE) {
+
+                Point startPoint = clipped->point(0);
                 startPoint = transform(startPoint);
 
-                endPoint.updateSNC(window->center(), window->vup(), window->scale());
+                Point endPoint = clipped->point(1);
                 endPoint = transform(endPoint);
 
                 canvas->drawLine(startPoint, endPoint, obj->color.r, obj->color.g, obj->color.b);
-            } else {
-                std::vector<Point> pontos;
-                for (unsigned int i = 0; i < obj->pointsCount(); i++) {
-                    Point polyPoint = obj->point(i);
-                    polyPoint.updateSNC(window->center(), window->vup(), window->scale());
-                    polyPoint = transform(polyPoint);
-                    pontos.push_back(polyPoint);
-                    canvas->drawPolygon(pontos, obj->isFilled(), obj->color.r, obj->color.g, obj->color.b);
 
+            } else if (clipped->type() == POLYGON) {
+
+                if (clipped->pointsCount() > 0) {
+                    std::vector<Point> pontos;
+                    for (unsigned int i = 0; i < clipped->pointsCount(); i++) {
+
+                        Point startPoint(clipped->point(i));
+                        startPoint = transform(startPoint);
+                        pontos.push_back(startPoint);
+
+                        canvas->drawPolygon(pontos, obj->isFilled(), clipped->color.r, clipped->color.g, clipped->color.b);
+                    }
                 }
-
             }
         }
     }
