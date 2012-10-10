@@ -36,8 +36,25 @@ void Parser::exportToObj(const std::string &path)
         for (unsigned int k=0; k < objs.size(); k++) {
             Object *obj = displayFile->getObjectAt(k);
             file << "o " << "Object" << k+1 << std::endl;
+            std::stringstream s;
+	    file << "usemtl ";
+	    s << "material" << k+1;
+	    file << s.str() << std::endl;
+	    createMaterial(s.str(), obj->color.r, obj->color.g, obj->color.b);
             file << objs[k] << std::endl;
         }
+    }
+    file.close();
+}
+
+void Parser::createMaterial(const std::string & path, int r, int b, int g)
+{
+    std::ofstream file;
+    std::string s(path + ".obj");
+    file.open(s);
+    if (file.is_open()) {
+        file << "newmtl " << path << std::endl;
+	file << "Kd " << r << " " << b << " " << g << std::endl; 
     }
     file.close();
 }

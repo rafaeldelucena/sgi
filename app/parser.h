@@ -17,6 +17,7 @@ class Parser
     private:
         void checkFaces(void);
         void parseLine(const std::string &line);
+	void createMaterial(const std::string & path, int, int, int);
         Point extractVertices(const std::string &line);
         std::string extractName(const std::string &line);
         
