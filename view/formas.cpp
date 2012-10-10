@@ -3,6 +3,8 @@
 
 #define PI 3.14159265
 
+#include <iostream>
+
 Object::Object(Shape type, int r, int g, int b)
 {
     shape = type;
@@ -42,8 +44,6 @@ int Object::regionCode(double x, double y, double xmin, double ymin, double xmax
 
     return code;
 }
-
-#include <iostream>
 
 Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                      const Point& windowCenter, double vup, const Point& scale)
@@ -142,7 +142,116 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
         }
 
     } else if (shape == POLYGON) {
-        return this;
+
+        Point startPoint;
+        Point endPoint;
+
+        Object* new_polygon = new Object(POLYGON, 0 ,0 ,0);
+
+        Point* goingIn = 0;
+        Point* goingOut = 0;
+
+        for (unsigned int i = 0; i < pointsCount() - 1; i++) {
+
+            Point p0 = point(i);
+            Point p1 = point(i+1);
+
+            Object* cur_line = new Object(LINE, 0, 0, 0);
+
+            cur_line->addPoint(p0.x(), p0.y(), 1);
+            cur_line->addPoint(p1.x(), p1.y(), 1);
+
+            Object* line_clipped = cur_line->clip(wmin_x, wmin_y, wmax_x, wmax_y, windowCenter, vup, scale);
+
+            if (line_clipped) {
+
+                std::cout << "teve clipping" << std::endl;
+
+                p0.updateSNC(windowCenter, vup, scale);
+                p1.updateSNC(windowCenter, vup, scale);
+
+                // tudo dentro
+                if ( ((line_clipped->point(0).x() == p0.sncX()) && (line_clipped->point(0).y() == p0.sncY()) ) &&
+                     ((line_clipped->point(1).x() == p1.sncX()) && (line_clipped->point(1).y() == p1.sncY()) )) {
+
+                    std::cout << "tudo igual" << std::endl;
+
+                    new_polygon->addPoint(p0.sncX(), p0.sncY(), 1);
+                    new_polygon->addPoint(p1.sncX(), p1.sncY(), 1);
+
+                // p_inicial dentro, saindo
+                } else if ( (line_clipped->point(0).x() > -1 && line_clipped->point(0).x() < 1) &&
+                            (line_clipped->point(0).y() > -1 && line_clipped->point(0).y() < 1) ) {
+
+                    goingOut = new Point(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
+
+                    new_polygon->addPoint(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
+                    new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
+
+                // p_final dentro, entrando
+                } else {
+
+                    goingIn = new Point(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
+
+                    if (goingOut) {
+                        new_polygon->addPoint(goingOut->x(), goingOut->y(), 1);
+                        new_polygon->addPoint(goingIn->x(), goingIn->y(), 1);
+                    }
+
+                    new_polygon->addPoint(goingIn->x(), goingIn->y(), 1);
+                    new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
+                }
+
+            } else {
+                continue;
+            }
+        }
+
+        Point p0 = point(pointsCount() - 1);
+        Point p1 = point(0);
+
+        Object* cur_line = new Object(LINE, 0, 0, 0);
+        cur_line->addPoint(p0.x(), p0.y(), 1);
+        cur_line->addPoint(p1.x(), p1.y(), 1);
+
+        Object* line_clipped = cur_line->clip(wmin_x, wmin_y, wmax_x, wmax_y, windowCenter, vup, scale);
+
+        if (line_clipped) {
+
+            p0.updateSNC(windowCenter, vup, scale);
+            p1.updateSNC(windowCenter, vup, scale);
+
+            // tudo dentro
+            if ( ((line_clipped->point(0).x() == p0.sncX()) && (line_clipped->point(0).y() == p0.sncY()) ) &&
+                 ((line_clipped->point(1).x() == p1.sncX()) && (line_clipped->point(1).y() == p1.sncY()) )) {
+
+                std::cout << "tudo igual" << std::endl;
+
+                new_polygon->addPoint(p0.sncX(), p0.sncY(), 1);
+                new_polygon->addPoint(p1.sncX(), p1.sncY(), 1);
+
+            // p_inicial dentro, saindo
+            } else if ( (line_clipped->point(0).x() > -1 && line_clipped->point(0).x() < 1) &&
+                        (line_clipped->point(0).y() > -1 && line_clipped->point(0).y() < 1) ) {
+
+                goingOut = new Point(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
+
+                new_polygon->addPoint(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
+                new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
+
+            // p_final dentro, entrando
+            } else {
+
+                goingIn = new Point(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
+
+                new_polygon->addPoint(goingOut->x(), goingOut->y(), 1);
+                new_polygon->addPoint(goingIn->x(), goingIn->y(), 1);
+
+                new_polygon->addPoint(goingIn->x(), goingIn->y(), 1);
+                new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
+            }
+        }
+        return new_polygon;
     }
     return 0;
 }
@@ -330,7 +439,7 @@ void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
     m[7] = windowCenter.y();
     m[8] = 1.0;
 
-    Point new_snc = transform(m); 
+    Point new_snc = transform(m);
 
     // rotate
     // [cos(a) -sin(a) 0
@@ -355,7 +464,7 @@ void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
     m2[8] = 1.0;
 
     new_snc = new_snc.transform(m2);
-    
+
     snc_X = new_snc.x();
     snc_Y = new_snc.y();
     snc_Z = new_snc.z();

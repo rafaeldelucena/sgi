@@ -110,8 +110,6 @@ void ViewPort::draw(void)
             continue;
         }
 
-       // clipped->updateSNC(window->center(), window->vup(), window->scale());
-
         if (clipped->type() == POINT) {
 
             // desenha um X com centro no ponto
@@ -127,16 +125,18 @@ void ViewPort::draw(void)
         } else if (clipped->type() == LINE) {
 
                 Point startPoint = clipped->point(0);
-//                startPoint.updateSNC(window->center(), window->vup(), window->scale());
                 startPoint = transform(startPoint);
 
                 Point endPoint = clipped->point(1);
-//                endPoint.updateSNC(window->center(), window->vup(), window->scale());
                 endPoint = transform(endPoint);
 
                 canvas->drawLine(startPoint, endPoint, obj->color.r, obj->color.g, obj->color.b);
 
         } else if (clipped->type() == POLYGON) {
+
+            if (clipped->pointsCount() == 0) {
+                continue;
+            }
 
             Point startPoint;
 
@@ -145,21 +145,13 @@ void ViewPort::draw(void)
             for (unsigned int i = 0; i < clipped->pointsCount() - 1; i++) {
 
                 startPoint = clipped->point(i);
-//                startPoint.updateSNC(window->center(), window->vup(), window->scale());
                 startPoint = transform(startPoint);
 
                 endPoint = clipped->point(i+1);
-//                endPoint.updateSNC(window->center(), window->vup(), window->scale());
                 endPoint = transform(endPoint);
 
                 canvas->drawLine(startPoint, endPoint, clipped->color.r, clipped->color.g, clipped->color.b);
             }
-
-            startPoint = clipped->point(0);
-//            startPoint.updateSNC(window->center(), window->vup(), window->scale());
-            startPoint = transform(startPoint);
-
-            canvas->drawLine(endPoint, startPoint, clipped->color.r, clipped->color.g, clipped->color.b);
         }
     }
     displayFile->update();
