@@ -21,6 +21,132 @@ Shape Object::type(void) const
     return shape;
 }
 
+int Object::regionCode(double x, double y, double xmin, double ymin, double xmax, double ymax)
+{
+    const int INSIDE = 0; // 0000
+    const int LEFT = 1;   // 0001
+    const int RIGHT = 2;  // 0010
+    const int BOTTOM = 4; // 0100
+    const int TOP = 8;    // 1000
+
+    int code = INSIDE;
+
+    if (x < xmin)           // to the left of clip window
+        code |= LEFT;
+    else if (x > xmax)      // to the right of clip window
+        code |= RIGHT;
+    if (y < ymin)           // below the clip window
+        code |= BOTTOM;
+    else if (y > ymax)      // above the clip window
+        code |= TOP;
+
+    return code;
+}
+
+#include <iostream>
+
+Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
+                     const Point& windowCenter, double vup, const Point& scale)
+{
+
+    if (shape == POINT) {
+
+        Point p = this->point(0);
+        p.updateSNC(windowCenter, vup, scale);
+
+        // em coordenadas normalizadas, a viewport vai de -1 a 1
+        if ( ((p.sncX() < -1) || (p.sncX() > 1)) || ((p.sncY() < -1) || (p.sncY() > 1)) ) {
+            return 0;
+        } else {
+            Object* new_point = new Object(POINT, 0, 0 ,0);
+            new_point->addPoint(p.sncX(), p.sncY(), 1);
+            return new_point;
+        }
+
+    } else if (shape == LINE) {
+
+        // cohen sutherland
+        //const int INSIDE = 0; // 0000
+        const int LEFT = 1;   // 0001
+        const int RIGHT = 2;  // 0010
+        const int BOTTOM = 4; // 0100
+        const int TOP = 8;    // 1000
+
+        Point p1 = point(0);
+        p1.updateSNC(windowCenter, vup, scale);
+        double x0 = p1.sncX();
+        double y0 = p1.sncY();
+
+        Point p2 = point(1);
+        p2.updateSNC(windowCenter, vup, scale);
+        double x1 = p2.sncX();
+        double y1 = p2.sncY();
+
+        int regionCode0 = this->regionCode(x0, y0, wmin_x, wmin_y, wmax_x, wmax_y);
+        int regionCode1 = this->regionCode(x1, y1, wmin_x, wmin_y, wmax_x, wmax_y);
+
+        bool accept = false;
+
+        while (true) {
+
+            if (!(regionCode0 | regionCode1)) { // totalmente dentro
+                accept = true;
+                break;
+            } else if (regionCode0 & regionCode1) { // totalmente fora
+                break;
+            } else {
+
+                // parcialmente
+                double x, y;
+
+                // At least one endpoint is outside the clip rectangle; pick it.
+                int regionCodeOut = regionCode0 ? regionCode0 : regionCode1;
+
+                // Now find the intersection point;
+                // use formulas y = y0 + slope * (x - x0), x = x0 + (1 / slope) * (y - y0)
+                if (regionCodeOut & TOP) {           // point is above the clip rectangle
+                    x = x0 + (x1 - x0) * (wmax_y - y0) / (y1 - y0);
+                    y = wmax_y;
+                } else if (regionCodeOut & BOTTOM) { // point is below the clip rectangle
+                    x = x0 + (x1 - x0) * (wmin_y - y0) / (y1 - y0);
+                    y = wmin_y;
+                } else if (regionCodeOut & RIGHT) {  // point is to the right of clip rectangle
+                    y = y0 + (y1 - y0) * (wmax_x - x0) / (x1 - x0);
+                    x = wmax_x;
+                } else if (regionCodeOut & LEFT) {   // point is to the left of clip rectangle
+                    y = y0 + (y1 - y0) * (wmin_x - x0) / (x1 - x0);
+                    x = wmin_x;
+                }
+
+                // Now we move outside point to intersection point to clip
+                // and get ready for next pass.
+                if (regionCodeOut == regionCode0) {
+                    x0 = x;
+                    y0 = y;
+                    regionCode0 = this->regionCode(x0, y0,  wmin_x, wmin_y, wmax_x, wmax_y);
+                } else {
+                    x1 = x;
+                    y1 = y;
+                    regionCode1 = this->regionCode(x1, y1, wmin_x, wmin_y, wmax_x, wmax_y);
+                }
+            }
+        }
+
+        if (accept) {
+            Object* new_obj = new Object(LINE, 0, 0, 0);
+            new_obj->addPoint(x0, y0, 1);
+            new_obj->addPoint(x1, y1, 1);
+            return new_obj;
+        } else {
+            return 0;
+        }
+
+    } else if (shape == POLYGON) {
+        return this;
+    }
+    return 0;
+}
+
 void Object::addPoint(double x, double y, double z)
 {
     Point* p = new Point(x, y, z);

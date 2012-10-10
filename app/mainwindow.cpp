@@ -24,6 +24,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     yAxis->addPoint(0, 150, 0);
     addToObjectsList(yAxis, QString("y axis"));
 
+    Object* new_line = new Object(LINE);
+    new_line->addPoint(124, 124, 0);
+    new_line->addPoint(169, 169, 0);
+    addToObjectsList(new_line, QString("new_line"));
+
     Object* triangle = new Object(POLYGON, 0, 255, 0);
     triangle->addPoint(50, -50, 0);
     triangle->addPoint(100, 50, 0);
