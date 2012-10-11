@@ -144,6 +144,8 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
 
     } else if (shape == POLYGON) {
 
+        bool has_some_line_inside = false;
+
         Object* new_polygon = new Object(POLYGON, color.r ,color.g , color.b);
         
         Point* goingIn = 0;
@@ -187,6 +189,8 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                     new_polygon->addPoint(p0.sncX(), p0.sncY(), 1);
                     new_polygon->addPoint(p1.sncX(), p1.sncY(), 1);
 
+                    has_some_line_inside = true;
+
                 // p_inicial dentro, saindo
                 } else if ( (line_clipped->point(0).x() > -1 && line_clipped->point(0).x() < 1) &&
                             (line_clipped->point(0).y() > -1 && line_clipped->point(0).y() < 1) ) {
@@ -198,6 +202,8 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                     new_polygon->addPoint(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
                     new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
 
+                    has_some_line_inside = true;
+
                 // p_final dentro, entrando
                 } else {
 
@@ -206,22 +212,32 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                     goingIn = new Point(p1.x(), p1.y(), 1);
 
                     if (!goingOut) {
+
                         goingOut = goingIn;
+
                     } else {
 
-                        if (goingOut->sncX() > 1 && goingOut->sncY() > 1) {
-                            new_polygon->addPoint(1, 1, 1);
-                        } else if (goingOut->sncX() > 1 && goingOut->sncY() < -1) {
-                            new_polygon->addPoint(1, -1, 1);
-                        } else if (goingOut->sncX() < -1 && goingOut->sncY() < -1) {
-                            new_polygon->addPoint(-1, -1, 1);
-                        } else if (goingOut->sncX() < -1 && goingOut->sncY() > 1) {
-                            new_polygon->addPoint(-1, 1, 1);
+                        double new_x = 0;
+                        double new_y = 0;
+
+                        if (goingOut->sncX() >= 1) {
+                            new_x = 1;
+                        } else if (goingOut->sncX() <= -1){
+                            new_x = -1;
+                        }
+
+                        if (goingOut->sncY() >= 1) {
+                            new_y = 1;
+                        } else if (goingOut->sncY() <= -1) {
+                            new_y = -1;
+                        }
+
+                        if (new_x != 0  && new_y != 0 ) {
+                            new_polygon->addPoint(new_x, new_y, 1);
                         }
                     }
 
                     new_polygon->addPoint(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
-
                     new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
                 }
 
@@ -232,11 +248,13 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                 double new_x;
                 double new_y;
                 Point p;
+
                 if (!goingOut || i == 0 || i == this->pointsCount() - 1) {
                     p = p0;
                 } else if (goingOut) {
                     p = p1;
                 }
+
                 if (p.sncX() >= 1) {
                     new_x = 1;
                 } else if (p.sncX() <= -1) {
@@ -248,13 +266,16 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                     new_y = 1;
                 } else if (p.sncY() <= -1) {
                     new_y = -1;
+                } else {
+                    new_y = p.sncY();
                 }
+
                 new_polygon->addPoint(new_x, new_y, 1);
             }
         }
-        std::cout << std::endl;
-        std::cout << std::endl;
-        return new_polygon;
+        if (has_some_line_inside) {
+            return new_polygon;
+        }
     }
     return 0;
 }
