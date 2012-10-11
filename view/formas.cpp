@@ -194,15 +194,33 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
 
                     goingIn = new Point(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
 
-                    if (goingOut) {
-                        new_polygon->addPoint(goingOut->x(), goingOut->y(), 1);
-                        new_polygon->addPoint(goingIn->x(), goingIn->y(), 1);
+                    if (!goingOut) {
+                        goingOut = goingIn;
                     }
+                    if (goingIn->x() != goingOut->x()) {
 
+                        if (goingIn->y() < goingOut->y()) {
+
+                            if (goingIn->x() < goingOut->x()) {
+                                new_polygon->addPoint(1, -1, 1);
+                            } else {
+                                new_polygon->addPoint(1, 1, 1);
+                            }
+
+                        } else {
+
+                            if (goingIn->x() < goingOut->x()) {
+                                new_polygon->addPoint(-1, -1, 1);
+                            } else {
+                                new_polygon->addPoint(-1, 1, 1);
+                            }
+                        }
+
+                    }
                     new_polygon->addPoint(goingIn->x(), goingIn->y(), 1);
+
                     new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
                 }
-
             } 
         }
         return new_polygon;
