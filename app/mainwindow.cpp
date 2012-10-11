@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     triangle->addPoint(100, 150, 0);
     triangle->addPoint(200, 50, 0);
     triangle->addPoint(50, 50, 0);
+    triangle->addPoint(100, 150, 0);
     addToObjectsList(triangle, QString("triangle"));
 
     Object* square = new Object(POLYGON, 255, 0, 0);

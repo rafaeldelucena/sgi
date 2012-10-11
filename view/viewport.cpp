@@ -138,8 +138,8 @@ void ViewPort::draw(void)
                         startPoint = transform(startPoint);
                         pontos.push_back(startPoint);
 
-                        canvas->drawPolygon(pontos, obj->isFilled(), clipped->color.r, clipped->color.g, clipped->color.b);
                     }
+                    canvas->drawPolygon(pontos, obj->isFilled(), clipped->color.r, clipped->color.g, clipped->color.b);
                 }
             }
         }
