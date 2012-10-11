@@ -207,7 +207,7 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                                 new_polygon->addPoint(1, 1, 1);
                             }
 
-                        } else {
+                        } else if (goingIn->y() > goingOut->y()) {
 
                             if (goingIn->x() < goingOut->x()) {
                                 new_polygon->addPoint(-1, -1, 1);
