@@ -229,68 +229,27 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
 
                 std::cout << "fora" << std::endl;
 
+                double new_x;
+                double new_y;
+                Point p;
                 if (!goingOut || i == 0 || i == this->pointsCount() - 1) {
-
-                    if (p0.sncX() < 1 && p0.sncX() > -1) {
-
-                        if (p0.sncY() > 1) {
-                            new_polygon->addPoint(p0.sncX(), 1, 1);
-                        } else {
-                            new_polygon->addPoint(p0.sncX(), -1, 1);
-                        }
-
-                    } else if (p0.sncY() < 1 && p0.sncY() > -1) {
-
-                        if (p0.sncX() > 1) {
-                            new_polygon->addPoint(1, p0.sncY(), 1);
-                        } else {                                
-                            new_polygon->addPoint(-1, p0.sncY(), 1);
-                        }
-
-                    } else {
-
-                        double new_x;
-                        if (p0.sncX() > 1) {
-                            new_x = 1;
-                        } else {
-                            new_x = -1;
-                        }
-                        double new_y;
-                        if (p0.sncY() > 1) {
-                            new_y = 1;
-                        } else {
-                            new_y = -1;
-                        }
-                        new_polygon->addPoint(new_x, new_y, 1);
-                    }
+                    p = p0;
+                } else if (goingOut) {
+                    p = p1;
                 }
-                if (goingOut || i == 0 || i == this->pointsCount() - 1) {
-
-                    if (p1.sncX() < 1 && p1.sncX() > -1) {
-
-                        if (p1.sncY() > 1) {
-                            new_polygon->addPoint(p1.sncX(), 1, 1);
-                        } else {
-                            new_polygon->addPoint(p1.sncX(), -1, 1);
-                        }
-
-                    } else if (p1.sncY() < 1 && p1.sncY() > -1) {
-
-                        if (p1.sncX() > 1) {
-                            new_polygon->addPoint(1, p1.sncY(), 1);
-                        } else {                                
-                            new_polygon->addPoint(-1, p1.sncY(), 1);
-                        }
-
-                    } else {
-
-                        if (p1.sncX() > 1 && p1.sncY() > 1) {
-                            new_polygon->addPoint(1, 1, 1);
-                        } else if (p1.sncX() < -1 && p1.sncY() < -1) {
-                            new_polygon->addPoint(-1, -1, 1);
-                        }
-                    }
+                if (p.sncX() >= 1) {
+                    new_x = 1;
+                } else if (p.sncX() <= -1) {
+                    new_x = -1;
+                } else {
+                    new_x = p.sncX();
                 }
+                if (p.sncY() >= 1) {
+                    new_y = 1;
+                } else if (p.sncY() <= -1) {
+                    new_y = -1;
+                }
+                new_polygon->addPoint(new_x, new_y, 1);
             }
         }
         std::cout << std::endl;
