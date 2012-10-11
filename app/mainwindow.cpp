@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     Object* triangle = new Object(POLYGON, 0, 255, 0);
     triangle->addPoint(100, 150, 0);
-    triangle->addPoint(200, 50, 0);
+    triangle->addPoint(150, 50, 0);
     triangle->addPoint(50, 50, 0);
     triangle->addPoint(100, 150, 0);
     addToObjectsList(triangle, QString("triangle"));
@@ -42,7 +42,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     square->addPoint(-50, -150, 0);
     square->addPoint(-150, -150, 0);
     square->addPoint(-100, -50, 0);
+    square->addPoint(-75, -50, 0);
     addToObjectsList(square, QString("square"));
+
+    Object* pentagon = new Object(POLYGON, 255, 0, 0);
+    pentagon->addPoint(-60, 120, 0);
+    pentagon->addPoint(-10, 60, 0);
+    pentagon->addPoint(-20, 10, 0);
+    pentagon->addPoint(-100, 10, 0);
+    pentagon->addPoint(-110, 60, 0);
+    pentagon->addPoint(-60, 120, 0);
+    addToObjectsList(pentagon, QString("pentagon"));
 
     tmpObject = 0;
     objectFilled = false;

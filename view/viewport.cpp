@@ -134,9 +134,9 @@ void ViewPort::draw(void)
                     std::vector<Point> pontos;
                     for (unsigned int i = 0; i < clipped->pointsCount(); i++) {
 
-                        Point startPoint(clipped->point(i));
-                        startPoint = transform(startPoint);
-                        pontos.push_back(startPoint);
+                        Point p(clipped->point(i));
+                        p = transform(p);
+                        pontos.push_back(p);
 
                     }
                     canvas->drawPolygon(pontos, obj->isFilled(), clipped->color.r, clipped->color.g, clipped->color.b);

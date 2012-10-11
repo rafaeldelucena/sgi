@@ -144,38 +144,45 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
 
     } else if (shape == POLYGON) {
 
-        Point startPoint;
-        Point endPoint;
-
         Object* new_polygon = new Object(POLYGON, color.r ,color.g , color.b);
         
         Point* goingIn = 0;
         Point* goingOut = 0;
 
-        for (unsigned int i = 0; i < pointsCount() - 1; i++) {
+        std::cout << "pointsCount: " << this->pointsCount() << std::endl;
+
+        for (unsigned int i = 0; i < this->pointsCount() -1; i++) {
+
+            std::cout << "i: " << i << std::endl;
 
             Point p0(point(i));
             Point p1(point(i+1));
 
             Object* cur_line = new Object(LINE, 0, 0, 0);
 
+            std::cout << "p0: " << p0.x() << "," << p0.y() << std::endl;
+            std::cout << "p1: " << p1.x() << "," << p1.y() << std::endl;
+            std::cout << "snc p0: " << p0.sncX() << "," << p0.sncY() << std::endl;
+            std::cout << "snc p1: " << p1.sncX() << "," << p1.sncY() << std::endl;
+
             cur_line->addPoint(p0.x(), p0.y(), 1);
             cur_line->addPoint(p1.x(), p1.y(), 1);
 
             Object* line_clipped = cur_line->clip(wmin_x, wmin_y, wmax_x, wmax_y, windowCenter, vup, scale);
 
+            p0.updateSNC(windowCenter, vup, scale);
+            p1.updateSNC(windowCenter, vup, scale);
+
             if (line_clipped) {
 
-                std::cout << "teve clipping" << std::endl;
-
-                p0.updateSNC(windowCenter, vup, scale);
-                p1.updateSNC(windowCenter, vup, scale);
-
                 // tudo dentro
-                if ( ((line_clipped->point(0).x() == p0.sncX()) && (line_clipped->point(0).y() == p0.sncY()) ) &&
-                     ((line_clipped->point(1).x() == p1.sncX()) && (line_clipped->point(1).y() == p1.sncY()) )) {
+                if ( ((line_clipped->point(0).x() > -1 && line_clipped->point(0).x() < 1) &&
+                     (line_clipped->point(0).y() > -1 && line_clipped->point(0).y() < 1) )
+                    && 
+                     ((line_clipped->point(1).x() > -1 && line_clipped->point(1).x() < 1) &&
+                     (line_clipped->point(1).y() > -1 && line_clipped->point(1).y() < 1) ) ) {
 
-                    std::cout << "tudo igual" << std::endl;
+                    std::cout << "dentro" << std::endl;
 
                     new_polygon->addPoint(p0.sncX(), p0.sncY(), 1);
                     new_polygon->addPoint(p1.sncX(), p1.sncY(), 1);
@@ -184,7 +191,9 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                 } else if ( (line_clipped->point(0).x() > -1 && line_clipped->point(0).x() < 1) &&
                             (line_clipped->point(0).y() > -1 && line_clipped->point(0).y() < 1) ) {
 
-                    goingOut = new Point(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
+                    std::cout << "saindo" << std::endl;
+
+                    goingOut = new Point(p1.x(), p1.y(), 1);
 
                     new_polygon->addPoint(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
                     new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
@@ -192,37 +201,100 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                 // p_final dentro, entrando
                 } else {
 
-                    goingIn = new Point(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
+                    std::cout << "entrando" << std::endl;
+
+                    goingIn = new Point(p1.x(), p1.y(), 1);
 
                     if (!goingOut) {
                         goingOut = goingIn;
-                    }
-                    if (goingIn->x() != goingOut->x()) {
+                    } else {
 
-                        if (goingIn->y() < goingOut->y()) {
-
-                            if (goingIn->x() < goingOut->x()) {
-                                new_polygon->addPoint(1, -1, 1);
-                            } else {
-                                new_polygon->addPoint(1, 1, 1);
-                            }
-
-                        } else if (goingIn->y() > goingOut->y()) {
-
-                            if (goingIn->x() < goingOut->x()) {
-                                new_polygon->addPoint(-1, -1, 1);
-                            } else {
-                                new_polygon->addPoint(-1, 1, 1);
-                            }
+                        if (goingOut->sncX() > 1 && goingOut->sncY() > 1) {
+                            new_polygon->addPoint(1, 1, 1);
+                        } else if (goingOut->sncX() > 1 && goingOut->sncY() < -1) {
+                            new_polygon->addPoint(1, -1, 1);
+                        } else if (goingOut->sncX() < -1 && goingOut->sncY() < -1) {
+                            new_polygon->addPoint(-1, -1, 1);
+                        } else if (goingOut->sncX() < -1 && goingOut->sncY() > 1) {
+                            new_polygon->addPoint(-1, 1, 1);
                         }
-
                     }
-                    new_polygon->addPoint(goingIn->x(), goingIn->y(), 1);
+
+                    new_polygon->addPoint(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
 
                     new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
                 }
-            } 
+
+            } else {
+
+                std::cout << "fora" << std::endl;
+
+                if (!goingOut || i == 0 || i == this->pointsCount() - 1) {
+
+                    if (p0.sncX() < 1 && p0.sncX() > -1) {
+
+                        if (p0.sncY() > 1) {
+                            new_polygon->addPoint(p0.sncX(), 1, 1);
+                        } else {
+                            new_polygon->addPoint(p0.sncX(), -1, 1);
+                        }
+
+                    } else if (p0.sncY() < 1 && p0.sncY() > -1) {
+
+                        if (p0.sncX() > 1) {
+                            new_polygon->addPoint(1, p0.sncY(), 1);
+                        } else {                                
+                            new_polygon->addPoint(-1, p0.sncY(), 1);
+                        }
+
+                    } else {
+
+                        double new_x;
+                        if (p0.sncX() > 1) {
+                            new_x = 1;
+                        } else {
+                            new_x = -1;
+                        }
+                        double new_y;
+                        if (p0.sncY() > 1) {
+                            new_y = 1;
+                        } else {
+                            new_y = -1;
+                        }
+                        new_polygon->addPoint(new_x, new_y, 1);
+                    }
+                }
+                if (goingOut || i == 0 || i == this->pointsCount() - 1) {
+
+                    if (p1.sncX() < 1 && p1.sncX() > -1) {
+
+                        if (p1.sncY() > 1) {
+                            new_polygon->addPoint(p1.sncX(), 1, 1);
+                        } else {
+                            new_polygon->addPoint(p1.sncX(), -1, 1);
+                        }
+
+                    } else if (p1.sncY() < 1 && p1.sncY() > -1) {
+
+                        if (p1.sncX() > 1) {
+                            new_polygon->addPoint(1, p1.sncY(), 1);
+                        } else {                                
+                            new_polygon->addPoint(-1, p1.sncY(), 1);
+                        }
+
+                    } else {
+
+                        if (p1.sncX() > 1 && p1.sncY() > 1) {
+                            new_polygon->addPoint(1, 1, 1);
+                        } else if (p1.sncX() < -1 && p1.sncY() < -1) {
+                            new_polygon->addPoint(-1, -1, 1);
+                        }
+                    }
+                }
+            }
         }
+        std::cout << std::endl;
+        std::cout << std::endl;
         return new_polygon;
     }
     return 0;
@@ -231,17 +303,17 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
 void Object::addPoint(double x, double y, double z)
 {
     Point* p = new Point(x, y, z);
-    points.push_back(p);
+    this->points.push_back(p);
 }
 
 unsigned int Object::pointsCount(void) const
 {
-    return points.size();
+    return this->points.size();
 }
 
 Point Object::point(int index)
 {
-    Point *p = points[index];
+    Point *p = this->points[index];
     return p->transform(transformationMatrix);
 }
 
@@ -249,7 +321,7 @@ void Object::updateTransform(double matrix[9])
 {
     //return [transformationMatrix]*[matrix]
 
-    double *t = transformationMatrix;
+    double *t = this->transformationMatrix;
 
     // linha 1
     double new_x1 = (t[0] * matrix[0]) + (t[1] * matrix[3]) + (t[2] * matrix[6]);
@@ -279,15 +351,15 @@ void Object::updateTransform(double matrix[9])
 
 void Object::clearTransformations(void)
 {
-    transformationMatrix[0] = 1;
-    transformationMatrix[1] = 0;
-    transformationMatrix[2] = 0;
-    transformationMatrix[3] = 0;
-    transformationMatrix[4] = 1;
-    transformationMatrix[5] = 0;
-    transformationMatrix[6] = 0;
-    transformationMatrix[7] = 0;
-    transformationMatrix[8] = 1;
+    this->transformationMatrix[0] = 1;
+    this->transformationMatrix[1] = 0;
+    this->transformationMatrix[2] = 0;
+    this->transformationMatrix[3] = 0;
+    this->transformationMatrix[4] = 1;
+    this->transformationMatrix[5] = 0;
+    this->transformationMatrix[6] = 0;
+    this->transformationMatrix[7] = 0;
+    this->transformationMatrix[8] = 1;
 }
 
 void Object::rotateOrigin(double a)
@@ -301,13 +373,13 @@ void Object::rotateOrigin(double a)
     m[3] = sin(a * PI/180.0);
     m[4] = cos(a * PI/180.0);
     m[8] = 1.0;
-    updateTransform(m);
+    this->updateTransform(m);
 }
 
 void Object::rotateCenter(double a)
 {
-    Point p = getCenterPoint();
-    translate(Point(-p.x(), -p.y()));
+    Point p = this->getCenterPoint();
+    this->translate(Point(-p.x(), -p.y()));
 
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
@@ -318,14 +390,14 @@ void Object::rotateCenter(double a)
     m[3] = sin(a * PI/180.0);
     m[4] = cos(a * PI/180.0);
     m[8] = 1.0;
-    updateTransform(m);
+    this->updateTransform(m);
 
-    translate(Point(p.x(), p.y()));
+    this->translate(Point(p.x(), p.y()));
 }
 
 void Object::rotatePoint(double a, const Point& p)
 {
-    translate(Point(-p.x(), -p.y()));
+    this->translate(Point(-p.x(), -p.y()));
 
     // [cos(a) -sin(a) 0
     //  sin(a)  cos(a) 0
@@ -336,14 +408,14 @@ void Object::rotatePoint(double a, const Point& p)
     m[3] = sin(a * PI/180.0);
     m[4] = cos(a * PI/180.0);
     m[8] = 1.0;
-    updateTransform(m);
+    this->updateTransform(m);
 
-    translate(Point(p.x(), p.y()));
+    this->translate(Point(p.x(), p.y()));
 }
 
 void Object::scale(const Point& vector)
 {
-    Point p = getCenterPoint();
+    Point p = this->getCenterPoint();
     this->translate(Point(-p.x(), -p.y()));
 
     // [Sx 0  0
@@ -354,7 +426,7 @@ void Object::scale(const Point& vector)
     m[4] = vector.y();
     m[8] = 1;
 
-    updateTransform(m);
+    this->updateTransform(m);
 
     this->translate(Point(p.x(), p.y()));
 }
@@ -370,7 +442,7 @@ void Object::translate(const Point& displacement)
     m[6] = displacement.x();
     m[7] = displacement.y();
     m[8] = 1.0;
-    updateTransform(m);
+   this-> updateTransform(m);
 }
 
 Point Object::getCenterPoint(void)
@@ -378,10 +450,10 @@ Point Object::getCenterPoint(void)
     double x = 0;
     double y = 0;
     unsigned int i;
-    for (i=0; i < pointsCount(); i++)
+    for (i=0; i < this->pointsCount(); i++)
     {
-        x += point(i).x();
-        y += point(i).y();
+        x += this->point(i).x();
+        y += this->point(i).y();
     }
 
     x = x/i;
@@ -392,12 +464,12 @@ Point Object::getCenterPoint(void)
 
 bool Object::isFilled(void)
 {
-   return filled;
+   return this->filled;
 }
 
 void Object::fill(bool value)
 {
-   filled = value;
+   this->filled = value;
 }
 
 Point::Point(double x, double y, double z) : wcX(x), wcY(y), wcZ(z)
