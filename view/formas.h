@@ -6,7 +6,7 @@
 
 #include <sstream>
 
-enum Shape { POINT, LINE, POLYGON };
+enum Shape { POINT, LINE, POLYGON, CURVE };
 
 class Point
 {

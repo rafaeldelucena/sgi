@@ -12,7 +12,7 @@ typedef struct
 {
     double v[4];
     int c[3];
-} Line;
+} CanvasLine;
 
 typedef struct
 {
@@ -21,7 +21,7 @@ typedef struct
         bool filled;
 } CanvasPolygon;
 
-typedef std::vector<Line> Lines;
+typedef std::vector<CanvasLine> Lines;
 typedef std::vector<CanvasPolygon> Polygons;
 
 class Canhamo : public QWidget {
@@ -39,7 +39,7 @@ private:
     Lines canvasLines;
     Polygons canvasPolygons;
     bool polygonFilled;
-    int offset; 
+    unsigned int offset;
 };
 
 #endif // CANHAMO_H

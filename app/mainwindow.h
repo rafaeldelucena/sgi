@@ -32,7 +32,9 @@ private slots:
     void onPushPointSaveButton(void);
     void onPushLineSaveButton(void);
     void onPushPolygonSaveButton(void);
-    void onPushPolygonAddButton(void);
+    void onPushPolygonAddPointButton(void);
+    void onPushCurveSaveButton(void);
+    void onPushCurveAddPointButton(void);
     void onPushDeleteButton(void);
     void onPushMoveUpButton(void);
     void onPushMoveLeftButton(void);
@@ -53,8 +55,9 @@ private slots:
     void onFilledBoxToggled(bool checked);
 
 private:
-    void addToPointsList(const Point &point);
-    void addToObjectsList(Object *object, QString name);
+    void addToPolygonPointsList(const QString & name);
+    void addToCurvePointsList(const QString & name);
+    void addToObjectsList(Object *object, const QString & name);
     void addToTransformationsList(QString transformation);
     void addToSelectedObjectPointsList(QString point);
     void deleteFromObjectsList(unsigned int index);
@@ -62,6 +65,7 @@ private:
     void clearLineTextFields(void);
     void clearPointTextFields(void);
     void clearPolygonTextFields(void);
+    void clearCurveTextFields(void);
     void clearObjectsPointsList(void);
     void updateWindowPoints(void);
 
@@ -72,11 +76,13 @@ private:
     inline void listen(void);
 
     Ui::MainWindow *ui;
-    QStringList pointsListNames;
+    QStringList polygonPointsListNames;
+    QStringList curvePointsListNames;
     QStringList objectsListNames;
     QStringList transformationsListNames;
     QStringList selectedObjPointsListNames;
-    QStringListModel *pointsList;
+    QStringListModel *polygonPointsList;
+    QStringListModel *curvePointsList;
     QStringListModel *objectsList;
     QStringListModel *transformationsList;
     QStringListModel *selectedObjPointsList;

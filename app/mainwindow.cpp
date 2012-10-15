@@ -7,7 +7,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     viewPort = new ViewPort(this->canvas(), &displayFile);
     parser = new Parser(&displayFile);
 
-    pointsList = new QStringListModel();
+    polygonPointsList = new QStringListModel();
+    curvePointsList = new QStringListModel();
     objectsList = new QStringListModel();
     transformationsList = new QStringListModel();
     selectedObjPointsList = new QStringListModel();
@@ -72,12 +73,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow()
 {
-    pointsListNames.clear();
+    polygonPointsListNames.clear();
+    curvePointsListNames.clear();
     delete tmpObject;
     delete objectsList;
     delete transformationsList;
     delete selectedObjPointsList;
-    delete pointsList;
+    delete polygonPointsList;
+    delete curvePointsList;
     delete viewPort;
     delete ui;
 }
@@ -92,7 +95,9 @@ inline void MainWindow::listen(void)
     connect(ui->saveLineButton, SIGNAL(pressed()), this,  SLOT(onPushLineSaveButton()));
     connect(ui->savePointButton, SIGNAL(pressed()), this, SLOT(onPushPointSaveButton()));
     connect(ui->savePolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonSaveButton()));
-    connect(ui->addPolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonAddButton()));
+    connect(ui->addPolygonButton, SIGNAL(pressed()), this, SLOT(onPushPolygonAddPointButton()));
+    connect(ui->saveCurveButton, SIGNAL(pressed()), this, SLOT(onPushCurveSaveButton()));
+    connect(ui->addCurvePointButton, SIGNAL(pressed()), this, SLOT(onPushCurveAddPointButton()));
     connect(ui->deleteButton, SIGNAL(pressed()), this, SLOT(onPushDeleteButton()));
     connect(ui->moveUpButton, SIGNAL(pressed()), this, SLOT(onPushMoveUpButton()));
     connect(ui->moveLeftButton, SIGNAL(pressed()), this, SLOT(onPushMoveLeftButton()));
@@ -177,6 +182,20 @@ void MainWindow::onPushPolygonSaveButton(void)
     viewPort->draw();
 }
 
+void MainWindow::onPushCurveSaveButton(void)
+{
+    if (tmpObject) {
+        QString name = ui->curveName->text();
+        Object *curve = new Object(CURVE);
+        *curve = *tmpObject;
+        addToObjectsList(curve, name);
+        delete tmpObject;
+        tmpObject = 0;
+    }
+    clearCurveTextFields();
+    viewPort->draw();
+}
+
 void MainWindow::onPushDeleteButton(void)
 {
     if (displayFile.objectsCount() > 0) {
@@ -187,7 +206,7 @@ void MainWindow::onPushDeleteButton(void)
     objectPosition = 0;
 }
 
-void MainWindow::onPushPolygonAddButton(void)
+void MainWindow::onPushPolygonAddPointButton(void)
 {
     if (!tmpObject) {
         int r = ui->polygonColorR->text().toInt();
@@ -200,8 +219,28 @@ void MainWindow::onPushPolygonAddButton(void)
     double z = ui->polygonZ->text().toDouble();
 
     tmpObject->addPoint(x, y, z);
-    Point point(x, y, z);
-    addToPointsList(point);
+    std::stringstream s;
+    s << "Point: " << x << "," << y << "," <<  z;
+    addToPolygonPointsList(QString::fromStdString(s.str()));
+}
+
+void MainWindow::onPushCurveAddPointButton(void)
+{
+    if (!tmpObject) {
+        int r = ui->curveColorR->text().toInt();
+        int g = ui->curveColorG->text().toInt();
+        int b = ui->curveColorB->text().toInt();
+        tmpObject = new Object(CURVE, r, g, b);
+    }
+    double x = ui->curveX->text().toDouble();
+    double y = ui->curveY->text().toDouble();
+    double z = ui->curveZ->text().toDouble();
+
+    tmpObject->addPoint(x, y, z);
+    
+    std::stringstream s;
+    s << "Point: " << x << "," << y << "," <<  z;
+    addToCurvePointsList(QString::fromStdString(s.str()));
 }
 
 void MainWindow::onPushMoveUpButton(void)
@@ -357,8 +396,10 @@ void MainWindow::onSelectObject(const QModelIndex & index)
         ui->selectedObjType->setText("Point");
     } else if (obj->type() == LINE) {
         ui->selectedObjType->setText("Line");
-    } else {
+    } else if (obj->type() == POLYGON) {
         ui->selectedObjType->setText("Polygon");
+    } else {
+        ui->selectedObjType->setText("Curve");
     }
     for (unsigned i=0; i < obj->pointsCount(); i++) {
 	addToSelectedObjectPointsList(QString::fromStdString(obj->point(i).toString()));	  }
@@ -383,7 +424,7 @@ void MainWindow::updateWindowPoints(void)
     ui->windowMaxY->setText(maxy);
 }
 
-void MainWindow::addToObjectsList(Object *object, QString name)
+void MainWindow::addToObjectsList(Object *object, const QString & name)
 {
     displayFile.insertObject(object);
     objectsListNames.append(name);
@@ -427,11 +468,18 @@ void MainWindow::deleteFromTransformationsList(unsigned int index)
     ui->transformationsListView->setModel(transformationsList);
 }
 
-void MainWindow::addToPointsList(const Point &point)
+void MainWindow::addToPolygonPointsList(const QString & name)
 {
-    pointsListNames.append(QString::fromStdString(point.toString()));
-    pointsList->setStringList(pointsListNames);
-    ui->pointsListView->setModel(pointsList);
+    polygonPointsListNames.append(name);
+    polygonPointsList->setStringList(polygonPointsListNames);
+    ui->polygonPointsListView->setModel(polygonPointsList);
+}
+
+void MainWindow::addToCurvePointsList(const QString & name)
+{
+    curvePointsListNames.append(name);
+    curvePointsList->setStringList(curvePointsListNames);
+    ui->curvePointsListView->setModel(curvePointsList);
 }
 
 void MainWindow::clearPointTextFields(void)
@@ -463,9 +511,22 @@ void MainWindow::clearPolygonTextFields(void)
     ui->polygonZ->clear();
 
     ui->polygonName->clear();
-    pointsListNames.clear();
-    pointsList->setStringList(pointsListNames);
-    ui->pointsListView->setModel(pointsList);
+    ui->filledBox->setChecked(false);
+    polygonPointsListNames.clear();
+    polygonPointsList->setStringList(polygonPointsListNames);
+    ui->polygonPointsListView->setModel(polygonPointsList);
+}
+
+void MainWindow::clearCurveTextFields(void)
+{
+    ui->curveX->clear();
+    ui->curveY->clear();
+    ui->curveZ->clear();
+
+    ui->curveName->clear();
+    curvePointsListNames.clear();
+    curvePointsList->setStringList(curvePointsListNames);
+    ui->curvePointsListView->setModel(curvePointsList);
 }
 
 void MainWindow::onActionImportObjTriggered(void)

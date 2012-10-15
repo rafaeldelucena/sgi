@@ -132,7 +132,7 @@ void ViewPort::draw(void)
 
                 if (clipped->pointsCount() > 0) {
                     std::vector<Point> pontos;
-                    for (unsigned int i = 0; i < clipped->pointsCount(); i++) {
+                    for (unsigned int i=0; i < clipped->pointsCount(); i++) {
 
                         Point p(clipped->point(i));
                         p = transform(p);
