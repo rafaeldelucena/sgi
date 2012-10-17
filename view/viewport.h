@@ -16,6 +16,7 @@ public:
     Point transform(const Point &wCoord);
     Point minWindowPoint(void);
     Point maxWindowPoint(void);
+    void setCurveSteps(unsigned int);
     bool pointClipped(Point p);
     void draw(void);
     void right(double value);
@@ -29,6 +30,7 @@ public:
     void rotate(double angle);
 
 private:
+    unsigned int curveSteps;
     Point vMin;
     Point vMax;
     Window *window;

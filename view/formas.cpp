@@ -63,8 +63,9 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
             new_point->addPoint(p.sncX(), p.sncY(), 1);
             return new_point;
         }
-
-    } else if (shape == LINE) {
+    }
+    
+    else if (shape == LINE) {
 
         // cohen sutherland
         //const int INSIDE = 0; // 0000
@@ -151,21 +152,12 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
         Point* goingIn = 0;
         Point* goingOut = 0;
 
-        std::cout << "pointsCount: " << this->pointsCount() << std::endl;
-
         for (unsigned int i = 0; i < this->pointsCount() -1; i++) {
-
-            std::cout << "i: " << i << std::endl;
 
             Point p0(point(i));
             Point p1(point(i+1));
 
             Object* cur_line = new Object(LINE, 0, 0, 0);
-
-            std::cout << "p0: " << p0.x() << "," << p0.y() << std::endl;
-            std::cout << "p1: " << p1.x() << "," << p1.y() << std::endl;
-            std::cout << "snc p0: " << p0.sncX() << "," << p0.sncY() << std::endl;
-            std::cout << "snc p1: " << p1.sncX() << "," << p1.sncY() << std::endl;
 
             cur_line->addPoint(p0.x(), p0.y(), 1);
             cur_line->addPoint(p1.x(), p1.y(), 1);
@@ -184,8 +176,6 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                      ((line_clipped->point(1).x() > -1 && line_clipped->point(1).x() < 1) &&
                      (line_clipped->point(1).y() > -1 && line_clipped->point(1).y() < 1) ) ) {
 
-                    std::cout << "dentro" << std::endl;
-
                     new_polygon->addPoint(p0.sncX(), p0.sncY(), 1);
                     new_polygon->addPoint(p1.sncX(), p1.sncY(), 1);
 
@@ -194,8 +184,6 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                 // p_inicial dentro, saindo
                 } else if ( (line_clipped->point(0).x() > -1 && line_clipped->point(0).x() < 1) &&
                             (line_clipped->point(0).y() > -1 && line_clipped->point(0).y() < 1) ) {
-
-                    std::cout << "saindo" << std::endl;
 
                     goingOut = new Point(p1.x(), p1.y(), 1);
 
@@ -206,8 +194,6 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
 
                 // p_final dentro, entrando
                 } else {
-
-                    std::cout << "entrando" << std::endl;
 
                     goingIn = new Point(p1.x(), p1.y(), 1);
 
@@ -242,8 +228,6 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                 }
 
             } else {
-
-                std::cout << "fora" << std::endl;
 
                 double new_x;
                 double new_y;
@@ -460,7 +444,7 @@ Point::Point(const Point &point) : wcX(point.x()), wcY(point.y()), wcZ(point.z()
 {
 }
 
-void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
+Point Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
 {
     //translate
     // [1  0  0
@@ -502,6 +486,8 @@ void Point::updateSNC(const Point& windowCenter, double vup, const Point& scale)
     snc_X = new_snc.x();
     snc_Y = new_snc.y();
     snc_Z = new_snc.z();
+
+    return Point(snc_X, snc_Y, snc_Z);
 }
 
 double Point::sncX(void) const
@@ -555,6 +541,13 @@ Point Point::transform(double matrix[9])
     double new_y = (x() * matrix[1]) + (y() * matrix[4]) + matrix[7];
     double new_z = (x() * matrix[2]) + (y() * matrix[5]) + matrix[8];
     return Point(new_x, new_y, new_z);
+}
+
+Point curveSegment(const Point& p1, const Point& p2, const Point & p3, const Point & p4 , double t)
+{
+    double x = ((((1-t)*(1-t))*(1-t))*p1.x()) + (3*t*((1-t)*(1-t))*p2.x()) + (3*t*t*(1-t)*p3.x()) + (t*t*t*p4.x());
+    double y = ((((1-t)*(1-t))*(1-t))*p1.y()) + (3*t*((1-t)*(1-t))*p2.y()) + (3*t*t*(1-t)*p3.y()) + (t*t*t*p4.y());
+    return Point(x, y);
 }
 
 std::string Point::toString(void) const

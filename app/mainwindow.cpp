@@ -169,7 +169,7 @@ void MainWindow::onPushPointSaveButton(void)
 
 void MainWindow::onPushPolygonSaveButton(void)
 {
-    if (tmpObject) {
+    if (tmpObject && polygonPointsListNames.size() >= 3) {
         QString name = ui->polygonName->text();
         Object *polygon = new Object(POLYGON);
         *polygon = *tmpObject;
@@ -184,7 +184,7 @@ void MainWindow::onPushPolygonSaveButton(void)
 
 void MainWindow::onPushCurveSaveButton(void)
 {
-    if (tmpObject) {
+    if (tmpObject && curvePointsListNames.size() >= 4) {
         QString name = ui->curveName->text();
         Object *curve = new Object(CURVE);
         *curve = *tmpObject;
@@ -193,6 +193,7 @@ void MainWindow::onPushCurveSaveButton(void)
         tmpObject = 0;
     }
     clearCurveTextFields();
+    viewPort->setCurveSteps(ui->curvePrecision->text().toInt());
     viewPort->draw();
 }
 

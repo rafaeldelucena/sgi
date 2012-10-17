@@ -5,6 +5,7 @@ ViewPort::ViewPort(Canhamo *cv, DisplayFile *d)
 {
     canvas = cv;
     displayFile = d;
+    curveSteps = 10;
 
     Point wMax(250.0, 250.0, 0.0);
     Point wMin(-250.0, -250.0, 0.0);
@@ -44,6 +45,11 @@ void ViewPort::reset(void)
 {
     window->reset();
     draw();
+}
+
+void ViewPort::setCurveSteps(unsigned int steps)
+{
+    curveSteps = steps;
 }
 
 void ViewPort::reset(double minx, double miny, double maxx, double maxy)
@@ -89,7 +95,7 @@ Point ViewPort::transform(const Point &point)
 
     return p;    
 }
-
+#include <iostream>
 void ViewPort::draw(void)
 {
     canvas->clear();
@@ -101,6 +107,25 @@ void ViewPort::draw(void)
     {
         Object* obj = displayFile->getObjectAt(i);
 
+        if (obj->type() == CURVE) {
+            double delta = 1.0 / curveSteps;
+            double t = 0.0;
+            Point start = obj->point(0);
+            for (unsigned int i=0; i < curveSteps; i++) {
+                t += delta;
+                Point end = curveSegment(obj->point(0), obj->point(1), obj->point(2), obj->point(3), t);
+                
+                Point p = end.updateSNC(window->center(), window->vup(), window->scale());
+                p = transform(p);
+                
+                start = start.updateSNC(window->center(), window->vup(), window->scale());
+                start = transform(start);
+                
+                canvas->drawLine(start, p, obj->color.r, obj->color.g, obj->color.b);
+                start = end;
+            }
+        } else {
+        
         Object* clipped = obj->clip(window->sncmin_x(), window->sncmin_y(), window->sncmax_x(), window->sncmax_y(),
                 window->center(), window->vup(), window->scale());
 
@@ -141,8 +166,9 @@ void ViewPort::draw(void)
                     }
                     canvas->drawPolygon(pontos, obj->isFilled(), clipped->color.r, clipped->color.g, clipped->color.b);
                 }
-            }
+            } 
         }
+    }
     }
     displayFile->update();
     canvas->refresh();

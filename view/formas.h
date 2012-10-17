@@ -26,7 +26,7 @@ public:
     void y(double);
     void z(double);
 
-    void updateSNC(const Point& windowCenter, double vup, const Point& scale);
+    Point updateSNC(const Point& windowCenter, double vup, const Point& scale);
 
     Point transform(double matrix[9]);
     std::string toString(void) const;
@@ -86,5 +86,7 @@ private:
     void updateTransform(double m[9]);
 };
 typedef std::vector<Object*> Objects;
+
+Point curveSegment(const Point& p1, const Point& p2, const Point & p3, const Point & p4 , double t);
 
 #endif // FORMAS_H
