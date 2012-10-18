@@ -111,64 +111,75 @@ void ViewPort::draw(void)
             double delta = 1.0 / curveSteps;
             double t = 0.0;
             Point start = obj->point(0);
-            for (unsigned int i=0; i < curveSteps; i++) {
+            for (unsigned int i = 0; i < curveSteps; i++) {
+
                 t += delta;
                 Point end = curveSegment(obj->point(0), obj->point(1), obj->point(2), obj->point(3), t);
-                
-                Point p = end.updateSNC(window->center(), window->vup(), window->scale());
-                p = transform(p);
-                
-                start = start.updateSNC(window->center(), window->vup(), window->scale());
-                start = transform(start);
-                
-                canvas->drawLine(start, p, obj->color.r, obj->color.g, obj->color.b);
+
+                Object line(LINE);
+                line.addPoint(start.x(), start.y(), start.z());
+                line.addPoint(end.x(), end.y(), end.z());
+
+                Object* clipped = line.clip(window->sncmin_x(), window->sncmin_y(), window->sncmax_x(), window->sncmax_y(),
+                                            window->center(), window->vup(), window->scale());
+
+                if (clipped && clipped->pointsCount() > 0) {
+                    Point vStart = transform(clipped->point(0));
+                    Point vEnd = transform(clipped->point(1));
+                    canvas->drawLine(vStart, vEnd, obj->color.r, obj->color.g, obj->color.b);
+                }
+
+                delete clipped;
+
                 start = end;
             }
+
         } else {
-        
-        Object* clipped = obj->clip(window->sncmin_x(), window->sncmin_y(), window->sncmax_x(), window->sncmax_y(),
-                window->center(), window->vup(), window->scale());
 
-        if (clipped) {
+            Object* clipped = obj->clip(window->sncmin_x(), window->sncmin_y(), window->sncmax_x(), window->sncmax_y(),
+                                        window->center(), window->vup(), window->scale());
 
-            if (clipped->type() == POINT) {
+            if (clipped) {
 
-                // desenha um X com centro no ponto
-                Point p = clipped->point(0);
+                if (clipped->type() == POINT) {
 
-                Point vPoint = transform(p);
+                    // desenha um X com centro no ponto
+                    Point p = clipped->point(0);
 
-                canvas->drawLine(Point(vPoint.x() - 1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
-                        obj->color.r, obj->color.g, obj->color.b);
-                canvas->drawLine(Point(vPoint.x() - 1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
-                        obj->color.r, obj->color.g, obj->color.b);
+                    Point vPoint = transform(p);
 
-            } else if (clipped->type() == LINE) {
+                    canvas->drawLine(Point(vPoint.x() - 1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
+                                     obj->color.r, obj->color.g, obj->color.b);
 
-                Point startPoint = clipped->point(0);
-                startPoint = transform(startPoint);
+                    canvas->drawLine(Point(vPoint.x() - 1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
+                                     obj->color.r, obj->color.g, obj->color.b);
 
-                Point endPoint = clipped->point(1);
-                endPoint = transform(endPoint);
+                } else if (clipped->type() == LINE) {
 
-                canvas->drawLine(startPoint, endPoint, obj->color.r, obj->color.g, obj->color.b);
+                    Point startPoint = clipped->point(0);
+                    startPoint = transform(startPoint);
 
-            } else if (clipped->type() == POLYGON) {
+                    Point endPoint = clipped->point(1);
+                    endPoint = transform(endPoint);
 
-                if (clipped->pointsCount() > 0) {
-                    std::vector<Point> pontos;
-                    for (unsigned int i=0; i < clipped->pointsCount(); i++) {
+                    canvas->drawLine(startPoint, endPoint, obj->color.r, obj->color.g, obj->color.b);
 
-                        Point p(clipped->point(i));
-                        p = transform(p);
-                        pontos.push_back(p);
+                } else if (clipped->type() == POLYGON) {
 
+                    if (clipped->pointsCount() > 0) {
+                        std::vector<Point> pontos;
+                        for (unsigned int i=0; i < clipped->pointsCount(); i++) {
+
+                            Point p(clipped->point(i));
+                            p = transform(p);
+                            pontos.push_back(p);
+
+                        }
+                        canvas->drawPolygon(pontos, obj->isFilled(), clipped->color.r, clipped->color.g, clipped->color.b);
                     }
-                    canvas->drawPolygon(pontos, obj->isFilled(), clipped->color.r, clipped->color.g, clipped->color.b);
-                }
-            } 
+                } 
+            }
         }
-    }
     }
     displayFile->update();
     canvas->refresh();
