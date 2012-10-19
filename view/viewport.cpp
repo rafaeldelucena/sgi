@@ -95,7 +95,7 @@ Point ViewPort::transform(const Point &point)
 
     return p;    
 }
-#include <iostream>
+
 void ViewPort::draw(void)
 {
     canvas->clear();
@@ -110,9 +110,9 @@ void ViewPort::draw(void)
         if (obj->type() == CURVE) {
             double delta = 1.0 / curveSteps;
             double t = 0.0;
+
             Point start = obj->point(0);
             for (unsigned int i = 0; i < curveSteps; i++) {
-
                 t += delta;
                 Point end = curveSegment(obj->point(0), obj->point(1), obj->point(2), obj->point(3), t);
 
@@ -121,23 +121,21 @@ void ViewPort::draw(void)
                 line.addPoint(end.x(), end.y(), end.z());
 
                 Object* clipped = line.clip(window->sncmin_x(), window->sncmin_y(), window->sncmax_x(), window->sncmax_y(),
-                                            window->center(), window->vup(), window->scale());
+                        window->center(), window->vup(), window->scale());
 
                 if (clipped && clipped->pointsCount() > 0) {
                     Point vStart = transform(clipped->point(0));
                     Point vEnd = transform(clipped->point(1));
                     canvas->drawLine(vStart, vEnd, obj->color.r, obj->color.g, obj->color.b);
+                    delete clipped;
+                    clipped = 0;
                 }
-
-                delete clipped;
-
                 start = end;
             }
-
         } else {
 
             Object* clipped = obj->clip(window->sncmin_x(), window->sncmin_y(), window->sncmax_x(), window->sncmax_y(),
-                                        window->center(), window->vup(), window->scale());
+                    window->center(), window->vup(), window->scale());
 
             if (clipped) {
 
@@ -149,10 +147,10 @@ void ViewPort::draw(void)
                     Point vPoint = transform(p);
 
                     canvas->drawLine(Point(vPoint.x() - 1.0, vPoint.y() - 1.0), Point(vPoint.x() + 1.0, vPoint.y() + 1.0),
-                                     obj->color.r, obj->color.g, obj->color.b);
+                            obj->color.r, obj->color.g, obj->color.b);
 
                     canvas->drawLine(Point(vPoint.x() - 1.0, vPoint.y() + 1.0), Point(vPoint.x() + 1.0, vPoint.y() - 1.0),
-                                     obj->color.r, obj->color.g, obj->color.b);
+                            obj->color.r, obj->color.g, obj->color.b);
 
                 } else if (clipped->type() == LINE) {
 
@@ -178,6 +176,8 @@ void ViewPort::draw(void)
                         canvas->drawPolygon(pontos, obj->isFilled(), clipped->color.r, clipped->color.g, clipped->color.b);
                     }
                 } 
+                delete clipped;
+                clipped = 0;
             }
         }
     }

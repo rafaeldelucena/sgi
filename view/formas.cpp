@@ -17,6 +17,7 @@ Object::Object(Shape type, int r, int g, int b)
 
 Object::~Object(void)
 {
+    points.clear();
 }
 
 Shape Object::type(void) const
@@ -157,12 +158,12 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
             Point p0(point(i));
             Point p1(point(i+1));
 
-            Object* cur_line = new Object(LINE, 0, 0, 0);
+            Object cur_line(LINE);
 
-            cur_line->addPoint(p0.x(), p0.y(), 1);
-            cur_line->addPoint(p1.x(), p1.y(), 1);
+            cur_line.addPoint(p0.x(), p0.y(), 1);
+            cur_line.addPoint(p1.x(), p1.y(), 1);
 
-            Object* line_clipped = cur_line->clip(wmin_x, wmin_y, wmax_x, wmax_y, windowCenter, vup, scale);
+            Object* line_clipped = cur_line.clip(wmin_x, wmin_y, wmax_x, wmax_y, windowCenter, vup, scale);
 
             p0.updateSNC(windowCenter, vup, scale);
             p1.updateSNC(windowCenter, vup, scale);
@@ -226,6 +227,8 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                     new_polygon->addPoint(line_clipped->point(0).x(), line_clipped->point(0).y(), 1);
                     new_polygon->addPoint(line_clipped->point(1).x(), line_clipped->point(1).y(), 1);
                 }
+                delete line_clipped;
+                line_clipped = 0;
 
             } else {
 
@@ -259,6 +262,15 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
         }
         if (has_some_line_inside) {
             return new_polygon;
+        }
+        if (goingOut) {
+            delete goingOut;
+            goingOut = 0;
+        }
+
+        if (goingIn) {
+            delete goingIn;
+            goingIn = 0;
         }
     }
     return 0;

@@ -55,6 +55,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     pentagon->addPoint(-60, 120, 0);
     addToObjectsList(pentagon, QString("pentagon"));
 
+    Object* curve = new Object(CURVE, 0, 0, 255);
+    curve->addPoint(50, -100, 0);
+    curve->addPoint(200, 0 ,0);
+    curve->addPoint(0, 0, 0);
+    curve->addPoint(100,-150, 0);
+    addToObjectsList(curve, QString("loop"));
+
     tmpObject = 0;
     objectFilled = false;
 
