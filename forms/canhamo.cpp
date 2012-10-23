@@ -14,24 +14,24 @@ void Canhamo::paintEvent(QPaintEvent*) {
     painter.drawLine(475,475,25,475);
     Lines::iterator iter;
     for (iter = canvasLines.begin(); iter != canvasLines.end(); iter++) {
-        QPen pen(QColor((*iter).c[0], (*iter).c[1], (*iter).c[2]), 1);
+        QPen pen(QColor(iter->c[0], iter->c[1], iter->c[2]), 1);
         painter.setPen(pen);   	
-        painter.drawLine((*iter).v[0] + offset, (*iter).v[1] + offset, (*iter).v[2] + offset, (*iter).v[3] + offset);
+        painter.drawLine(iter->v[0] + offset, iter->v[1] + offset, iter->v[2] + offset, iter->v[3] + offset);
     }
 
     Polygons::iterator it;
     for(it = canvasPolygons.begin(); it != canvasPolygons.end(); it++) {
-        QPen pen(QColor((*it).c[0], (*it).c[1], (*it).c[2]), 1);
+        QPen pen(QColor(it->c[0], it->c[1], it->c[2]), 1);
         QBrush brush;
-        if ((*it).filled) {
-            brush = QBrush(QColor((*it).c[0], (*it).c[1], (*it).c[2]));
+        if (it->filled) {
+            brush = QBrush(QColor(it->c[0], it->c[1], it->c[2]));
             painter.setBrush(brush);
             painter.setPen(pen);
-            painter.drawPolygon((*it).points, Qt::WindingFill);
+            painter.drawPolygon(it->points, Qt::WindingFill);
         } else {
             painter.setPen(pen);
             painter.setBrush(brush);
-            painter.drawPolygon((*it).points);
+            painter.drawPolygon(it->points);
         }
     } 
     painter.end();

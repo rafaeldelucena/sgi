@@ -557,8 +557,9 @@ Point Point::transform(double matrix[9])
 
 Point curveSegment(const Point& p1, const Point& p2, const Point & p3, const Point & p4 , double t)
 {
-    double x = ((((1-t)*(1-t))*(1-t))*p1.x()) + (3*t*((1-t)*(1-t))*p2.x()) + (3*t*t*(1-t)*p3.x()) + (t*t*t*p4.x());
-    double y = ((((1-t)*(1-t))*(1-t))*p1.y()) + (3*t*((1-t)*(1-t))*p2.y()) + (3*t*t*(1-t)*p3.y()) + (t*t*t*p4.y());
+
+    double x = t*t*t*p4.x() + (1-t)*(3*t*t*p3.x() + (1-t)*(3*t*p2.x() + (1-t)*p1.x()));
+    double y = t*t*t*p4.y() + (1-t)*(3*t*t*p3.y() + (1-t)*(3*t*p2.y() + (1-t)*p1.y()));
     return Point(x, y);
 }
 
