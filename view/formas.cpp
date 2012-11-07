@@ -65,7 +65,7 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
             return new_point;
         }
     }
-
+    
     else if (shape == LINE) {
 
         // cohen sutherland
@@ -149,7 +149,7 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
         bool has_some_line_inside = false;
 
         Object* new_polygon = new Object(POLYGON, color.r ,color.g , color.b);
-
+        
         Point* goingIn = 0;
         Point* goingOut = 0;
 
@@ -173,7 +173,7 @@ Object* Object::clip(double wmin_x, double wmin_y, double wmax_x, double wmax_y,
                 // tudo dentro
                 if ( ((line_clipped->point(0).x() > -1 && line_clipped->point(0).x() < 1) &&
                      (line_clipped->point(0).y() > -1 && line_clipped->point(0).y() < 1) )
-                    &&
+                    && 
                      ((line_clipped->point(1).x() > -1 && line_clipped->point(1).x() < 1) &&
                      (line_clipped->point(1).y() > -1 && line_clipped->point(1).y() < 1) ) ) {
 
@@ -555,139 +555,12 @@ Point Point::transform(double matrix[9])
     return Point(new_x, new_y, new_z);
 }
 
-double * BezierDerived(const Point& p1, const Point& p2, const Point & p3, const Point & p4 , double t)
+Point curveSegment(const Point& p1, const Point& p2, const Point & p3, const Point & p4 , double t)
 {
-    double bezier[16];
-    bezier[0] = 1.0;
-    bezier[1] = 0;
-    bezier[2] = 0;
-    bezier[3] = 0;
-    bezier[4] = 0;
-    bezier[5] = 0;
-    bezier[6] = 0;
-    bezier[7] = 1.0;
-    bezier[8] = -3.0;
-    bezier[9] = 3.0;
-    bezier[10] = 0;
-    bezier[11] = 0;
-    bezier[12] = 0;
-    bezier[13] = 0;
-    bezier[14] = -3.0;
-    bezier[15] = 3.0;
 
-    std::cout << "bezier: " << "0: " << bezier[0] << "| 1: " << bezier[1] << "| 2: " << bezier[2] << "| 3: " << bezier[3] <<  std::endl;
-    std::cout << "bezier: " << "4: " << bezier[4] << "| 5: " << bezier[5] << "| 6: " << bezier[6] << "| 7: " << bezier[7] <<  std::endl;
-    std::cout << "bezier: " << "8: " << bezier[8] << "| 9: " << bezier[9] << "| 10: " << bezier[10] << "| 11: " << bezier[11] <<  std::endl;
-    std::cout << "bezier: " << "12: " << bezier[12] << "| 13: " << bezier[13] << "| 14: " << bezier[14] << "| 15: " << bezier[15] <<  std::endl;
-
-    double xA = bezier[0] * p1.x() + bezier[1] * p2.x() + bezier[2] * p3.x() + bezier[3] * p4.x();
-    double xB = bezier[4] * p1.x() + bezier[5] * p2.x() + bezier[6] * p3.x() + bezier[7] * p4.x();
-    double xC = bezier[8] * p1.x() + bezier[9] * p2.x() + bezier[10] * p3.x() + bezier[11] * p4.x();
-    double xD = bezier[12] * p1.x() + bezier[13] * p2.x() + bezier[14] * p3.x() + bezier[15] * p4.x();
-
-    double yA = bezier[0] * p1.y() + bezier[1] * p2.y() + bezier[2] * p3.y() + bezier[3] * p4.y();
-    double yB = bezier[4] * p1.y() + bezier[5] * p2.y() + bezier[6] * p3.y() + bezier[7] * p4.y();
-    double yC = bezier[8] * p1.y() + bezier[9] * p2.y() + bezier[10] * p3.y() + bezier[11] * p4.y();
-    double yD = bezier[12] * p1.y() + bezier[13] * p2.y() + bezier[14] * p3.y() + bezier[15] * p4.y();
-
-
-    double * pontos = new double[8];
-    pontos[0] = xA;
-    pontos[1] = yA;
-    pontos[2] = xB;
-    pontos[3] = yB;
-    pontos[4] = xC;
-    pontos[5] = yC;
-    pontos[6] = xD;
-    pontos[7] = yD;
-    return pontos;		
-
-}
-
-double * BSplineDerived(const Point& p1, const Point& p2, const Point & p3, const Point & p4 , double t)
-{
-    double bspline[16];
-    bspline[0] = -1.0/6.0;
-    bspline[1] = 0.5;
-    bspline[2] = -0.5;
-    bspline[3] = 1.0/6.0;
-    bspline[4] = 0.5;
-    bspline[5] = -1;
-    bspline[6] = 0.5;
-    bspline[7] = 0.0;
-    bspline[8] = -0.5;
-    bspline[9] = 0.0;
-    bspline[10] = 0.5;
-    bspline[11] = 0;
-    bspline[12] = 1.0/6.0;
-    bspline[13] = 2.0/3.0;
-    bspline[14] = 1.0/6.0;
-    bspline[15] = 0.0;
-
-    std::cout << "bspline: " << "0: " << bspline[0] << "| 1: " << bspline[1] << "| 2: " << bspline[2] << "| 3: " << bspline[3] <<  std::endl;
-    std::cout << "bspline: " << "4: " << bspline[4] << "| 5: " << bspline[5] << "| 6: " << bspline[6] << "| 7: " << bspline[7] <<  std::endl;
-    std::cout << "bspline: " << "8: " << bspline[8] << "| 9: " << bspline[9] << "| 10: " << bspline[10] << "| 11: " << bspline[11] <<  std::endl;
-    std::cout << "bspline: " << "12: " << bspline[12] << "| 13: " << bspline[13] << "| 14: " << bspline[14] << "| 15: " << bspline[15] <<  std::endl;
-
-    double xA = bspline[0] * p1.x() + bspline[1] * p2.x() + bspline[2] * p3.x() + bspline[3] * p4.x();
-    double xB = bspline[4] * p1.x() + bspline[5] * p2.x() + bspline[6] * p3.x() + bspline[7] * p4.x();
-    double xC = bspline[8] * p1.x() + bspline[9] * p2.x() + bspline[10] * p3.x() + bspline[11] * p4.x();
-    double xD = bspline[12] * p1.x() + bspline[13] * p2.x() + bspline[14] * p3.x() + bspline[15] * p4.x();
-
-    double yA = bspline[0] * p1.y() + bspline[1] * p2.y() + bspline[2] * p3.y() + bspline[3] * p4.y();
-    double yB = bspline[4] * p1.y() + bspline[5] * p2.y() + bspline[6] * p3.y() + bspline[7] * p4.y();
-    double yC = bspline[8] * p1.y() + bspline[9] * p2.y() + bspline[10] * p3.y() + bspline[11] * p4.y();
-    double yD = bspline[12] * p1.y() + bspline[13] * p2.y() + bspline[14] * p3.y() + bspline[15] * p4.y();
-
-    std::cout << "Pontos: " << "p1x: " << p1.x() << " p1y: " << p1.y() << " p2x: " << p2.x() << " p2y: " << p2.y() << " p3x: " << p3.x() << " p3y: " << p3.y() << " p4x: " << p4.x() << " p4y: " << p4.y() <<  std::endl;
-    std::cout << "Coeficientes: " << "xA: " << xA << " xB: " << xB << " xC: " << xC << " xD: " << xD << " yA: " << yA << " yB: " << yB << " yC: " << yC << " yD: " << yD <<  std::endl;
-
-    double t2 = t*t;
-    double t3 = t2*t;
-
-    double E[16];
-    E[0] = 0;
-    E[1] = 0;
-    E[2] = 0;
-    E[3] = 1;
-    E[4] = t3;
-    E[5] = t2;
-    E[6] = t;
-    E[7] = 0;
-    E[8] = 6*t3;
-    E[9] = 2*t2;
-    E[10] = 0;
-    E[11] = 0;
-    E[12] = 6*t3;
-    E[13] = 0;
-    E[14] = 0;
-    E[15] = 0;
-
-    std::cout << "E: " << "0: " << E[0] << "| 1: " << E[1] << "| 2: " << E[2] << "| 3: " << E[3] <<  std::endl;
-    std::cout << "E: " << "4: " << E[4] << "| 5: " << E[5] << "| 6: " << E[6] << "| 7: " << E[7] <<  std::endl;
-    std::cout << "E: " << "8: " << E[8] << "| 9: " << E[9] << "| 10: " << E[10] << "| 11: " << E[11] <<  std::endl;
-    std::cout << "E: " << "12: " << E[12] << "| 13: " << E[13] << "| 14: " << E[14] << "| 15: " << E[15] <<  std::endl;
-
-    double x =   E[0] * xA + E[1] * xB + E[2] * xC + E[3] * xD;
-    double dx =  E[4] * xA + E[5] * xB + E[6] * xC + E[7] * xD;
-    double d2x = E[8] * xA + E[9] * xB + E[10] * xC + E[11] * xD;
-    double d3x = E[12] * xA + E[13] * xB + E[14] * xC + E[15] * xD;
-
-    double y =   E[0] * yA + E[1] * yB + E[2] * yC + E[3] * yD;
-    double dy =  E[4] * yA + E[5] * yB + E[6] * yC + E[7] * yD;
-    double d2y = E[8] * yA + E[9] * yB + E[10] * yC + E[11] * yD;
-    double d3y = E[12] * yA + E[13] * yB + E[14] * yC + E[15] * yD;
-
-    double * pontos = new double[8];
-    pontos[0] = x;
-    pontos[1] = y;
-    pontos[2] = dx;
-    pontos[3] = dy;
-    pontos[4] = d2x;
-    pontos[5] = d2y;
-    pontos[6] = d3x;
-    pontos[7] = d3y;
-    return pontos;		
+    double x = t*t*t*p4.x() + (1-t)*(3*t*t*p3.x() + (1-t)*(3*t*p2.x() + (1-t)*p1.x()));
+    double y = t*t*t*p4.y() + (1-t)*(3*t*t*p3.y() + (1-t)*(3*t*p2.y() + (1-t)*p1.y()));
+    return Point(x, y);
 }
 
 std::string Point::toString(void) const
