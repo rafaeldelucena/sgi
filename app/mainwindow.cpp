@@ -5,7 +5,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
 
     viewPort = new ViewPort(this->canvas(), &displayFile);
-    parser = new Parser(&displayFile);
 
     polygonPointsList = new QStringListModel();
     curvePointsList = new QStringListModel();
@@ -539,12 +538,10 @@ void MainWindow::clearCurveTextFields(void)
 
 void MainWindow::onActionImportObjTriggered(void)
 {
-    //parser->importFromObj("file.obj");
 }
 
 void MainWindow::onActionExportObjTriggered(void)
 {
-    parser->exportToObj("new-file.obj");
 }
 
 void MainWindow::onFilledBoxToggled(bool checked)
