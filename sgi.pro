@@ -3,8 +3,6 @@ QT  += core gui
 TARGET = sgi
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -std=c++0x
-
 CONFIG += qt debug
 
 SOURCES += app/app.cpp\

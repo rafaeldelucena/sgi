@@ -6,8 +6,6 @@
 #include <QPushButton>
 #include <QPainter>
 
-#include "app/parser.h"
-
 #include "view/formas.h"
 #include "view/displayfile.h"
 #include "view/viewport.h"
@@ -90,7 +88,6 @@ private:
     Object* tmpObject;
     DisplayFile displayFile;
     ViewPort *viewPort;
-    Parser *parser;
 };
 
 #endif // MAINWINDOW_H
